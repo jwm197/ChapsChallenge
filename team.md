@@ -2,9 +2,9 @@
 
 | Module | Team Member name | Gitlab account |
 | ------ | ------ | ------ |
-| Domain | Yuri | |
-| App | Shekinah | |
-| Render | Anfri | |
-| Presist | Jia Wei | |
-| Recorder | Jacob | |
-| Fuzz | Hanning |
+| Domain | Yuri | sidoroyuri |
+| App | Shekinah | pratapshek |
+| Render | Anfri | haywarmatt |
+| Presist | Jia Wei | leongjia1 |
+| Recorder | Jacob | mcbridjaco |
+| Fuzz | Hanning | quhann | 
