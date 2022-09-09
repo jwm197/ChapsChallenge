@@ -1,3 +1,0 @@
-/**
- * Fuzz module
- */
