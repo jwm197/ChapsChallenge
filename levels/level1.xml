@@ -1,7 +1,46 @@
 <!--Level 1-->
-
 <level>
-    <tiles>
-        
-    </tiles>
+    <player>
+        <location>
+            <x></x>
+            <y></y>
+        </location>
+        <items></items>
+    </player>
+
+    <door>
+        <location></location>
+        <colour>Blue</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <wall>
+        <location>
+            <x></x>
+            <y></y>
+        </location>
+    </wall>
+
+
+    <key>
+        <location>
+            <x></x>
+            <y></y>
+        </location>
+        <colour>Blue</colour>
+    </key>
+
+    <chip>
+        <location>
+            <x></x>
+            <y></y>
+        </location>
+        <colour></colour>
+    </chip>
+
+    <portal>
+        <destination>
+
+        </destination>
+    </portal>
 </level>
