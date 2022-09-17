@@ -1,15 +1,17 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
+import org.dom4j.DocumentException;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 record PersistencyTests(){
 
     @Test
-    void TestLoadXML1(){
+    void TestLoadXML1() throws DocumentException, IOException {
         Persistency p = new Persistency();
-        p.loadXML();
+        p.loadXML("level1.xml");
         assert false : "XML file failed to parse";
     }
 
@@ -21,9 +23,11 @@ record PersistencyTests(){
     @Test
     void TestInvalidLoadXML1(){
         try{
-            assert false : "Parsing exception not thrown";
+            Persistency p = new Persistency();
+            p.loadXML("level999.xml");
+            assert false : "IO exception not thrown";
         }
-        catch(ParserException e){return;}
+        catch(ParserException | IOException | DocumentException e){return;}
     }
 
     @Test
