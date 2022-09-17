@@ -1,1 +1,101 @@
 <!--Level 2-->
+<!--Level 1-->
+<level>
+    <player>
+        <location>
+            <x>0</x>
+            <y>0</y>
+        </location>
+        <items>
+            <!-- Item ids -->
+        </items>
+    </player>
+
+    <!-- chips -->
+    <chip>
+        <location>
+            <x>2</x>
+            <y>1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>2</x>
+            <y>-1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-9</x>
+            <y>4</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-9</x>
+            <y>-4</y>
+        </location>
+    </chip>
+
+    <bug>
+        <location>
+            <x>-7</x>
+            <y>0</y>
+        </location>
+    </bug>
+    <bug>
+        <location>
+            <x>-8</x>
+            <y>1</y>
+        </location>
+    </bug>
+
+    <bug>
+        <location>
+            <x>-8</x>
+            <y>-1</y>
+        </location>
+    </bug>
+
+    <lock>
+        <location>
+            <x>-12</x>
+            <y>0</y>
+        </location>
+
+    </lock>
+
+    <info>
+        <location>
+            <x>1</x>
+            <y>0</y>
+        </location>
+        <helptext>Lorem ipsum dolor blah blah blah</helptext>
+    </info>
+
+    <exit>
+        <location>
+            <x>-13</x>
+            <y>0</y>
+        </location>
+        <destination>None</destination>
+    </exit>
+    <!-- walls -->
+    <wall>
+        <location>
+            <x>0</x>
+            <y>0</y>
+        </location>
+        <from>
+            <x>0</x>
+            <y>0</y>
+        </from>
+        <to>
+            <x>0</x>
+            <y>0</y>
+        </to>
+    </wall>
+</level>
