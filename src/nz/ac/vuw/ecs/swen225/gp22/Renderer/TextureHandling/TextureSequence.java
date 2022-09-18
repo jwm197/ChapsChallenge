@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp22.Rendering.TextureHandling;
+package nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling;
 
 import java.util.Iterator;
 import java.util.List;

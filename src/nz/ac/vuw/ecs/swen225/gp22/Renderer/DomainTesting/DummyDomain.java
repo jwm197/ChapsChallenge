@@ -1,6 +1,6 @@
-package nz.ac.vuw.ecs.swen225.gp22.Rendering;
+package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
-import nz.ac.vuw.ecs.swen225.gp22.Rendering.TextureHandling.TextureSequence;
+import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
 
 interface Animator {
 	void queueMovingImgSequence(Entity entity, TextureSequence images, Position initialPos, Position finalPos, int tickLength, int frameTicks, Runnable onCompletion);
