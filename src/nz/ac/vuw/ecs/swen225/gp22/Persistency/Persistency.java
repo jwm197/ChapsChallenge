@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,17 +17,83 @@ import org.dom4j.io.SAXReader;
 
 record Persistency(){
 
+    private List<Integer> getCoords(Node n){
+        int x = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("x").getText());
+        int y = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("y").getText());
+        return List.of(x,y);
+    }
+
+    private void parseKeysandDoors(List<Node> keys,List<Node> doors){
+        if(keys == null) throw new ParserException("List of keys not found");
+        else if(doors == null) throw new ParserException("List of doors not found");
+        System.out.println("keys and doors");
+
+
+        //if(keys.size() != doors.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
+
+    }
+
+    private void parsePlayer(Node player){
+        if(player == null) throw new ParserException("Player not found");
+        System.out.println("player");
+        String playerData = "Coords: " + getCoords(player).toString();
+    }
+
+    private void parseChips(List<Node> chips){
+        if(chips.isEmpty()) throw new ParserException("List of chips not found");
+        System.out.println("chips");
+        List<List<Integer>> coords = chips.stream().map(this::getCoords).toList();
+        String chipsData = coords.toString();
+        System.out.println(chipsData);
+    }
+
+    private void parseWalls(List<Node> walls){
+        if(walls.isEmpty()) throw new ParserException("List of walls not found");
+        System.out.println("walls");
+        List<List<Integer>> coords = walls.stream().map(this::getCoords).toList();
+        String wallsData = coords.toString();
+        System.out.println(wallsData);
+    }
+
+    private void parseBugs(List<Node> bugs){
+        if(bugs.isEmpty()) return;
+        System.out.println("bugs");
+        List<List<Integer>> coords = bugs.stream().map(this::getCoords).toList();
+        String bugsData = coords.toString();
+        System.out.println("Bug data " + bugsData);
+    }
+
+    private void parseInfo(Node info){
+        if(info == null) throw new ParserException("Info not found");
+        System.out.println("info");
+        String infoData = "Coords: " + getCoords(info).toString();
+
+    }
+
+    private void parseLock(Node lock){
+        if(lock == null) throw new ParserException("Lock not found");
+        System.out.println("lock");
+        String lockData = "Coords: " + getCoords(lock).toString();
+
+    }
+
+    private void parseExit(Node exit){
+        if(exit == null) throw new ParserException("Exit not found");
+        System.out.println("exit");
+        String exitData = "Coords: " + getCoords(exit).toString();
+    }
+
     private HashMap<String,Map<String,String>> parseXML(Document doc) throws ParserException {
         HashMap<String,Map<String,String>> data = new HashMap<>();
-        List<Node> levelNodes = doc.selectNodes("/level");
-        for(Node eachNode : levelNodes){
-            Node player = eachNode.selectSingleNode("player");
-            Node portal = eachNode.selectSingleNode("portal");
-            List<Node> keys = eachNode.selectNodes("key");
-            List<Node> doors = eachNode.selectNodes("door");
-            if(keys.size() != doors.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
-        }
-
+        Node root = doc.selectSingleNode("level");
+        parsePlayer(root.selectSingleNode("player"));
+        parseKeysandDoors(root.selectNodes("key"),root.selectNodes("door"));
+        parseChips(root.selectNodes("chip"));
+        parseWalls(root.selectNodes("wall"));
+        parseBugs(root.selectNodes("bug"));
+        parseInfo(root.selectSingleNode("info"));
+        parseLock(root.selectSingleNode("lock"));
+        parseExit(root.selectSingleNode("exit"));
 
         return data;
     }

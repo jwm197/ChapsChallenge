@@ -64,6 +64,7 @@
         <colour>Yellow</colour>
         <unlocked>false</unlocked>
     </door>
+
     <door name="eastdoor1">
         <location>
             <x>3</x>
@@ -73,7 +74,7 @@
         <unlocked>false</unlocked>
     </door>
 
-    <door name="eastdoor1">
+    <door name="eastdoor2">
         <location>
             <x>3</x>
             <y>-2</y>
@@ -83,7 +84,7 @@
     </door>
 
     <!-- keys -->
-    <key>
+    <key name="bluekey1">
         <location>
             <x>-2</x>
             <y>1</y>
@@ -91,7 +92,7 @@
         <colour>Blue</colour>
     </key>
 
-    <key>
+    <key name="bluekey2">
         <location>
             <x>-2</x>
             <y>-1</y>
@@ -99,7 +100,7 @@
         <colour>Blue</colour>
     </key>
 
-    <key>
+    <key name="redkey1">
         <location>
             <x>2</x>
             <y>1</y>
@@ -107,7 +108,7 @@
         <colour>Red</colour>
     </key>
 
-    <key>
+    <key name="redkey2">
         <location>
             <x>1</x>
             <y>-6</y>
@@ -115,7 +116,7 @@
         <colour>Red</colour>
     </key>
 
-    <key>
+    <key name="yellowkey1">
         <location>
             <x>2</x>
             <y>-5</y>
@@ -123,7 +124,7 @@
         <colour>Yellow</colour>
     </key>
 
-    <key>
+    <key name="yellowkey2">
         <location>
             <x>2</x>
             <y>5</y>
@@ -131,12 +132,12 @@
         <colour>Yellow</colour>
     </key>
 
-    <key>
+    <key name="greenkey">
         <location>
             <x>2</x>
             <y>1</y>
         </location>
-        <colour>Red</colour>
+        <colour>Green</colour>
     </key>
 
     <!-- chips -->
@@ -223,7 +224,6 @@
             <x>0</x>
             <y>3</y>
         </location>
-
     </lock>
 
     <info>
@@ -241,6 +241,7 @@
         </location>
         <destination>level2.xml</destination>
     </exit>
+
     <!-- walls -->
     <wall>
         <location>
