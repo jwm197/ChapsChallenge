@@ -13,17 +13,38 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 class ChapsChallenge extends JFrame{
 	private static final long serialVersionUID = 1L;
 	Runnable closePhase = ()->{};
 	int width = 1280;
 	int height = 720;
+	Font largeFont = new Font("Trebuchet MS", Font.BOLD, 54);
+	Font smallFont = new Font("Trebuchet MS", Font.PLAIN, 28);
 	int level = 1;
 	
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		try {
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		MenuScreen();
 		setVisible(true);
 		setResizable(false);
@@ -36,33 +57,33 @@ class ChapsChallenge extends JFrame{
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
-		var title = new JLabel("Chaps Challenge", SwingConstants.CENTER);
-		title.setFont(new Font("Arial", Font.BOLD, 48));
+		var title = new JLabel("CHAPS CHALLENGE", SwingConstants.CENTER);
+		title.setFont(largeFont);
 		title.setBounds(0, (int)(-height*0.4), width, height);
 		// JButton to start game
 		var start = new JButton("Start");
 		start.setBounds(width/4, (int)(height*0.25), width/2, height/10);
-		start.setFont(new Font("Arial", Font.PLAIN, 28));
+		start.setFont(smallFont);
 		start.addActionListener(e->GameScreen());
 		// JButton to resume saved game from file selector
 		var load = new JButton("Load");
 		load.setBounds(width/4, (int)(height*0.375), width/2, height/10);
-		load.setFont(new Font("Arial", Font.PLAIN, 28));
+		load.setFont(smallFont);
 		load.addActionListener(e->LoadGame());
 		// JButton to view game help info
 		var help = new JButton("Help");
 		help.setBounds(width/4, (int)(height*0.5), width/2, height/10);
-		help.setFont(new Font("Arial", Font.PLAIN, 28));
+		help.setFont(smallFont);
 		help.addActionListener(e->GameHelp());
 		// JButton to view controls
 		var controls = new JButton("Controls");
 		controls.setBounds(width/4, (int)(height*0.625), width/2, height/10);
-		controls.setFont(new Font("Arial", Font.PLAIN, 28));
+		controls.setFont(smallFont);
 		controls.addActionListener(e->ViewControls());
 		// JButton to quit game
 		var quit = new JButton("Quit");
 		quit.setBounds(width/4, (int)(height*0.75), width/2, height/10);
-		quit.setFont(new Font("Arial", Font.PLAIN, 28));
+		quit.setFont(smallFont);
 		quit.addActionListener(e->System.exit(0));
 		// adds components to panel
 		panel.setLayout(null);
@@ -83,7 +104,7 @@ class ChapsChallenge extends JFrame{
 		JPanel panel = new JPanel();
 		// JLabel to show level player is on
 		var levelText = new JLabel("Level: " + level, SwingConstants.CENTER);
-		levelText.setFont(new Font("Arial", Font.BOLD, 48));
+		levelText.setFont(largeFont);
 		levelText.setBounds(0, (int)(-height*0.4), width, height);
 		
 		// DOMAIN??
@@ -91,7 +112,7 @@ class ChapsChallenge extends JFrame{
 		// JButton to go back to menu
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
-		back.setFont(new Font("Arial", Font.PLAIN, 28));
+		back.setFont(smallFont);
 		back.addActionListener(e->MenuScreen());
 		// adds components to panel
 		panel.setLayout(null);
@@ -119,7 +140,7 @@ class ChapsChallenge extends JFrame{
 		JPanel panel = new JPanel();
 		// JLabel for displaying help title
 		var helpTitle = new JLabel("Help", SwingConstants.CENTER);
-		helpTitle.setFont(new Font("Arial", Font.BOLD, 48));
+		helpTitle.setFont(largeFont);
 		helpTitle.setBounds(0, (int)(-height*0.4), width, height);
 		// JLabel to display help info
 		var helpInfo = new JLabel("<html>"
@@ -134,12 +155,12 @@ class ChapsChallenge extends JFrame{
 				+ "Exit lock will be open when all treasures are collected<br/>"
 				+ "Enter exit tile once unlocked to pass level<br/>"
 				+ "View controls from the menu screen button</html>", SwingConstants.CENTER);
-		helpInfo.setFont(new Font("Arial", Font.PLAIN, 28));
+		helpInfo.setFont(smallFont);
 		helpInfo.setBounds(0, -height/20, width, height);
 		// JButton to go back to menu
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
-		back.setFont(new Font("Arial", Font.PLAIN, 28));
+		back.setFont(smallFont);
 		back.addActionListener(e->MenuScreen());
 		// adds components to panel
 		panel.setLayout(null);
@@ -157,7 +178,7 @@ class ChapsChallenge extends JFrame{
 		JPanel panel = new JPanel();
 		// JLabel for displaying controls title
 		var controlsText = new JLabel("Controls", SwingConstants.CENTER);
-		controlsText.setFont(new Font("Arial", Font.BOLD, 48));
+		controlsText.setFont(largeFont);
 		controlsText.setBounds(0, (int)(-height*0.4), width, height);
 		// JLabel to display controls info
 		var controlsInfo = new JLabel("<html>"
@@ -172,7 +193,7 @@ class ChapsChallenge extends JFrame{
 				+ "Move Chap Down:<br/>"
 				+ "Move Chap Left:<br/>"
 				+ "Move Chap Right:</html>", SwingConstants.LEFT);
-		controlsInfo.setFont(new Font("Arial", Font.PLAIN, 28));
+		controlsInfo.setFont(smallFont);
 		controlsInfo.setBounds(width/5, -height/20, width, height);
 		// JLabel to display controls keys
 		var controlsKeys = new JLabel("<html>"
@@ -187,12 +208,12 @@ class ChapsChallenge extends JFrame{
 				+ "DOWN<br/>"
 				+ "LEFT<br/>"
 				+ "RIGHT</html>", SwingConstants.RIGHT);
-		controlsKeys.setFont(new Font("Arial", Font.PLAIN, 28));
+		controlsKeys.setFont(smallFont);
 		controlsKeys.setBounds(-width/5, -height/20, width, height);
 		// JButton to go back to menu
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
-		back.setFont(new Font("Arial", Font.PLAIN, 28));
+		back.setFont(smallFont);
 		back.addActionListener(e->MenuScreen());
 		// adds components to panel
 		panel.setLayout(null);
