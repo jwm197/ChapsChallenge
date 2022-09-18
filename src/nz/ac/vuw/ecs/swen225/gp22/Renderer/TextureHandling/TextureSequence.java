@@ -1,9 +1,8 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling;
 
-import java.util.Iterator;
 import java.util.List;
 
-public interface TextureSequence extends Iterable<LayeredTexture> {
+public interface TextureSequence {
 	List<LayeredTexture> frames();
 	
 	default LayeredTexture first() {
@@ -14,7 +13,11 @@ public interface TextureSequence extends Iterable<LayeredTexture> {
 		return frames().get(frames().size()-1);
 	}
 	
-	default Iterator<LayeredTexture> iterator() {
-		return frames().iterator();
+	default LayeredTexture get(int index) {
+		return frames().get(index);
+	}
+	
+	default int frameCount() {
+		return frames().size();
 	}
 }

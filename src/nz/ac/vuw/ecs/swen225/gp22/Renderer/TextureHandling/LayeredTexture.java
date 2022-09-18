@@ -5,11 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public interface LayeredTexture extends Iterable<Texture>, Tintable<LayeredTexture> {
+public interface LayeredTexture extends Iterable<Texture>, Tintable<LayeredTexture>, TextureSequence {
 	List<Texture> layers();
-	default Iterator<Texture> iterator() { return layers().iterator(); }
 	default Texture top() { return layers().get(0); }
 	default Texture bottom() { return layers().get(layers().size()-1); }
+	default int layerCount() { return layers().size(); }
+	
+	default Iterator<Texture> iterator() { return layers().iterator(); }
+	
+	default List<LayeredTexture> frames() { return List.of(this); }
+	default LayeredTexture first() { return this; }
+	default LayeredTexture last() { return this; }
+	default int frameCount() { return 1; }
 	
 	default LayeredTexture tint(Color tint) { return tint(tint, DEFAULT_TINT_METHOD); }
 	default LayeredTexture tint(Color tint, BiFunction<List<Texture>, Color, List<Texture>> f) { return tint(this, tint, f); }
@@ -17,18 +24,7 @@ public interface LayeredTexture extends Iterable<Texture>, Tintable<LayeredTextu
 	private static LayeredTexture tint(LayeredTexture source, Color tint, BiFunction<List<Texture>, Color, List<Texture>> f) {
 		return new LayeredTexture() {
 			private List<Texture> layers = f.apply(source.layers(), tint);
-			
-			public LayeredTexture tint(Color tint, BiFunction<List<Texture>, Color, List<Texture>> f) {
-				return LayeredTexture.tint(this, tint, f);
-			}
-			
-			public LayeredTexture tint(Color tint) {
-				return tint(tint, DEFAULT_TINT_METHOD);
-			}
-			
-			public List<Texture> layers() {
-				return layers;
-			}
+			public List<Texture> layers() { return layers; }
 		};
 	}
 	
