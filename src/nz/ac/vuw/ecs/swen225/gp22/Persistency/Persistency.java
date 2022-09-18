@@ -18,6 +18,8 @@ import org.dom4j.io.SAXReader;
 record Persistency(){
 
     private List<Integer> getCoords(Node n){
+        if(n.selectSingleNode("location").selectSingleNode("x") == null) throw new ParserException("X coord not found");
+        else if(n.selectSingleNode("location").selectSingleNode("y") == null) throw new ParserException("Y coord not found");
         int x = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("x").getText());
         int y = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("y").getText());
         return List.of(x,y);
@@ -27,9 +29,15 @@ record Persistency(){
         if(keys == null) throw new ParserException("List of keys not found");
         else if(doors == null) throw new ParserException("List of doors not found");
         System.out.println("keys and doors");
-
-
-        //if(keys.size() != doors.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
+//        keys.forEach(node -> System.out.println(node.selectSingleNode("colour").getText()));
+//        System.out.println();
+//        doors.forEach(node -> System.out.println(node.selectSingleNode("colour").getText()));
+        keys.forEach(node -> doors.forEach(node1 -> {
+                node.selectSingleNode("colour").getText();
+                node1.selectSingleNode("colour").getText();
+            if(keys.size() != doors.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
+        }));
+//        keys.stream().flatMap(node -> doors.stream().map());
 
     }
 
@@ -94,7 +102,6 @@ record Persistency(){
         parseInfo(root.selectSingleNode("info"));
         parseLock(root.selectSingleNode("lock"));
         parseExit(root.selectSingleNode("exit"));
-
         return data;
     }
 
