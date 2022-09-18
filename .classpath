@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry excluding="nz/ac/vuw/ecs/swen225/gp22/Persistency/" kind="src" path="src"/>
-	<classpathentry kind="src" path="src/nz/ac/vuw/ecs/swen225/gp22/Persistency"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
