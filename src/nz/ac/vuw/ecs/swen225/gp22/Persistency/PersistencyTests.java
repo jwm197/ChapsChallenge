@@ -9,15 +9,26 @@ import java.util.function.Consumer;
 record PersistencyTests(){
 
     @Test
-    void TestLoadXML1() throws DocumentException, IOException {
-        Persistency p = new Persistency();
-        p.loadXML("level1.xml");
-        assert false : "XML file failed to parse";
+    void TestLoadXML1() {
+        try{
+            Persistency p = new Persistency();
+            p.loadXML("level1.xml");
+        }
+        catch(Exception e){
+            assert false : e.getMessage();
+        }
+
     }
 
     @Test
     void TestLoadXML2(){
-        assert false : "XML file failed to parse";
+        try{
+            Persistency p = new Persistency();
+            p.loadXML("level2.xml");
+        }
+        catch(Exception e){
+            assert false : e.getMessage();
+        }
     }
 
     @Test
@@ -27,7 +38,7 @@ record PersistencyTests(){
             p.loadXML("level999.xml");
             assert false : "IO exception not thrown";
         }
-        catch(ParserException | IOException | DocumentException e){return;}
+        catch(Exception e){return;}
     }
 
     @Test
@@ -35,6 +46,6 @@ record PersistencyTests(){
         try{
             assert false : "Parsing exception not thrown";
         }
-        catch(ParserException e){return;}
+        catch(Exception e){return;}
     }
 }

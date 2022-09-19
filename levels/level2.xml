@@ -40,17 +40,29 @@
         </location>
     </chip>
 
+    <!-- bugs -->
     <bug>
         <location>
             <x>-7</x>
             <y>0</y>
         </location>
     </bug>
+
     <bug>
         <location>
             <x>-8</x>
             <y>1</y>
         </location>
+        <path>
+            <from>
+                <x></x>
+                <y></y>
+            </from>
+            <to>
+                <x></x>
+                <y></y>
+            </to>
+        </path>
     </bug>
 
     <bug>
@@ -59,6 +71,8 @@
             <y>-1</y>
         </location>
     </bug>
+
+
 
     <lock>
         <location>

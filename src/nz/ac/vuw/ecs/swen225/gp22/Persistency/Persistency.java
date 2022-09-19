@@ -28,16 +28,15 @@ record Persistency(){
     private void parseKeysandDoors(List<Node> keys,List<Node> doors){
         if(keys == null) throw new ParserException("List of keys not found");
         else if(doors == null) throw new ParserException("List of doors not found");
-        System.out.println("keys and doors");
-//        keys.forEach(node -> System.out.println(node.selectSingleNode("colour").getText()));
-//        System.out.println();
-//        doors.forEach(node -> System.out.println(node.selectSingleNode("colour").getText()));
-        keys.forEach(node -> doors.forEach(node1 -> {
-                node.selectSingleNode("colour").getText();
-                node1.selectSingleNode("colour").getText();
-            if(keys.size() != doors.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
-        }));
-//        keys.stream().flatMap(node -> doors.stream().map());
+        List<String> keyColour = keys.stream()
+                .map(node -> node.selectSingleNode("colour").getText()).toList();
+        List<String> doorColour = doors.stream()
+                .map(node -> node.selectSingleNode("colour").getText()).toList();
+        Map<String,Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e->e,Collectors.counting()));
+        Map<String,Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e->e,Collectors.counting()));
+        System.out.println(keyCounts);
+        System.out.println(doorCounts);
+        //if(keyColour.size() != doorColour.size()) throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
 
     }
 
@@ -49,9 +48,8 @@ record Persistency(){
 
     private void parseChips(List<Node> chips){
         if(chips.isEmpty()) throw new ParserException("List of chips not found");
-        System.out.println("chips");
         List<List<Integer>> coords = chips.stream().map(this::getCoords).toList();
-        String chipsData = coords.toString();
+        String chipsData = "Num of chips: " + chips.size() + " Coords: " + coords;
         System.out.println(chipsData);
     }
 
@@ -59,7 +57,7 @@ record Persistency(){
         if(walls.isEmpty()) throw new ParserException("List of walls not found");
         System.out.println("walls");
         List<List<Integer>> coords = walls.stream().map(this::getCoords).toList();
-        String wallsData = coords.toString();
+        String wallsData = "Num of walls: " + walls.size() + " Coords: " + coords;
         System.out.println(wallsData);
     }
 
@@ -73,22 +71,25 @@ record Persistency(){
 
     private void parseInfo(Node info){
         if(info == null) throw new ParserException("Info not found");
-        System.out.println("info");
-        String infoData = "Coords: " + getCoords(info).toString();
+        String helpText = info.selectSingleNode("helptext").getText();
+        if(helpText == null) throw new ParserException("Missing help text");
+        String infoData = "Text: " + helpText + " Coords: " + getCoords(info).toString();
+        System.out.println(infoData);
 
     }
 
-    private void parseLock(Node lock){
+    private void parseLock(List<Node> chips, Node lock){
         if(lock == null) throw new ParserException("Lock not found");
-        System.out.println("lock");
-        String lockData = "Coords: " + getCoords(lock).toString();
-
+        String lockData = "Lock - Num of chips: " + chips.size() + " Coords: " + getCoords(lock).toString();
+        System.out.println(lockData);
     }
 
     private void parseExit(Node exit){
         if(exit == null) throw new ParserException("Exit not found");
-        System.out.println("exit");
-        String exitData = "Coords: " + getCoords(exit).toString();
+        String dest = exit.selectSingleNode("destination").getText();
+        if(dest == null) throw new ParserException("Destination not specified");
+        String exitData = "Destination: " + dest + " Coords: " + getCoords(exit).toString();
+        System.out.println(exitData);
     }
 
     private HashMap<String,Map<String,String>> parseXML(Document doc) throws ParserException {
@@ -100,13 +101,13 @@ record Persistency(){
         parseWalls(root.selectNodes("wall"));
         parseBugs(root.selectNodes("bug"));
         parseInfo(root.selectSingleNode("info"));
-        parseLock(root.selectSingleNode("lock"));
+        parseLock(root.selectNodes("chip"),root.selectSingleNode("lock"));
         parseExit(root.selectSingleNode("exit"));
         return data;
     }
 
 
-    public void loadXML(String fileName) throws ParserException, IOException, DocumentException{
+    public void loadXML(String fileName) throws Exception {
 
         try{
             File xmlFile = new File("levels/" + fileName);
@@ -119,15 +120,28 @@ record Persistency(){
             System.out.println("Parsing complete");
         }
         catch (ParserException e){
+            throw new Exception("Oops, something went wrong: " + e);
+        }
+        catch (IOException e){
+            throw new IOException("Oops, something went wrong: " + e);
+        }
+    }
+     
+     public void saveXML(String levelName,String levelData) throws ParserException, IOException, DocumentException{
+        try{
+            File xmlFile = new File("levels/" + levelName);
+            if (!xmlFile.exists()){
+                throw new IOException("XML file doesn't exist");
+            }
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(xmlFile);
+            System.out.println("Save complete");
+        }
+        catch (ParserException e){
             throw new ParserException("Oops, something went wrong: " + e.getMessage());
         }
         catch (IOException e){
             throw new IOException("Oops, something went wrong: " + e.getMessage());
         }
-    }
-     
-     public boolean saveXML(){
-        System.out.println("Save complete");
-        return false;
      }
   }
