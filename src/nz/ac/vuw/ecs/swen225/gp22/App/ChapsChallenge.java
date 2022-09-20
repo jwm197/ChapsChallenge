@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -24,6 +25,7 @@ class ChapsChallenge extends JFrame{
 	Font largeFont = new Font("Trebuchet MS", Font.BOLD, 54);
 	Font smallFont = new Font("Trebuchet MS", Font.PLAIN, 28);
 	int level = 1;
+	float time = 60;
 	
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
@@ -106,9 +108,24 @@ class ChapsChallenge extends JFrame{
 		var levelText = new JLabel("Level: " + level, SwingConstants.CENTER);
 		levelText.setFont(largeFont);
 		levelText.setBounds(0, (int)(-height*0.4), width, height);
-		
+		// Timer text
+		var timerText = new JLabel("Timer: 60s", SwingConstants.CENTER);
+		timerText.setFont(smallFont);
+		timerText.setBounds(0, (int)(-height*0.325), width, height);
+		time = 60;
 		// DOMAIN??
-		
+		//Viewport v;
+		//Game g;
+		Timer timer = new Timer(34,unused->{
+			assert SwingUtilities.isEventDispatchThread();
+			//g.ping();
+			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
+			time-=0.034;
+			//v.repaint();
+			repaint();
+			if (time <=0) {closePhase.run(); MenuScreen();}
+		});
+		timer.start();
 		// JButton to go back to menu
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
@@ -118,8 +135,9 @@ class ChapsChallenge extends JFrame{
 		panel.setLayout(null);
 		panel.add(levelText);
 		panel.add(back);
+		panel.add(timerText);
 		closePhase.run();
-		closePhase = ()->{remove(panel);};
+		closePhase = ()->{remove(panel); timer.stop();};
 		add(panel);
 		setPreferredSize(getSize());
 		pack();
