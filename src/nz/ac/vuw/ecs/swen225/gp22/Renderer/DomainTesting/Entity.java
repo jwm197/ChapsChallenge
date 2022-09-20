@@ -1,11 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
+import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.LayeredTexture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Texture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Textures;
 
 public interface Entity {
 	Position<Integer> getPos();
 	Boolean locked();
+	LayeredTexture texture();
 }
 
 class DummyPlayer implements Entity {
@@ -30,5 +32,8 @@ class DummyPlayer implements Entity {
 	}
 	public Boolean locked() {
 		return locked;
+	}
+	public LayeredTexture texture() {
+		return Textures.Scrungle;
 	}
 }
