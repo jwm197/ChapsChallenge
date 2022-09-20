@@ -3,23 +3,32 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Texture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Textures;
 
-interface Entity {
-	Position getPos();
+public interface Entity {
+	Position<Integer> getPos();
+	Boolean locked();
 }
 
 class DummyPlayer implements Entity {
 	public static Texture test = Textures.Scrungle;
-	private Position pos;
-	DummyPlayer(Position pos) {
+	private Position<Integer> pos;
+	private boolean locked = false;
+	DummyPlayer(Position<Integer> pos) {
 		this.pos = pos;
 	}
-	public Position getPos() {
+	public Position<Integer> getPos() {
 		return pos;
 	}
-	public void moveLeft(Animator e) {
-		Position newPos = new Position(pos.x(), pos.y());
-		e.AnimateMoving(null, test, newPos, 60, () -> {
+	public void moveRight(Animator e) {
+		if (locked) return;
+		locked = true;
+		Position<Integer> newPos = new Position<Integer>(pos.x()+1, pos.y());
+		
+		e.Animate(this, test, newPos, 60, () -> {
 			pos = newPos;
+			locked = false;
 		});
+	}
+	public Boolean locked() {
+		return locked;
 	}
 }
