@@ -7,8 +7,8 @@ import java.util.function.BiFunction;
 
 public interface LayeredTexture extends Iterable<Texture>, Tintable<LayeredTexture>, TextureSequence {
 	List<Texture> layers();
-	default Texture top() { return layers().get(0); }
-	default Texture bottom() { return layers().get(layers().size()-1); }
+	default Texture top() { return layers().get(layers().size()-1); }
+	default Texture bottom() { return layers().get(0); }
 	default int layerCount() { return layers().size(); }
 	
 	default Iterator<Texture> iterator() { return layers().iterator(); }
