@@ -32,6 +32,10 @@ class Animation implements Drawable {
 		return ((double)tick)/properties.duration();
 	}
 	
+	public Position<Double> position() {
+		return position;
+	}
+	
 	public void tick() {
 		tick++;
 		position = Position.tween(properties.startPos(), properties.endPos(), percentage());

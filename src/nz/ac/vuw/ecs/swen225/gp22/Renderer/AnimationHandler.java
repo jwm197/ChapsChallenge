@@ -20,6 +20,14 @@ public class AnimationHandler implements Animator, Drawable {
 		animations.put(entity, new Animation(properties));
 	}
 	
+	public boolean animating(Entity e) {
+		return animations.containsKey(e);
+	}
+	
+	public Animation get(Entity e) {
+		return animations.get(e);
+	}
+	
 	public void tick() {
 		animations.forEach((e, a) -> a.tick());
 		animations.entrySet().removeIf(e -> e.getValue().completed());
@@ -29,6 +37,4 @@ public class AnimationHandler implements Animator, Drawable {
 	public void draw(Graphics g, Renderer r) {
 		animations.forEach((e, a) -> a.draw(g, r));
 	}
-	
-	
 }
