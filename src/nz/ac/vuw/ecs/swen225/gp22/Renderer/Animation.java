@@ -2,12 +2,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 
 import java.awt.Graphics;
 
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Entity;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
 
 record AnimationProperties(
-		Entity entity,
    		TextureSequence frames,
    		Position<Double> startPos, Position<Double> endPos,
    		int duration, int frameDuration,

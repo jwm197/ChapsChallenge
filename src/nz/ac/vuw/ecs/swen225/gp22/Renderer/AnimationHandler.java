@@ -1,8 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 
 import java.awt.Graphics;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Animator;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Entity;
@@ -10,25 +9,25 @@ import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
 
 public class AnimationHandler implements Animator, Drawable {
-	private Set<Animation> animations = new HashSet<Animation>();
+	private HashMap<Entity, Animation> animations = new HashMap<>();
 	
 	@Override
 	public void Animate(Entity entity, TextureSequence frames, Position<Integer> initPos, Position<Integer> finalPos,
 			int duration, int frameDuration, boolean isLooping, Runnable onCompletion) {
 		AnimationProperties properties = new AnimationProperties(
-				entity, frames, initPos.doubleValue(), finalPos.doubleValue(), frameDuration, frameDuration, isLooping, onCompletion
+				frames, initPos.doubleValue(), finalPos.doubleValue(), frameDuration, frameDuration, isLooping, onCompletion
 		);
-		animations.add(new Animation(properties));
+		animations.put(entity, new Animation(properties));
 	}
 	
 	public void tick() {
-		animations.forEach(a -> a.tick());
-		animations.removeIf(a -> a.completed());
+		animations.forEach((e, a) -> a.tick());
+		animations.entrySet().removeIf(e -> e.getValue().completed());
 	}
 	
 	@Override
 	public void draw(Graphics g, Renderer r) {
-		animations.forEach(a -> a.draw(g, r));
+		animations.forEach((e, a) -> a.draw(g, r));
 	}
 	
 	
