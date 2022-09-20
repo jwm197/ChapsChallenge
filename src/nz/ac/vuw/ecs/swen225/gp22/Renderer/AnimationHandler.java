@@ -15,7 +15,7 @@ public class AnimationHandler implements Animator, Drawable {
 	public void Animate(Entity entity, TextureSequence frames, Position<Integer> initPos, Position<Integer> finalPos,
 			int duration, int frameDuration, boolean isLooping, Runnable onCompletion) {
 		AnimationProperties properties = new AnimationProperties(
-				frames, initPos.doubleValue(), finalPos.doubleValue(), frameDuration, frameDuration, isLooping, onCompletion
+				frames, initPos.doubleValue(), finalPos.doubleValue(), duration, frameDuration, isLooping, onCompletion
 		);
 		animations.put(entity, new Animation(properties));
 	}
