@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
+import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Animations;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.LayeredTexture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Texture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Textures;
@@ -23,9 +24,9 @@ class DummyPlayer implements Entity {
 	public void moveRight(Animator e) {
 		if (locked) return;
 		locked = true;
-		Position<Integer> newPos = new Position<Integer>(pos.x()+1, pos.y());
+		Position<Integer> newPos = new Position<Integer>(pos.x()+1, pos.y()+1);
 		
-		e.Animate(this, test, newPos, 60, () -> {
+		e.Animate(this, Animations.RainbowScrungle, newPos, 30, () -> {
 			pos = newPos;
 			locked = false;
 		});

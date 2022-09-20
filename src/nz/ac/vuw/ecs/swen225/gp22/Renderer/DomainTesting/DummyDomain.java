@@ -15,7 +15,7 @@ class DummyDomain extends JFrame {
 	RenderPanel debugRenderer;
 	
 	DummyDomain() {
-		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,0)), Animator.NONE);
+		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,3)), Animator.NONE);
 		debugRenderer = new RenderPanel(debugLevel);
 		
 		setSize(400,400);
@@ -34,8 +34,8 @@ class DummyDomain extends JFrame {
 	}
 	
 	public void tick() {
-		debugLevel.tick();
 		debugRenderer.tick();
+		debugLevel.tick();
 		debugRenderer.repaint();
 	}
 	
