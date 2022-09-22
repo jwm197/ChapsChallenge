@@ -6,7 +6,14 @@
             <y>0</y>
         </location>
         <items>
-            <!-- Item ids -->
+            <!-- Item ids: list items followed by comma
+            e.g.
+            aaa,
+            b,
+            cc,
+            ssssss
+            -->
+
         </items>
     </player>
 
@@ -244,17 +251,61 @@
 
     <!-- walls -->
     <wall>
-        <location>
-            <x>0</x>
-            <y>0</y>
-        </location>
-        <from>
-            <x>0</x>
-            <y>0</y>
-        </from>
-        <to>
-            <x>0</x>
-            <y>0</y>
-        </to>
+        <x1>-1</x1>
+        <y1>6</y1>
+        <x2>-5</x2>
+        <y2>6</y2>
     </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>6</y1>
+        <x2>5</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>-5</x1>
+        <y1>5</y1>
+        <x2>-5</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>5</x1>
+        <y1>5</y1>
+        <x2>5</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>-1</x1>
+        <y1>5</y1>
+        <x2>-1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>5</y1>
+        <x2>1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>-1</x1>
+        <y1>5</y1>
+        <x2>-1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>5</y1>
+        <x2>1</x2>
+        <y2>3</y2>
+    </wall>
+
+
+
 </level>

@@ -3,13 +3,12 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
+
 
 /**
  * Persistency module
@@ -26,8 +25,8 @@ record Persistency(){
             }
             SAXReader reader = new SAXReader();
             Document document = reader.read(xmlFile);
-            HashMap<String,Map<String,String>> level = new ParseXML().parse(document);
-            System.out.println("Parsing complete");
+            HashMap<String,Map<String,String>> level = new ParseXML().parse(document);//need to return
+            System.out.println("Load complete");
         }
         catch (ParserException e){
             throw new Exception("Oops, something went wrong: " + e);
@@ -45,7 +44,7 @@ record Persistency(){
             }
             SAXReader reader = new SAXReader();
             Document document = reader.read(xmlFile);
-            HashMap<String,Map<String,String>> level = new WriteXML().write(levelData);
+            boolean write = new WriteXML().write(document,levelData);
             System.out.println("Save complete");
         }
         catch (ParserException e){
