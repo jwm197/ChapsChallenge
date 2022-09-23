@@ -231,20 +231,20 @@ public class ChapsChallenge extends JFrame{
 		return game;
 	}
 	*/
-	public JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
+	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
 		JButton b = new JButton(name);
 		b.setBounds(x,y,w,h);
 		b.setFont(f);
 		b.addActionListener(l);
 		return b;
 	}
-	public JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
+	private JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
 		JLabel l = new JLabel(name, i);
 		l.setBounds(x,y,w,h);
 		l.setFont(f);
 		return l;
 	}
-	public void addComponents(JPanel p, Component...cs) {
+	private void addComponents(JPanel p, Component...cs) {
 		for (Component c :cs) { p.add(c); }
 	}
 }
