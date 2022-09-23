@@ -1,5 +1,10 @@
 package nz.ac.vuw.ecs.swen225.gp22.App;
 
+import nz.ac.vuw.ecs.swen225.gp22.Renderer.*;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
+import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
+import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -17,7 +22,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-class ChapsChallenge extends JFrame{
+public class ChapsChallenge extends JFrame{
 	private static final long serialVersionUID = 1L;
 	Runnable closePhase = ()->{};
 	int width = 1280;
@@ -26,6 +31,10 @@ class ChapsChallenge extends JFrame{
 	Font smallFont = new Font("Trebuchet MS", Font.PLAIN, 28);
 	int level = 1;
 	float time = 60;
+	/*
+	 * RenderPanel renderPanel;
+	 * DomainObject domainObject;
+	 */
 	
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
@@ -55,7 +64,7 @@ class ChapsChallenge extends JFrame{
 		});
 	}			
 	
-	private void MenuScreen() {
+	public void MenuScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
@@ -101,7 +110,7 @@ class ChapsChallenge extends JFrame{
 		setPreferredSize(new Dimension(width,height));
 		pack();
 	}
-	private void GameScreen() {
+	public void GameScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel to show level player is on
@@ -113,15 +122,24 @@ class ChapsChallenge extends JFrame{
 		timerText.setFont(smallFont);
 		timerText.setBounds(0, (int)(-height*0.325), width, height);
 		time = 60;
-		// DOMAIN??
-		//Viewport v;
-		//Game g;
+		// DOMAIN/RENDERER
+		/*
+		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
+		 */
+
 		Timer timer = new Timer(34,unused->{
 			assert SwingUtilities.isEventDispatchThread();
-			//g.ping();
+			// DOMAIN/RENDERER
+			/*
+			 * renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			 * domainObject.tick();
+			 * renderPanel.repaint();
+			 */
+			
+			// updating timer
 			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
 			time-=0.034;
-			//v.repaint();
 			repaint();
 			if (time <=0) {closePhase.run(); MenuScreen();}
 		});
@@ -142,7 +160,7 @@ class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
-	private void LoadGame() {
+	public void LoadGame() {
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
 		JFileChooser fileChooser = new JFileChooser();
@@ -151,9 +169,13 @@ class ChapsChallenge extends JFrame{
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
 		    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+		    // PERSISTENCY
+		    /*
+		     *  loadXML(selectedFile);
+		     */
 		}
 	}
-	private void GameHelp() {
+	public void GameHelp() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying help title
@@ -191,7 +213,7 @@ class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
-	private void ViewControls() {
+	public void ViewControls() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying controls title
@@ -245,4 +267,11 @@ class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
+	// FUZZ
+	/*
+	public Game testInput(Direction dir) {
+		game.move(dir);
+		return game;
+	}
+	*/
 }

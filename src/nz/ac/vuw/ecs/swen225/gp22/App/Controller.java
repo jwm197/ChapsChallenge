@@ -50,6 +50,10 @@ public class Controller implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+		//Releasing key stops chap moving in that direction
+		if (e.getKeyCode()==KeyEvent.VK_UP) {}
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) {}
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) {}
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {}
 	}
 }
