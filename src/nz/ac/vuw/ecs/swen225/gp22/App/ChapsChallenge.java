@@ -31,6 +31,7 @@ public class ChapsChallenge extends JFrame{
 	Font smallFont = new Font("Trebuchet MS", Font.PLAIN, 28);
 	int level = 1;
 	float time = 60;
+	// DOMAIN/RENDERER
 	/*
 	 * RenderPanel renderPanel;
 	 * DomainObject domainObject;
@@ -56,7 +57,7 @@ public class ChapsChallenge extends JFrame{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		MenuScreen();
+		menuScreen();
 		setVisible(true);
 		setResizable(false);
 		addWindowListener(new WindowAdapter(){
@@ -64,7 +65,7 @@ public class ChapsChallenge extends JFrame{
 		});
 	}			
 	
-	public void MenuScreen() {
+	public void menuScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
@@ -75,22 +76,22 @@ public class ChapsChallenge extends JFrame{
 		var start = new JButton("Start");
 		start.setBounds(width/4, (int)(height*0.25), width/2, height/10);
 		start.setFont(smallFont);
-		start.addActionListener(e->GameScreen());
+		start.addActionListener(e->gameScreen());
 		// JButton to resume saved game from file selector
 		var load = new JButton("Load");
 		load.setBounds(width/4, (int)(height*0.375), width/2, height/10);
 		load.setFont(smallFont);
-		load.addActionListener(e->LoadGame());
+		load.addActionListener(e->loadGame());
 		// JButton to view game help info
 		var help = new JButton("Help");
 		help.setBounds(width/4, (int)(height*0.5), width/2, height/10);
 		help.setFont(smallFont);
-		help.addActionListener(e->GameHelp());
+		help.addActionListener(e->gameHelp());
 		// JButton to view controls
 		var controls = new JButton("Controls");
 		controls.setBounds(width/4, (int)(height*0.625), width/2, height/10);
 		controls.setFont(smallFont);
-		controls.addActionListener(e->ViewControls());
+		controls.addActionListener(e->viewControls());
 		// JButton to quit game
 		var quit = new JButton("Quit");
 		quit.setBounds(width/4, (int)(height*0.75), width/2, height/10);
@@ -110,7 +111,7 @@ public class ChapsChallenge extends JFrame{
 		setPreferredSize(new Dimension(width,height));
 		pack();
 	}
-	public void GameScreen() {
+	public void gameScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel to show level player is on
@@ -141,14 +142,14 @@ public class ChapsChallenge extends JFrame{
 			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
 			time-=0.034;
 			repaint();
-			if (time <=0) {closePhase.run(); MenuScreen();}
+			if (time <=0) {closePhase.run(); menuScreen();}
 		});
 		timer.start();
 		// JButton to go back to menu
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
 		back.setFont(smallFont);
-		back.addActionListener(e->MenuScreen());
+		back.addActionListener(e->menuScreen());
 		// adds components to panel
 		panel.setLayout(null);
 		panel.add(levelText);
@@ -160,7 +161,7 @@ public class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
-	public void LoadGame() {
+	public void loadGame() {
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
 		JFileChooser fileChooser = new JFileChooser();
@@ -175,7 +176,7 @@ public class ChapsChallenge extends JFrame{
 		     */
 		}
 	}
-	public void GameHelp() {
+	public void gameHelp() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying help title
@@ -201,7 +202,7 @@ public class ChapsChallenge extends JFrame{
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
 		back.setFont(smallFont);
-		back.addActionListener(e->MenuScreen());
+		back.addActionListener(e->menuScreen());
 		// adds components to panel
 		panel.setLayout(null);
 		panel.add(helpTitle);
@@ -213,7 +214,7 @@ public class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
-	public void ViewControls() {
+	public void viewControls() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying controls title
@@ -254,7 +255,7 @@ public class ChapsChallenge extends JFrame{
 		var back = new JButton("Back");
 		back.setBounds((int)(width*0.075), (int)(height*0.75), width/5, height/10);
 		back.setFont(smallFont);
-		back.addActionListener(e->MenuScreen());
+		back.addActionListener(e->menuScreen());
 		// adds components to panel
 		panel.setLayout(null);
 		panel.add(controlsText);
