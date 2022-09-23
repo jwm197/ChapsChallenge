@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -40,23 +41,11 @@ public class ChapsChallenge extends JFrame{
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		try {
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		try { UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); } 
+		catch (ClassNotFoundException e1) { e1.printStackTrace(); } 
+		catch (InstantiationException e1) { e1.printStackTrace(); } 
+		catch (IllegalAccessException e1) { e1.printStackTrace(); } 
+		catch (UnsupportedLookAndFeelException e1) { e1.printStackTrace(); }
 		menuScreen();
 		setVisible(true);
 		setResizable(false);
@@ -139,10 +128,22 @@ public class ChapsChallenge extends JFrame{
 			 */
 			
 			// updating timer
-			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
 			time-=0.034;
+			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
 			repaint();
-			if (time <=0) {closePhase.run(); menuScreen();}
+			if (time <=0) {
+				time = 0;
+				timerText.setText("Timer: NO TIME LEFT");
+				repaint();
+				int result = JOptionPane.showConfirmDialog(this,
+						"<html>You ran out of time!<br/>Would you like to retry level <html>"+level+"?", 
+						"Level Failed!",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if(result == JOptionPane.YES_OPTION){ gameScreen(); }
+				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
+				else { closePhase.run(); menuScreen(); }
+			}
 		});
 		timer.start();
 		// JButton to go back to menu
