@@ -26,18 +26,24 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ChapsChallenge extends JFrame{
+	// Final variables
+	final int WIDTH = 1280;
+	final int HEIGHT = 720;
+	final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
+	final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
+	
+	// Private variables
 	private static final long serialVersionUID = 1L;
-	Runnable closePhase = ()->{};
-	int width = 1280;
-	int height = 720;
-	Font largeFont = new Font("Trebuchet MS", Font.BOLD, 54);
-	Font smallFont = new Font("Trebuchet MS", Font.PLAIN, 28);
-	int level = 1;
-	float time = 60;
-	// DOMAIN/RENDERER
+	private Runnable closePhase = ()->{};
+	private String level = "1";
+	private float time = 60;
+	private Timer timer;
+	
+	// DOMAIN/RENDERER/RECORDER
 	/*
 	 * RenderPanel renderPanel;
 	 * DomainObject domainObject;
+	 * Recorder recorder;
 	 */
 	
 	ChapsChallenge(){
@@ -60,53 +66,60 @@ public class ChapsChallenge extends JFrame{
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
-		var title = createLabel("CHAPS CHALLENGE", SwingConstants.CENTER, largeFont, 0, (int)(-height*0.4), width, height);
+		var title = createLabel("CHAPS CHALLENGE", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// JButton to start game
-		var start = createButton("Start", width/4, (int)(height*0.25), width/2, height/10, smallFont, e->gameScreen());
+		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.25), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen());
 		// JButton to resume saved game from file selector
-		var load = createButton("Load", width/4, (int)(height*0.375), width/2, height/10, smallFont, e->loadGame());
+		var load = createButton("Load", WIDTH/4, (int)(HEIGHT*0.375), WIDTH/2, HEIGHT/10, SMALL_FONT, e->loadGame());
 		// JButton to view game help info
-		var help = createButton("Help", width/4, (int)(height*0.5), width/2, height/10, smallFont, e->gameHelp());
+		var help = createButton("Help", WIDTH/4, (int)(HEIGHT*0.5), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameHelp());
 		// JButton to view controls
-		var controls = createButton("Controls", width/4, (int)(height*0.625), width/2, height/10, smallFont, e->viewControls());
+		var controls = createButton("Controls", WIDTH/4, (int)(HEIGHT*0.625), WIDTH/2, HEIGHT/10, SMALL_FONT, e->viewControls());
 		// JButton to quit game
-		var quit = createButton("Quit", width/4, (int)(height*0.75), width/2, height/10, smallFont, e->System.exit(0));
+		var quit = createButton("Quit", WIDTH/4, (int)(HEIGHT*0.75), WIDTH/2, HEIGHT/10, SMALL_FONT, e->System.exit(0));
 		// adds components to panel
 		panel.setLayout(null);
 		addComponents(panel, title, start, load, help, controls, quit);
 		closePhase.run();
 		closePhase = ()->{remove(panel);};
 		add(panel);
-		setPreferredSize(new Dimension(width,height));
+		setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		pack();
 	}
+	
 	public void gameScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel to show level player is on
-		var levelText = createLabel("Level: " + level, SwingConstants.CENTER, largeFont, 0, (int)(-height*0.4), width, height);
+		var levelText = createLabel("Level: " + level, SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// Timer text
-		var timerText = createLabel("Timer: 60s", SwingConstants.CENTER, smallFont, 0, (int)(-height*0.325), width, height);
-		time = 60;
-		// DOMAIN/RENDERER
-		/*
-		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
-		 */
+		var timerText = createLabel("Timer: 60.0s", SwingConstants.CENTER, SMALL_FONT, 0, (int)(-HEIGHT*0.325), WIDTH, HEIGHT);
+		// JButton to go back to menu
+		var back = createButton("Back", (int)(WIDTH*0.075), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
+		// Controller for keys
+		panel.addKeyListener(new Controller(this));
+		
+		// Creates level (sets up domain/renderer/recorder)
+		newGame(level);
 
-		Timer timer = new Timer(34,unused->{
+		timer = new Timer(34,unused->{
 			assert SwingUtilities.isEventDispatchThread();
-			// DOMAIN/RENDERER
+			// UPDATES DOMAIN/RENDERER/RECORDER
 			/*
 			 * renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			 * domainObject.tick();
-			 * renderPanel.repaint();
+			 * recorder.parse(domainObject);
 			 */
 			
 			// updating timer
 			time-=0.034;
-			timerText.setText("Timer: " + (float)Math.round(time*10)/10);
+			levelText.setText("Level: " + level);
+			timerText.setText("Timer: " + (float)Math.round(time*10)/10 + "s");
+			
+			// repaints gui and renderpanel
 			repaint();
+			
+			// checks if ran out of time
 			if (time <=0) {
 				time = 0;
 				timerText.setText("Timer: NO TIME LEFT");
@@ -116,23 +129,23 @@ public class ChapsChallenge extends JFrame{
 						"Level Failed!",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
-				if(result == JOptionPane.YES_OPTION){ gameScreen(); }
+				if(result == JOptionPane.YES_OPTION){ newGame(level); }
 				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
 				else { closePhase.run(); menuScreen(); }
 			}
 		});
 		timer.start();
-		// JButton to go back to menu
-		var back = createButton("Back", (int)(width*0.075), (int)(height*0.75), width/5, height/10, smallFont, e->menuScreen());
-		// adds components to panel
 		panel.setLayout(null);
-		addComponents(panel, levelText, back, timerText);
+		// adds components to panel
+		addComponents(panel, levelText, back, timerText); // and renderPanel
 		closePhase.run();
 		closePhase = ()->{remove(panel); timer.stop();};
 		add(panel);
 		setPreferredSize(getSize());
 		pack();
+		panel.requestFocus();
 	}
+	
 	public void loadGame() {
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
@@ -141,18 +154,16 @@ public class ChapsChallenge extends JFrame{
 		int result = fileChooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
-		    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-		    // PERSISTENCY
-		    /*
-		     *  loadXML(selectedFile);
-		     */
+		    System.out.println("Selected file: " + selectedFile.getName());
+		    newGame(selectedFile.getName());
 		}
 	}
+	
 	public void gameHelp() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying help title
-		var helpTitle = createLabel("Help", SwingConstants.CENTER, largeFont, 0, (int)(-height*0.4), width, height);
+		var helpTitle = createLabel("Help", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// JLabel to display help info
 		var helpInfo = createLabel("<html>"
 				+ "Complete the level within the time limit<br/>"
@@ -166,9 +177,9 @@ public class ChapsChallenge extends JFrame{
 				+ "Exit lock will be open when all treasures are collected<br/>"
 				+ "Enter exit tile once unlocked to pass level<br/>"
 				+ "View controls from the menu screen button</html>", 
-				SwingConstants.CENTER, smallFont, 0, -height/20, width, height);
+				SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT/20, WIDTH, HEIGHT);
 		// JButton to go back to menu
-		var back = createButton("Back", (int)(width*0.075), (int)(height*0.75), width/5, height/10, smallFont, e->menuScreen());
+		var back = createButton("Back", (int)(WIDTH*0.075), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
 		// adds components to panel
 		panel.setLayout(null);
 		addComponents(panel, helpTitle, helpInfo, back);
@@ -178,11 +189,12 @@ public class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
+	
 	public void viewControls() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying controls title
-		var controlsText = createLabel("Controls", SwingConstants.CENTER, largeFont, 0, (int)(-height*0.4), width, height);
+		var controlsText = createLabel("Controls", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// JLabel to display controls info
 		var controlsInfo = new JLabel("<html>"
 				+ "Exit Without Saving:<br/>"
@@ -196,8 +208,8 @@ public class ChapsChallenge extends JFrame{
 				+ "Move Chap Down:<br/>"
 				+ "Move Chap Left:<br/>"
 				+ "Move Chap Right:</html>", SwingConstants.LEFT);
-		controlsInfo.setFont(smallFont);
-		controlsInfo.setBounds(width/5, -height/20, width, height);
+		controlsInfo.setFont(SMALL_FONT);
+		controlsInfo.setBounds(WIDTH/5, -HEIGHT/20, WIDTH, HEIGHT);
 		// JLabel to display controls keys
 		var controlsKeys = new JLabel("<html>"
 				+ "CTRL+X<br/>"
@@ -211,10 +223,10 @@ public class ChapsChallenge extends JFrame{
 				+ "DOWN<br/>"
 				+ "LEFT<br/>"
 				+ "RIGHT</html>", SwingConstants.RIGHT);
-		controlsKeys.setFont(smallFont);
-		controlsKeys.setBounds(-width/5, -height/20, width, height);
+		controlsKeys.setFont(SMALL_FONT);
+		controlsKeys.setBounds(-WIDTH/5, -HEIGHT/20, WIDTH, HEIGHT);
 		// JButton to go back to menu
-		var back = createButton("Back", (int)(width*0.075), (int)(height*0.75), width/5, height/10, smallFont, e->menuScreen());
+		var back = createButton("Back", (int)(WIDTH*0.075), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
 		// adds components to panel
 		panel.setLayout(null);
 		addComponents(panel, controlsText, controlsInfo, controlsKeys, back);
@@ -224,13 +236,15 @@ public class ChapsChallenge extends JFrame{
 		setPreferredSize(getSize());
 		pack();
 	}
+	
 	// FUZZ
 	/*
-	public Game testInput(Direction dir) {
-		game.move(dir);
-		return game;
+	public DomainObject testInput(Direction dir) {
+		domainObject.moveChap(dir);
+		return domainObject;
 	}
 	*/
+	
 	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
 		JButton b = new JButton(name);
 		b.setBounds(x,y,w,h);
@@ -238,13 +252,40 @@ public class ChapsChallenge extends JFrame{
 		b.addActionListener(l);
 		return b;
 	}
+	
 	private JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
 		JLabel l = new JLabel(name, i);
 		l.setBounds(x,y,w,h);
 		l.setFont(f);
 		return l;
 	}
+	
 	private void addComponents(JPanel p, Component...cs) {
 		for (Component c :cs) { p.add(c); }
+	}
+	
+	public void newGame(String name) {
+		// updates level name and resets timer
+		level = name;
+		time = 60;
+		
+		// DOMAIN/RENDERER/RECORDER
+		/* 
+		 * HashMap<String,ObjectBuilder> objects = new Persistency().loadXML(name);
+		 * domainObject.createObjects(objects);
+		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
+		 * recorder.clear();
+		 * recorder.parse(domainObject);
+		 */
+	}
+	
+	public void pause(Boolean p) {
+		if (p) { timer.stop(); } 
+		else { timer.start(); }
+	}
+	
+	public String setLevelName() {
+		return (String)JOptionPane.showInputDialog("Set Level Name: ");
 	}
 }

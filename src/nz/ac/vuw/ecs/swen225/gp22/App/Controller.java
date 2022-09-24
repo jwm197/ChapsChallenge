@@ -4,16 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Controller implements KeyListener{
-	// Game game;
-	Controller(){
-		// should probably store the game object
-		// this.game = g;
+	final ChapsChallenge chapsChallenge;
+	
+	Controller(ChapsChallenge c){
+		this.chapsChallenge = c;
 	}	
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -21,21 +20,32 @@ public class Controller implements KeyListener{
 		// Checks if control is held down
 		if (e.isControlDown()) {
 			// Ctrl+x exits the game, doesn't save
-			if (e.getKeyCode()==KeyEvent.VK_X) {}
+			if (e.getKeyCode()==KeyEvent.VK_X) { chapsChallenge.menuScreen(); }
 			// Ctrl+s exits and saves the game
-			if (e.getKeyCode()==KeyEvent.VK_S) {}
-			// Ctrl+r file selector to resume game
-			if (e.getKeyCode()==KeyEvent.VK_R) {}
+			if (e.getKeyCode()==KeyEvent.VK_S) {
+				chapsChallenge.pause(true);
+				String levelName = chapsChallenge.setLevelName();
+				System.out.println(levelName);
+				// DOMAIN/PERSISTENCY/RECORDER?
+				/* 
+				 * timer included in level data?
+				 * new Persistency().saveXML(levelName, levelData);
+				 * 
+				 */
+				chapsChallenge.menuScreen();
+			}
+			// Ctrl+r file selector to resume a saved game
+			if (e.getKeyCode()==KeyEvent.VK_R) { chapsChallenge.loadGame(); }
 			// Ctrl+1 starts a new game at level 1
-			if (e.getKeyCode()==KeyEvent.VK_1) {}
+			if (e.getKeyCode()==KeyEvent.VK_1) { chapsChallenge.newGame("1"); }
 			// Ctrl+2 starts a new game at level 2
-			if (e.getKeyCode()==KeyEvent.VK_2) {}
+			if (e.getKeyCode()==KeyEvent.VK_2) { chapsChallenge.newGame("2"); }
 		}
 		
 		// Space pauses game
-		if (e.getKeyCode()==KeyEvent.VK_SPACE) {}
+		if (e.getKeyCode()==KeyEvent.VK_SPACE) { chapsChallenge.pause(true); }
 		// Esc resumes game
-		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) {}
+		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.pause(false); }
 		
 		// Moves chap up
 		if (e.getKeyCode()==KeyEvent.VK_UP) {}
@@ -49,7 +59,6 @@ public class Controller implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		//Releasing key stops chap moving in that direction
 		if (e.getKeyCode()==KeyEvent.VK_UP) {}
 		if (e.getKeyCode()==KeyEvent.VK_DOWN) {}
