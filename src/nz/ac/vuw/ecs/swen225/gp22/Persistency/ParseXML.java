@@ -4,6 +4,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,11 @@ import java.util.stream.Collectors;
 
 
 public class ParseXML {
+    /**
+     *
+     * @param n
+     * @return
+     */
     private List<Integer> getCoords(Node n) {
         if (n.selectSingleNode("location").selectSingleNode("x") == null || n.selectSingleNode("location").selectSingleNode("y") == null)
             throw new ParserException("X or Y coordinate not found");
@@ -19,8 +25,12 @@ public class ParseXML {
         return List.of(x, y);
     }
 
-
-    private void parseKeysandDoors(List<Node> keys, List<Node> doors) {
+    /**
+     *
+     * @param keys
+     * @param doors
+     */
+    private void checkKeysandDoors(List<Node> keys, List<Node> doors){
         if (keys == null) throw new ParserException("List of keys not found");
         else if (doors == null) throw new ParserException("List of doors not found");
         List<String> keyColour = keys.stream()
@@ -29,7 +39,6 @@ public class ParseXML {
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
         Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
         Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-
         if (!keyCounts.containsKey("Green")) throw new ParserException("Green key not found");
         if (!doorCounts.containsKey("Green")) throw new ParserException("No green doors found");
         keyCounts.entrySet().stream().filter(m -> !m.getKey().equals("Green")).forEach(m -> {
@@ -41,74 +50,145 @@ public class ParseXML {
         System.out.println("Doors: " + doorCounts);
     }
 
-    private void parsePlayer(Node player) {
+    /**
+     *
+     * @param keys
+     * @return
+     */
+    private ObjectBuilder parseKeys(List<Node> keys) {
+        List<String> keyColour = keys.stream()
+                .map(node -> node.selectSingleNode("colour").getText()).toList();
+        List<List<Integer>> coords = keys.stream().map(this::getCoords).toList();
+        return new ObjectBuilder().name("keys").colour(keyColour).locations(coords);
+    }
+
+    /**
+     *
+     * @param doors
+     * @return
+     */
+    private ObjectBuilder parseDoors(List<Node> doors) {
+        List<String> doorColour = doors.stream()
+                .map(node -> node.selectSingleNode("colour").getText()).toList();
+        List<List<Integer>> coords = doors.stream().map(this::getCoords).toList();
+        return new ObjectBuilder().name("doors").colour(doorColour).locations(coords);
+    }
+
+    /**
+     *
+     * @param player
+     * @return
+     */
+    private ObjectBuilder parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
         String[] items = player.selectSingleNode("items").getText().split(",");
-        String playerData = "Num items: " + items.length + " Coords: " + getCoords(player);
-        System.out.println(playerData);
+        return new ObjectBuilder().name("player").items(List.of(items)).location(getCoords(player));
     }
 
-    private void parseChips(List<Node> chips) {
+    /**
+     *
+     * @param chips
+     * @return
+     */
+    private ObjectBuilder parseChips(List<Node> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
         List<List<Integer>> coords = chips.stream().map(this::getCoords).toList();
-        String chipsData = "Num of chips: " + chips.size() + " Coords: " + coords;
-        System.out.println(chipsData);
+        return new ObjectBuilder().name("chips").locations(coords);
     }
 
-    private void parseWalls(List<Node> walls) {
+    /**
+     *
+     * @param walls
+     * @return
+     */
+    private ObjectBuilder parseWalls(List<Node> walls) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
-        List<List<Integer>> fromCoords = walls.stream().map(node -> getCoords(node.selectSingleNode("from"))).toList();
-        List<List<Integer>> toCoords = walls.stream().map(node -> getCoords(node.selectSingleNode("to"))).toList();
-        String wallsData = "Num of walls: " + walls.size() + " From: " + fromCoords + " To: " + toCoords;
-        System.out.println(wallsData);
+        List<List<Integer>> coords = walls.stream().map(n -> {
+            if (n.selectSingleNode("x1") == null || n.selectSingleNode("y1") == null)
+                throw new ParserException("First set of coordinate(s) not found");
+            else if (n.selectSingleNode("x2") == null || n.selectSingleNode("y2") == null)
+                throw new ParserException("Second set of coordinate(s) not found");
+            int x1 = Integer.parseInt(n.selectSingleNode("x1").getText());
+            int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
+            int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
+            int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
+            return List.of(x1,y1,x2,y2);
+        }).toList();
+        return new ObjectBuilder().name("walls").locations(coords);
     }
 
-    private void parseBugs(List<Node> bugs) {
-        if (bugs.isEmpty()) return;
-        List<List<Integer>> coords = bugs.stream().map(this::getCoords).toList();
-        String bugsData = coords.toString();
-        System.out.println("Bug data " + bugsData);
+    /**
+     *
+     * @param bugs
+     * @return
+     */
+    private ObjectBuilder parseBugs(List<Node> bugs) {
+//        if (bugs.isEmpty()) return;
+        //List<ListInteger> coords =
+
+
+        //String bugsData = coords.toString();
+        //System.out.println("Bug data " + bugsData);
+        return new ObjectBuilder();
     }
 
-    private void parseInfo(Node info) {
+    /**
+     *
+     * @param info
+     * @return
+     */
+    private ObjectBuilder parseInfo(Node info) {
         if (info == null) throw new ParserException("Info not found");
         String helpText = info.selectSingleNode("helptext").getText();
         if (helpText == null) throw new ParserException("Missing help text");
-        String infoData = "Text: " + helpText + " Coords: " + getCoords(info);
-        System.out.println(infoData);
-
+        return new ObjectBuilder().name("info").location(getCoords(info)).text(helpText);
     }
 
-    private void parseLock(List<Node> chips, Node lock) {
+    /**
+     *
+     * @param chips
+     * @param lock
+     * @return
+     */
+    private ObjectBuilder parseLock(List<Node> chips, Node lock) {
         if (lock == null) throw new ParserException("Lock not found");
-        String lockData = "Lock - Num of chips: " + chips.size() + " Coords: " + getCoords(lock);
-        System.out.println(lockData);
+        else if(chips == null) throw new ParserException("List of chips not found");
+        return new ObjectBuilder().name("lock").location(getCoords(lock)).numChips(chips.size());
     }
 
-    private void parseExit(Node exit) {
+    /**
+     *
+     * @param exit
+     * @return
+     */
+    private ObjectBuilder parseExit(Node exit) {
         if (exit == null) throw new ParserException("Exit not found");
         String dest = exit.selectSingleNode("destination").getText();
         if (dest == null) throw new ParserException("Destination not specified");
-        String exitData = "Destination: " + dest + " Coords: " + getCoords(exit);
-        System.out.println(exitData);
+        return new ObjectBuilder().name("exit").location(getCoords(exit)).text(dest);//next level file (destination) is stored in text
     }
 
-    protected HashMap<String, Map<String, String>> parse(Document doc) throws ParserException {
-        HashMap<String, Map<String, String>> data = new HashMap<>();
+    /**
+     *
+     * @param doc
+     * @return a list of objects for the game to use
+     * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
+     */
+    protected HashMap<String,ObjectBuilder> parse(Document doc) throws ParserException {
+        HashMap<String,ObjectBuilder>  data = new HashMap<>();
         Node root = doc.selectSingleNode("level");
-        parsePlayer(root.selectSingleNode("player"));
-        parseKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
-        parseChips(root.selectNodes("chip"));
-        parseWalls(root.selectNodes("wall"));
-        parseBugs(root.selectNodes("bug"));
-        parseInfo(root.selectSingleNode("info"));
-        parseLock(root.selectNodes("chip"), root.selectSingleNode("lock"));
-        parseExit(root.selectSingleNode("exit"));
+        checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
+        //Adding all object data to hashmap
+        data.put("player",parsePlayer(root.selectSingleNode("player")));
+        data.put("key",parseKeys(root.selectNodes("key")));
+        data.put("door",parseDoors(root.selectNodes("door")));
+        data.put("chip",parseChips(root.selectNodes("chip")));
+        data.put("info",parseInfo(root.selectSingleNode("info")));
+        data.put("locks",parseLock(root.selectNodes("chip"), root.selectSingleNode("lock")));
+        data.put("exit",parseExit(root.selectSingleNode("exit")));
+        data.put("wall",parseWalls(root.selectNodes("wall")));
+        data.put("bugs",parseBugs(root.selectNodes("bug")));
+        System.out.println("Parsing complete");
         return data;
     }
-}
-
-
-record ObjectInfo(String... data) {
-
 }
