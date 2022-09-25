@@ -4,10 +4,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -17,12 +14,12 @@ public class ParseXML {
      * @param n
      * @return
      */
-    private List<Integer> getCoords(Node n) {
-        if (n.selectSingleNode("location").selectSingleNode("x") == null || n.selectSingleNode("location").selectSingleNode("y") == null)
+    private Location getCoords(Node n) {
+        if (n.selectSingleNode("location").selectSingleNode("x").getText().isEmpty() || n.selectSingleNode("location").selectSingleNode("y").getText().isEmpty())
             throw new ParserException("X or Y coordinate not found");
         int x = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("x").getText());
         int y = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("y").getText());
-        return List.of(x, y);
+        return new Location(x, y);
     }
 
     /**
@@ -58,8 +55,8 @@ public class ParseXML {
     private ObjectBuilder parseKeys(List<Node> keys) {
         List<String> keyColour = keys.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
-        List<List<Integer>> coords = keys.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("keys").colour(keyColour).locations(coords);
+        List<Location> coords = keys.stream().map(this::getCoords).toList();
+        return new ObjectBuilder().name("keys").colour(keyColour).location(coords);
     }
 
     /**
@@ -70,8 +67,8 @@ public class ParseXML {
     private ObjectBuilder parseDoors(List<Node> doors) {
         List<String> doorColour = doors.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
-        List<List<Integer>> coords = doors.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("doors").colour(doorColour).locations(coords);
+        List<Location> coords = doors.stream().map(this::getCoords).toList();
+        return new ObjectBuilder().name("doors").colour(doorColour).location(coords);
     }
 
     /**
@@ -81,8 +78,12 @@ public class ParseXML {
      */
     private ObjectBuilder parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
-        String[] items = player.selectSingleNode("items").getText().split(",");
-        return new ObjectBuilder().name("player").items(List.of(items)).location(getCoords(player));
+        List<String> items = new ArrayList<>();
+        if(player.selectSingleNode("items").getText() != null) {
+            String[] temp = player.selectSingleNode("items").getText().split(",");
+            items.addAll(Arrays.asList(temp));
+        }
+        return new ObjectBuilder().name("player").items(items).location(List.of(getCoords(player)));
     }
 
     /**
@@ -92,8 +93,8 @@ public class ParseXML {
      */
     private ObjectBuilder parseChips(List<Node> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
-        List<List<Integer>> coords = chips.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("chips").locations(coords);
+        List<Location> coords = chips.stream().map(this::getCoords).toList();
+        return new ObjectBuilder().name("chips").location(coords);
     }
 
     /**
@@ -103,7 +104,7 @@ public class ParseXML {
      */
     private ObjectBuilder parseWalls(List<Node> walls) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
-        List<List<Integer>> coords = walls.stream().map(n -> {
+        List<Path> coords = walls.stream().map(n -> {
             if (n.selectSingleNode("x1") == null || n.selectSingleNode("y1") == null)
                 throw new ParserException("First set of coordinate(s) not found");
             else if (n.selectSingleNode("x2") == null || n.selectSingleNode("y2") == null)
@@ -112,9 +113,9 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
-            return List.of(x1,y1,x2,y2);
+            return new Path(x1,y1,x2,y2);
         }).toList();
-        return new ObjectBuilder().name("walls").locations(coords);
+        return new ObjectBuilder().name("walls").paths(coords);
     }
 
     /**
@@ -141,7 +142,7 @@ public class ParseXML {
         if (info == null) throw new ParserException("Info not found");
         String helpText = info.selectSingleNode("helptext").getText();
         if (helpText == null) throw new ParserException("Missing help text");
-        return new ObjectBuilder().name("info").location(getCoords(info)).text(helpText);
+        return new ObjectBuilder().name("info").location(List.of(getCoords(info))).text(helpText);
     }
 
     /**
@@ -153,7 +154,7 @@ public class ParseXML {
     private ObjectBuilder parseLock(List<Node> chips, Node lock) {
         if (lock == null) throw new ParserException("Lock not found");
         else if(chips == null) throw new ParserException("List of chips not found");
-        return new ObjectBuilder().name("lock").location(getCoords(lock)).numChips(chips.size());
+        return new ObjectBuilder().name("lock").location(List.of(getCoords(lock))).numChips(chips.size());
     }
 
     /**
@@ -165,7 +166,7 @@ public class ParseXML {
         if (exit == null) throw new ParserException("Exit not found");
         String dest = exit.selectSingleNode("destination").getText();
         if (dest == null) throw new ParserException("Destination not specified");
-        return new ObjectBuilder().name("exit").location(getCoords(exit)).text(dest);//next level file (destination) is stored in text
+        return new ObjectBuilder().name("exit").location(List.of(getCoords(exit))).text(dest);//next level file (destination) is stored in text
     }
 
     /**

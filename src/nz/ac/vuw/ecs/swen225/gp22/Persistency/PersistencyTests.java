@@ -1,8 +1,11 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
+import org.dom4j.DocumentException;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A bunch of tests to test the persistency module
@@ -15,11 +18,8 @@ record PersistencyTests() {
     @Test
     void TestLoadXML1() {
         try {
-            HashMap<String,ObjectBuilder> data = new Persistency().loadXML("level1.xml");
-            System.out.println(data.toString());
-            data.get("player").location;
-            assert data.toString().equals("{door=Item: , exit=Item: , bugs=Item: , chip=Item: , locks=Item: , wall=Item: , key=Item: , player=Item: , info=Item: }") : "Data doesn't match";
-        } catch (Exception e) {
+            new Persistency().loadXML("levels/","level1.xml");
+        } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
     }
@@ -30,9 +30,9 @@ record PersistencyTests() {
     @Test
     void TestLoadXML2() {
         try {
-            new Persistency().loadXML("level2.xml");
-        } catch (Exception e) {
-            assert false : e.getMessage();
+            new Persistency().loadXML("levels/","level2.xml");
+        } catch (ParserException | IOException | DocumentException e) {
+            assert false : e.toString();
         }
     }
 
@@ -42,9 +42,9 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML1() {
         try {
-            new Persistency().loadXML("level999.xml");
+            new Persistency().loadXML("levels/","level999.xml");
             assert false : "IO exception not thrown";
-        } catch (Exception e) {
+        } catch (IOException | DocumentException e) {
             return;
         }
     }
@@ -55,8 +55,48 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML2() {
         try {
+            new Persistency().loadXML("test_levels/","level_broken1.xml");
             assert false : "Parsing exception not thrown";
-        } catch (Exception e) {
+        } catch (ParserException | IOException | DocumentException e) {
+            return;
+        }
+    }
+
+    /**
+     * Test that it cannot load in a file with one colour missing (this is required for all keys and doors)
+     */
+    @Test
+    void TestInvalidLoadXML3() {
+        try {
+            new Persistency().loadXML("test_levels/","level_broken2.xml");
+            assert false : "Parsing exception not thrown";
+        } catch (ParserException | IOException | DocumentException e) {
+            return;
+        }
+    }
+
+    /**
+     * Test that it cannot load in a file with the destination for the exit missing
+     */
+    @Test
+    void TestInvalidLoadXML4() {
+        try {
+            new Persistency().loadXML("test_levels/","level_broken3.xml");
+            assert false : "Parsing exception not thrown";
+        } catch (ParserException | IOException | DocumentException e) {
+            return;
+        }
+    }
+
+    /**
+     * Test that it cannot load in a file with the helptext text missing
+     */
+    @Test
+    void TestInvalidLoadXML5() {
+        try {
+            new Persistency().loadXML("test_levels/","level_broken4.xml");
+            assert false : "Parsing exception not thrown";
+        } catch (ParserException | IOException | DocumentException e) {
             return;
         }
     }

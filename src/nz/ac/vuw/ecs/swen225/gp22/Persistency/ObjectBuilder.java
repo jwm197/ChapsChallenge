@@ -10,13 +10,11 @@ public class ObjectBuilder {
     public String name = "";
     public String text = "";
     public int numChips;
-    public List<Integer> location = new ArrayList<>();
-    public List<List<Integer>> locations = new ArrayList<>();
+    public List<Location> location;
+    public List<Path> paths = new ArrayList<>();
     public List<String> items = new ArrayList<>();
     public List<String> colour = new ArrayList<>();
-    public List<String> keys = new ArrayList<>();
-    public List<String> doors = new ArrayList<>();
-    public List<String> bugs = new ArrayList<>();
+
 
     /**
      *
@@ -53,18 +51,18 @@ public class ObjectBuilder {
      * @param loc
      * @return
      */
-    public ObjectBuilder location(List<Integer> loc) {
+    public ObjectBuilder location(List<Location> loc) {
         location = loc;
         return this;
     }
 
     /**
      *
-     * @param l
+     * @param p
      * @return
      */
-    public ObjectBuilder locations(List<List<Integer>> l) {
-        locations = l;
+    public ObjectBuilder paths(List<Path> p) {
+        paths = p;
         return this;
     }
 
@@ -90,36 +88,6 @@ public class ObjectBuilder {
 
     /**
      *
-     * @param k
-     * @return
-     */
-    public ObjectBuilder keys(List<String> k) {
-        keys = k;
-        return this;
-    }
-
-    /**
-     *
-     * @param d
-     * @return
-     */
-    public ObjectBuilder doors(List<String> d) {
-        doors = d;
-        return this;
-    }
-
-    /**
-     *
-     * @param b
-     * @return
-     */
-    public ObjectBuilder bugs(List<String> b) {
-        bugs = b;
-        return this;
-    }
-
-    /**
-     *
      * @return
      */
     public ObjectBuilder getObj(){
@@ -129,11 +97,14 @@ public class ObjectBuilder {
 
     @Override
     public String toString() {
-        return "Item: " + name +
-                "Text: " + text +
-                "Number of chips required: " + numChips +
-                "Location(s): " + if(!location.isEmpty()) location else if(!locations.isEmpty()) locations +
-                "Items: " + items
-                ;
+        StringBuilder sb = new StringBuilder();
+        if(name != null && !name.isEmpty()) sb.append("Item: ").append(name);
+        if(text != null && !text.isEmpty()) sb.append("\nText: ").append(text);
+        if(numChips > 0) sb.append("\nNumber of chips required: ").append(numChips);
+        if(location != null && !location.isEmpty()) sb.append("\nLocation(s): ").append(location);
+        if(paths != null && !paths.isEmpty()) sb.append("\nPaths: ").append(paths);
+        if(items != null && !items.isEmpty()) sb.append("\nItems: ").append(items);
+        if(colour != null && !colour.isEmpty()) sb.append("\nColours: ").append(colour);
+        return sb.toString();
     }
 }

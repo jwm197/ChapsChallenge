@@ -22,7 +22,7 @@ record Persistency(){
      * @return
      * @throws Exception
      */
-    public HashMap<String,ObjectBuilder> loadXML(String fileName) throws Exception {
+    public HashMap<String,ObjectBuilder> loadXML(String path,String fileName) throws ParserException,IOException,DocumentException {
 
         try{
             File xmlFile = new File(path + fileName);
@@ -33,11 +33,11 @@ record Persistency(){
             Document document = reader.read(xmlFile);
             return new ParseXML().parse(document);
         }
-        catch (ParserException e){
-            throw new Exception("Oops, something went wrong: " + e);
+        catch (ParserException | NullPointerException e){
+            throw new ParserException(e.getMessage());
         }
         catch (IOException e){
-            throw new IOException("Oops, something went wrong: " + e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -49,22 +49,22 @@ record Persistency(){
      * @throws IOException
      * @throws DocumentException
      */
-     public void saveXML(String levelName,String levelData) throws ParserException, IOException, DocumentException{
+     public void saveXML(String levelName,HashMap<String,ObjectBuilder> levelData) throws ParserException, IOException, DocumentException{
         try{
-            File xmlFile = new File(path + levelName);
+            File xmlFile = new File(levelName + levelName);
             if (!xmlFile.exists()){
                 throw new IOException("XML file doesn't exist");
             }
             SAXReader reader = new SAXReader();
             Document document = reader.read(xmlFile);
-            new WriteXML().write(document,levelData);
+            new WriteXML().write(path,document,levelData);
             System.out.println("Save complete");
         }
-        catch (ParserException e){
-            throw new ParserException("Oops, something went wrong: " + e.getMessage());
+        catch (ParserException | NullPointerException e){
+            throw new ParserException(e.getMessage());
         }
         catch (IOException e){
-            throw new IOException("Oops, something went wrong: " + e.getMessage());
+            throw new IOException(e.getMessage());
         }
      }
   }
