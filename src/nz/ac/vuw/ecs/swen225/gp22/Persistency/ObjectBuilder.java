@@ -98,7 +98,7 @@ public class ObjectBuilder {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if(name != null && !name.isEmpty()) sb.append("Item: ").append(name);
+        if(name != null && !name.isEmpty()) sb.append("Name: ").append(name);
         if(text != null && !text.isEmpty()) sb.append("\nText: ").append(text);
         if(numChips > 0) sb.append("\nNumber of chips required: ").append(numChips);
         if(location != null && !location.isEmpty()) sb.append("\nLocation(s): ").append(location);

@@ -79,7 +79,7 @@ public class ParseXML {
     private ObjectBuilder parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
         List<String> items = new ArrayList<>();
-        if(player.selectSingleNode("items").getText() != null) {
+        if(player.selectSingleNode("items").getText().isEmpty()) {
             String[] temp = player.selectSingleNode("items").getText().split(",");
             items.addAll(Arrays.asList(temp));
         }
