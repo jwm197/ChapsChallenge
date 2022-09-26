@@ -1,0 +1,297 @@
+<!--Level 2-->
+<!--Level 1-->
+<level>
+    <player>
+        <location>
+            <x>0</x>
+            <y>0</y>
+        </location>
+        <items>
+            <!-- Item ids -->
+        </items>
+    </player>
+
+    <!-- chips -->
+    <chip>
+        <location>
+            <x>2</x>
+            <y>1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>2</x>
+            <y>-1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-9</x>
+            <y>4</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-9</x>
+            <y>-4</y>
+        </location>
+    </chip>
+
+    <!-- bugs -->
+    <bug>
+        <location>
+            <x>-7</x>
+            <y>0</y>
+        </location>
+    </bug>
+
+    <bug>
+        <start>
+            <x>-8</x>
+            <y>1</y>
+        </start>
+        <path>
+            <x>-8</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>-3</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>-3</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>-1</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>-1</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>0</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>1</y>
+        </path>
+    </bug>
+
+    <bug>
+        <start>
+            <x>-7</x>
+            <y>0</y>
+        </start>
+        <path>
+            <x>-7</x>
+            <y>1</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>1</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>-3</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>-3</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>-1</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>-1</y>
+        </path>
+    </bug>
+
+    <bug>
+        <start>
+            <x>-8</x>
+            <y>-1</y>
+        </start>
+        <path>
+            <x>-7</x>
+            <y>-1</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>0</y>
+        </path>
+        <path>
+            <x>-7</x>
+            <y>1</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>1</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>3</y>
+        </path>
+        <path>
+            <x>-10</x>
+            <y>-3</y>
+        </path>
+        <path>
+            <x>-8</x>
+            <y>-3</y>
+        </path>
+    </bug>
+
+    <lock>
+        <location>
+            <x>-12</x>
+            <y>0</y>
+        </location>
+
+    </lock>
+
+    <info>
+        <location>
+            <x>1</x>
+            <y>0</y>
+        </location>
+        <helptext>Lorem ipsum dolor blah blah blah</helptext>
+    </info>
+
+    <exit>
+        <location>
+            <x>-13</x>
+            <y>0</y>
+        </location>
+        <destination>None</destination>
+    </exit>
+
+    <!-- walls -->
+    <wall>
+        <x1>2</x1>
+        <y1>2</y1>
+        <x2>-5</x2>
+        <y2>2</y2>
+    </wall>
+
+    <wall>
+        <x1>2</x1>
+        <y1>-2</y1>
+        <x2>-5</x2>
+        <y2>-2</y2>
+    </wall>
+
+    <wall>
+        <x1>3</x1>
+        <y1>2</y1>
+        <x2>3</x2>
+        <y2>-2</y2>
+    </wall>
+
+    <wall>
+        <x1>-6</x1>
+        <y1>-2</y1>
+        <x2>-6</x2>
+        <y2>-5</y2>
+    </wall>
+
+    <wall>
+        <x1>-6</x1>
+        <y1>2</y1>
+        <x2>-6</x2>
+        <y2>5</y2>
+    </wall>
+
+    <wall>
+        <x1>-6</x1>
+        <y1>2</y1>
+        <x2>-6</x2>
+        <y2>5</y2>
+    </wall>
+
+    <wall>
+        <x1>-7</x1>
+        <y1>5</y1>
+        <x2>-11</x2>
+        <y2>5</y2>
+    </wall>
+
+    <wall>
+        <x1>-7</x1>
+        <y1>-5</y1>
+        <x2>-11</x2>
+        <y2>-5</y2>
+    </wall>
+
+    <wall>
+        <x1>-11</x1>
+        <y1>4</y1>
+        <x2>-11</x2>
+        <y2>1</y2>
+    </wall>
+
+    <wall>
+        <x1>-11</x1>
+        <y1>-4</y1>
+        <x2>-11</x2>
+        <y2>-1</y2>
+    </wall>
+
+    <wall>
+        <x1>-13</x1>
+        <y1>1</y1>
+        <x2>-14</x2>
+        <y2>1</y2>
+    </wall>
+
+    <wall>
+        <x1>-13</x1>
+        <y1>-1</y1>
+        <x2>-14</x2>
+        <y2>-1</y2>
+    </wall>
+
+    <wall>
+        <x1>-14</x1>
+        <y1>0</y1>
+        <x2>-14</x2>
+        <y2>0</y2>
+    </wall>
+
+    <wall>
+        <x1>-8</x1>
+        <y1>0</y1>
+        <x2>-8</x2>
+        <y2>0</y2>
+    </wall>
+
+    <wall>
+        <x1>-9</x1>
+        <y1>2</y1>
+        <x2>-9</x2>
+        <y2>-2</y2>
+    </wall>
+</level>

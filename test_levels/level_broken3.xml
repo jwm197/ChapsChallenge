@@ -246,7 +246,6 @@
             <x>0</x>
             <y>4</y>
         </location>
-        <destination>level2.xml</destination>
     </exit>
 
     <!-- walls -->
