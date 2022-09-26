@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class ParseXML {
     /**
-     *
-     * @param n
-     * @return
+     * Converts a node to a set of x and y coords
+     * @param n the node to parse
+     * @return A location instance containing x and y
      */
     private Location getCoords(Node n) {
         if (n.selectSingleNode("location").selectSingleNode("x").getText().isEmpty() || n.selectSingleNode("location").selectSingleNode("y").getText().isEmpty())
@@ -23,9 +23,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param keys
-     * @param doors
+     * Check to make sure there is enough keys for each door and will throw a parserexeception if this condition isn't met.
+     * @param keys the list of keys to parse
+     * @param doors the list of doors to parse
      */
     private void checkKeysandDoors(List<Node> keys, List<Node> doors){
         if (keys == null) throw new ParserException("List of keys not found");
@@ -48,9 +48,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param keys
-     * @return
+     * Parse all the keys
+     * @param keys a list of keys to parse
+     * @return a list of objectbuilder instances containing info about keys
      */
     private ObjectBuilder parseKeys(List<Node> keys) {
         List<String> keyColour = keys.stream()
@@ -60,9 +60,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param doors
-     * @return
+     * Parse all the doors
+     * @param doors a list of doors to parse
+     * @return a list of objectbuilder instances containing info about doors
      */
     private ObjectBuilder parseDoors(List<Node> doors) {
         List<String> doorColour = doors.stream()
@@ -72,9 +72,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param player
-     * @return
+     * Parse the player
+     * @param player the node to parse
+     * @return a new objectbuilder instance containing info about player
      */
     private ObjectBuilder parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
@@ -87,9 +87,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param chips
-     * @return
+     * Parse all the chips
+     * @param chips a list of chips to parse
+     * @return a list of objectbuilder instances containing info about chips
      */
     private ObjectBuilder parseChips(List<Node> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
@@ -98,9 +98,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param walls
-     * @return
+     * Parse all the walls
+     * @param walls a list of walls to parse
+     * @return a list of objectbuilder instances containing info about walls
      */
     private ObjectBuilder parseWalls(List<Node> walls) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
@@ -119,9 +119,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param bugs
-     * @return
+     * Parse all bugs
+     * @param bugs the list of bugs to parse
+     * @return a list of objectbuilder instances containing info about bugs
      */
     private ObjectBuilder parseBugs(List<Node> bugs) {
 //        if (bugs.isEmpty()) return;
@@ -134,9 +134,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param info
-     * @return
+     * Parse info field
+     * @param info the node to parse
+     * @return  a new objectbuilder instance containing info about info field
      */
     private ObjectBuilder parseInfo(Node info) {
         if (info == null) throw new ParserException("Info not found");
@@ -146,10 +146,10 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param chips
-     * @param lock
-     * @return
+     * Parse the lock
+     * @param chips a list of chips to check the number of chips
+     * @param lock the node to parse
+     * @return  a new objectbuilder instance containing info about lock
      */
     private ObjectBuilder parseLock(List<Node> chips, Node lock) {
         if (lock == null) throw new ParserException("Lock not found");
@@ -158,9 +158,9 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param exit
-     * @return
+     * Parse the exit
+     * @param exit the node to parse
+     * @return a new objectbuilder instance containing info about exit
      */
     private ObjectBuilder parseExit(Node exit) {
         if (exit == null) throw new ParserException("Exit not found");
@@ -170,8 +170,8 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param doc
+     * Parses the given file and return a map of game objects
+     * @param doc a dom4j document to parse
      * @return a list of objects for the game to use
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */

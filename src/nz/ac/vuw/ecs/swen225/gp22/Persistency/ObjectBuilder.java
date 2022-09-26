@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Used to build objects parsed
  */
 public class ObjectBuilder {
     public String name = "";
