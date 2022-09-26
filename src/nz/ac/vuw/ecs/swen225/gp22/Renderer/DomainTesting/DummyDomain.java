@@ -15,8 +15,9 @@ class DummyDomain extends JFrame {
 	RenderPanel debugRenderer;
 	
 	DummyDomain() {
-		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,3)), Animator.NONE);
-		debugRenderer = new RenderPanel(debugLevel);
+		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,3)));
+		debugRenderer = new RenderPanel();
+		debugRenderer.bind(debugLevel);
 		
 		setSize(400,400);
 		add(debugRenderer);

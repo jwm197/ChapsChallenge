@@ -27,9 +27,9 @@ class DummyPlayer implements Entity {
 		Position<Integer> newPos = new Position<Integer>(pos.x()+1, pos.y()+1);
 		
 		e.Animate(this, Animations.RainbowScrungle, newPos, 30, () -> {
-			pos = newPos;
 			locked = false;
 		});
+		pos = newPos;
 	}
 	public Boolean locked() {
 		return locked;
