@@ -271,7 +271,8 @@ public class ChapsChallenge extends JFrame{
 		
 		// DOMAIN/RENDERER/RECORDER
 		/* 
-		 * HashMap<String,ObjectBuilder> objects = new Persistency().loadXML(name);
+		 * try{ HashMap<String, ObjectBuilder> objects = new Persistency().loadXML("levels/",name); } 
+		 * catch(Exception e){ e.printStackTrace(); }
 		 * domainObject.createObjects(objects);
 		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
