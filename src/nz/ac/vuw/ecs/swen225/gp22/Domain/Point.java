@@ -1,7 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-record Point(double x, double y){
-    public Point add(double x,double y) {
+record Point(int x, int y){
+    public Point add(int x, int y) {
       return new Point(x()+x, y()+y);
     }
 
@@ -9,11 +9,11 @@ record Point(double x, double y){
       return add(p.x, p.y);
     }
 
-    public Point times(double x, double y) {
+    public Point times(int x, int y) {
       return new Point(x()*x, y()*y);
     }
 
-    public Point times(double v) {
+    public Point times(int v) {
       return new Point(x()*v, y()*v);
     }
     
