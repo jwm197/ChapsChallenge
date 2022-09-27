@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Level;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
@@ -25,7 +26,7 @@ public record Persistency(){
      * @throws IOException if file cannot be read
      * @throws DocumentException if something is wrong with the document
      */
-    public HashMap<String,ObjectBuilder> loadXML(String path,String fileName) throws ParserException,IOException,DocumentException {
+    public Level loadXML(String path, String fileName) throws ParserException,IOException,DocumentException {
 
         try{
             File xmlFile = new File(path + fileName);

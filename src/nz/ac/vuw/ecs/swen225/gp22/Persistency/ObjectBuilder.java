@@ -2,7 +2,6 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Used to build objects parsed
  */
