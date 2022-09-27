@@ -2,18 +2,21 @@ package nz.ac.vuw.ecs.swen225.gp22.App;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.dom4j.DocumentException;
+
+import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 
 public class Controller implements KeyListener{
 	final ChapsChallenge chapsChallenge;
 	
-	Controller(ChapsChallenge c){
-		this.chapsChallenge = c;
-	}	
+	Controller(ChapsChallenge c) { this.chapsChallenge = c; }	
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {		
@@ -25,13 +28,16 @@ public class Controller implements KeyListener{
 			if (e.getKeyCode()==KeyEvent.VK_S) {
 				chapsChallenge.pause(true);
 				String levelName = chapsChallenge.setLevelName();
-				System.out.println(levelName);
+				
 				// DOMAIN/PERSISTENCY/RECORDER?
-				/* 
-				 * timer included in level data?
-				 * new Persistency().saveXML(levelName, levelData);
-				 * 
-				 */
+				HashMap<String, ObjectBuilder> levelData = new HashMap<>();
+				// timer included in level data?
+				try { new Persistency().saveXML(levelName, levelData); } 
+				catch (ParserException e1) { e1.printStackTrace(); } 
+				catch (IOException e1) { e1.printStackTrace(); } 
+				catch (DocumentException e1) { e1.printStackTrace(); }
+				
+				// return to menu
 				chapsChallenge.menuScreen();
 			}
 			// Ctrl+r file selector to resume a saved game
@@ -48,21 +54,27 @@ public class Controller implements KeyListener{
 		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.pause(false); }
 		
 		// Moves chap up
-		if (e.getKeyCode()==KeyEvent.VK_UP) {}
+		if (e.getKeyCode()==KeyEvent.VK_UP) {
+			chapsChallenge.domainObject.model().player().
+			movePlayer(null, Direction.UP, chapsChallenge.domainObject.model());
+		}
 		// Moves chap down
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) {}
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+			chapsChallenge.domainObject.model().player().
+			movePlayer(null, Direction.DOWN, chapsChallenge.domainObject.model());
+		}
 		// Moves chap left
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) {}
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+			chapsChallenge.domainObject.model().player().
+			movePlayer(null, Direction.LEFT, chapsChallenge.domainObject.model());
+		}
 		// Moves chap right
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {}
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			chapsChallenge.domainObject.model().player().
+			movePlayer(null, Direction.RIGHT, chapsChallenge.domainObject.model());
+		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		//Releasing key stops chap moving in that direction
-		if (e.getKeyCode()==KeyEvent.VK_UP) {}
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) {}
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) {}
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {}
-	}
+	public void keyReleased(KeyEvent e) {}
 }

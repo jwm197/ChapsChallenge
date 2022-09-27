@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -27,10 +28,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class ChapsChallenge extends JFrame{
 	// Final variables
-	final int WIDTH = 1280;
-	final int HEIGHT = 720;
-	final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
-	final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
+	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
 	
 	// Private variables
 	private static final long serialVersionUID = 1L;
@@ -40,11 +41,9 @@ public class ChapsChallenge extends JFrame{
 	private Timer timer;
 	
 	// DOMAIN/RENDERER/RECORDER
-	/*
-	 * RenderPanel renderPanel;
-	 * DomainObject domainObject;
-	 * Recorder recorder;
-	 */
+	RenderPanel renderPanel;
+	Level domainObject;
+	// Recorder recorder;
 	
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
@@ -105,11 +104,9 @@ public class ChapsChallenge extends JFrame{
 		timer = new Timer(34,unused->{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
-			/*
-			 * renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-			 * domainObject.tick();
-			 * recorder.parse(domainObject);
-			 */
+			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			//domainObject.tick();
+			//recorder.parse(domainObject);
 			
 			// updating timer
 			time-=0.034;
@@ -238,12 +235,10 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	// FUZZ
-	/*
-	public DomainObject testInput(Direction dir) {
-		domainObject.moveChap(dir);
+	public Level testInput(Direction dir) {
+		domainObject.model().player().movePlayer(null, dir, domainObject.model());
 		return domainObject;
 	}
-	*/
 	
 	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
 		JButton b = new JButton(name);
@@ -270,15 +265,13 @@ public class ChapsChallenge extends JFrame{
 		time = 60;
 		
 		// DOMAIN/RENDERER/RECORDER
-		/* 
-		 * try{ HashMap<String, ObjectBuilder> objects = new Persistency().loadXML("levels/",name); } 
-		 * catch(Exception e){ e.printStackTrace(); }
-		 * domainObject.createObjects(objects);
-		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
-		 * recorder.clear();
-		 * recorder.parse(domainObject);
-		 */
+		try{ HashMap<String, ObjectBuilder> objects = new Persistency().loadXML("levels/",name); } 
+		catch(Exception e){ e.printStackTrace(); }
+		// domainObject.createObjects(objects);
+		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
+		// recorder.clear();
+		// recorder.parse(domainObject);
 	}
 	
 	public void pause(Boolean p) {
