@@ -9,25 +9,21 @@ import java.util.Stack;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
-public class ParseRecordedGame extends ParseXML {
+public class ParseRecordedGame {
     private ArrayDeque<RecordedMove> parsedDoneMoves=new ArrayDeque<>();
     private ArrayDeque<RecordedMove> parsedFutureMoves=new ArrayDeque<>();
-    public void parseLevel(Node level){
+    private void parseLevel(Node level){
         if (level==null){
             throw new ParserException("level not found");
         }
         String levelName=level.selectSingleNode("levelname").getText();
-        if (levelName.equals(the currently loaded level )){
-           // reset it
-        }
-        else{
-            //call level parser here
-        }
+        //call level here to reset
     }
-    public void parseMove(Node move) {
+    private void parseMove(Node move) {
        if (move == null) {
            throw new ParserException("Player move not found");
         }
+
         parsedFutureMoves.add(new RecordedMove(super.getCoords(move).get(0),super.getCoords(move).get(1)));
     }
     protected HashMap<String, Map<String, String>> parse(Document doc) throws ParserException {
@@ -35,6 +31,8 @@ public class ParseRecordedGame extends ParseXML {
         Node root = doc.selectSingleNode("recordedGame");
         parseLevel("level");
         parseMove(root.selectSingleNode("move"));
+
+        
         return data;
     }
 
