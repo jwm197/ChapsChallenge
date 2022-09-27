@@ -49,13 +49,13 @@ public class FuzzTest{
         void doMove(Move move){//moves player accordingly
             switch(move.ordinal()){
                 case 0:
-                ChapsChallenge.performAction("LEFT");
+                ChapsChallenge.performAction("LEFT");//breakpoint ChapsChallenge 268
                 case 1:
-                ChapsChallenge.performAction("RIGHT");
+                ChapsChallenge.performAction("RIGHT");//breakpoint ChapsChallenge 268
                 case 2:
-                ChapsChallenge.performAction("UP");
+                ChapsChallenge.performAction("UP");//breakpoint ChapsChallenge 268
                 case 3:
-                ChapsChallenge.performAction("DOWN");
+                ChapsChallenge.performAction("DOWN");//breakpoint ChapsChallenge 268
             }
             
         }
