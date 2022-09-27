@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.awt.Color;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class Key implements Item {
     private LayeredTexture texture;
     private Color color;

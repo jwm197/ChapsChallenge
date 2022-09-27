@@ -1,10 +1,12 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class WallTile {
     private LayeredTexture texture;
-    private Point location;
+    private IntPoint location;
 
-    public WallTile(Point location) {
+    public WallTile(IntPoint location) {
         this.location = location;
     }
 
@@ -12,7 +14,7 @@ public class WallTile {
         return texture;
     }
 
-    public Point location() {
+    public IntPoint location() {
         return location;
     }
 

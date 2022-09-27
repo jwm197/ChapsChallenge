@@ -1,6 +1,8 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public interface Entity {
     LayeredTexture texture();
-    Point location();
+    IntPoint location();
 }

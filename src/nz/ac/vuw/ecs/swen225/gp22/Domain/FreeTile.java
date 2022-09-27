@@ -1,11 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class FreeTile implements Tile {
     private LayeredTexture texture;
-    private Point location;
+    private IntPoint location;
     private Item item;
 
-    public FreeTile(Point location, Item item) {
+    public FreeTile(IntPoint location, Item item) {
         this.location = location;
         this.item = item;
     }
@@ -14,7 +16,7 @@ public class FreeTile implements Tile {
         return texture;
     }
 
-    public Point location() {
+    public IntPoint location() {
         return location;
     }
     

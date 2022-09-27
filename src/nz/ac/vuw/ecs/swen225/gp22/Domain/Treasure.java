@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class Treasure implements Item {
     private LayeredTexture texture;
     

@@ -10,6 +10,6 @@ public interface Model {
     Tiles tiles();
     void onGameOver();
     void onNextLevel();
-    void bindAnimator(Animator a);    
+    void bindAnimator(Animator a);
     Animator animator();
 }

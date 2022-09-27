@@ -1,9 +1,11 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class Exit extends FreeTile {
     private LayeredTexture texture;
 
-    public Exit(Point location) {
+    public Exit(IntPoint location) {
         super(location, null);
     }
 

@@ -1,9 +1,11 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class ExitLock extends WallTile {
     private LayeredTexture texture;
 
-    public ExitLock(Point location) {
+    public ExitLock(IntPoint location) {
         super(location);
     }
 

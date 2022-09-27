@@ -2,11 +2,13 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.awt.Color;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class LockedDoor extends WallTile {
     private LayeredTexture texture;
     private Color color;
 
-    public LockedDoor(Point location, Color color) {
+    public LockedDoor(IntPoint location, Color color) {
         super(location);
         this.color = color;
     }

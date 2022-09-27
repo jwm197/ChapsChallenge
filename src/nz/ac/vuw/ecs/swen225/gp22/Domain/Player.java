@@ -2,13 +2,15 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.util.List;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+
 public class Player implements Entity {
     private LayeredTexture texture;
-    private Point location;
+    private IntPoint location;
     private List<Key> keys;
     private Boolean locked;
 
-    public Player(Point location) {
+    public Player(IntPoint location) {
         this.location=location;
         locked = false;
     }
@@ -17,7 +19,7 @@ public class Player implements Entity {
         return texture;
     }
 
-    public Point location() {
+    public IntPoint location() {
         return location;
     }
     
@@ -29,7 +31,7 @@ public class Player implements Entity {
         if (locked) return;
         locked = true;
 
-        Point newPos = location.add(d.direction());
+        IntPoint newPos = location.add(d.direction());
         m.tiles().getTile(newPos).playerMovedTo(m);
         a.Animate(this, null, newPos, 100, () -> {
             location = newPos;
