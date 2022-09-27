@@ -1,0 +1,8 @@
+bin/
+levels/
+test_levels/
+src/nz/ac/vuw/ecs/swen225/gp22/App
+src/nz/ac/vuw/ecs/swen225/gp22/Persistency
+src/nz/ac/vuw/ecs/swen225/gp22/Recorder
+src/nz/ac/vuw/ecs/swen225/gp22/Renderer
+src/test/nz/ac/vuw/ecs/swen225/gp22/Fuzz

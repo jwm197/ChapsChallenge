@@ -11,4 +11,5 @@ public interface Model {
     void onGameOver();
     void onNextLevel();
     void bindAnimator(Animator a);    
+    Animator animator();
 }

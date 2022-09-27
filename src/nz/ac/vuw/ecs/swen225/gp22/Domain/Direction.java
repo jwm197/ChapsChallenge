@@ -1,6 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-enum Direction {
+public enum Direction {
     UP {
         public Point direction() { return new Point(0,-1); }
     },
@@ -13,6 +13,6 @@ enum Direction {
     LEFT {
         public Point direction() { return new Point(-1,0); }
     };
-    
+
     public Point direction() { return new Point(0,0); }
 }

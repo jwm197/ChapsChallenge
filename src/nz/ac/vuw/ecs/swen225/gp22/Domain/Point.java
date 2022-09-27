@@ -1,6 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-record Point(int x, int y){
+public record Point(int x, int y){
     public Point add(int x, int y) {
       return new Point(x()+x, y()+y);
     }
