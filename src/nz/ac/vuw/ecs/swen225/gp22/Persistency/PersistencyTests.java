@@ -1,5 +1,8 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.IntPoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Level;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Player;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.*;
 
@@ -18,7 +21,9 @@ record PersistencyTests() {
     @Test
     void TestLoadXML1() {
         try {
-            new Persistency().loadXML("levels/","level1.xml");
+            Level l = new Persistency().loadXML("levels/","level1.xml");
+            assert l.model().treasureCount() == 11;
+            assert l.model().player().location().equals(new IntPoint(0,0));
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }

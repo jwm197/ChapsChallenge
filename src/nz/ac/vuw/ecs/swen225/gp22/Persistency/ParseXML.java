@@ -136,12 +136,17 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
-            if(x1 != x2){
-                while(x1++ != x2) points.add(new IntPoint(x1,y1));
-            }
-            else if(y1 != y2){
-                while(y1++ != y2) points.add(new IntPoint(x1,y1));
-            }
+//            if(x1 != x2){
+//                while(temp++ == x2) {
+//                    points.add(new IntPoint(x1,y1));
+//                }
+//            }
+//            else if(y1 != y2){
+//                temp = y1;
+//                while(temp++ == y2) points.add(new IntPoint(x1,y1));
+//            }
+            points.add(new IntPoint(x1,y1));
+            points.add(new IntPoint(x2,y2));
         });
         return points.stream().map(WallTile::new).collect(Collectors.toList());
     }
@@ -207,6 +212,7 @@ public class ParseXML {
         Node root = doc.selectSingleNode("level");
         checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
         List<List<? extends Tile>> tiles = List.of(
+                parseWalls(root.selectNodes("wall")),
                 parseDoors(root.selectNodes("door")),
                 parseKeys(root.selectNodes("key")),
                 List.of(parseInfo(root.selectSingleNode("info")),
