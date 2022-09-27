@@ -10,6 +10,12 @@ import org.dom4j.DocumentException;
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 
+/**
+ * Manages user key input for controls
+ * 
+ * @author pratapshek
+ */
+
 public class Controller implements KeyListener{
 	final ChapsChallenge chapsChallenge;
 	
@@ -23,56 +29,30 @@ public class Controller implements KeyListener{
 		// Checks if control is held down
 		if (e.isControlDown()) {
 			// Ctrl+x exits the game, doesn't save
-			if (e.getKeyCode()==KeyEvent.VK_X) { chapsChallenge.menuScreen(); }
+			if (e.getKeyCode()==KeyEvent.VK_X) { chapsChallenge.performAction("CTRL-X"); }
 			// Ctrl+s exits and saves the game
-			if (e.getKeyCode()==KeyEvent.VK_S) {
-				chapsChallenge.pause(true);
-				String levelName = chapsChallenge.setLevelName();
-				
-				// DOMAIN/PERSISTENCY/RECORDER?
-				HashMap<String, ObjectBuilder> levelData = new HashMap<>();
-				// timer included in level data?
-				try { new Persistency().saveXML(levelName, levelData); } 
-				catch (ParserException e1) { e1.printStackTrace(); } 
-				catch (IOException e1) { e1.printStackTrace(); } 
-				catch (DocumentException e1) { e1.printStackTrace(); }
-				
-				// return to menu
-				chapsChallenge.menuScreen();
-			}
+			if (e.getKeyCode()==KeyEvent.VK_S) { chapsChallenge.performAction("CTRL-S"); }
 			// Ctrl+r file selector to resume a saved game
-			if (e.getKeyCode()==KeyEvent.VK_R) { chapsChallenge.loadGame(); }
+			if (e.getKeyCode()==KeyEvent.VK_R) { chapsChallenge.performAction("CTRL-R"); }
 			// Ctrl+1 starts a new game at level 1
-			if (e.getKeyCode()==KeyEvent.VK_1) { chapsChallenge.newGame("1"); }
+			if (e.getKeyCode()==KeyEvent.VK_1) { chapsChallenge.performAction("CTRL-1"); }
 			// Ctrl+2 starts a new game at level 2
-			if (e.getKeyCode()==KeyEvent.VK_2) { chapsChallenge.newGame("2"); }
+			if (e.getKeyCode()==KeyEvent.VK_2) { chapsChallenge.performAction("CTRL-2"); }
 		}
 		
 		// Space pauses game
-		if (e.getKeyCode()==KeyEvent.VK_SPACE) { chapsChallenge.pause(true); }
+		if (e.getKeyCode()==KeyEvent.VK_SPACE) { chapsChallenge.performAction("SPACE"); }
 		// Esc resumes game
-		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.pause(false); }
+		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.performAction("ESC"); }
 		
 		// Moves chap up
-		if (e.getKeyCode()==KeyEvent.VK_UP) {
-			chapsChallenge.domainObject.model().player().
-			movePlayer(null, Direction.UP, chapsChallenge.domainObject.model());
-		}
+		if (e.getKeyCode()==KeyEvent.VK_UP) { chapsChallenge.performAction("UP"); }
 		// Moves chap down
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-			chapsChallenge.domainObject.model().player().
-			movePlayer(null, Direction.DOWN, chapsChallenge.domainObject.model());
-		}
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) { chapsChallenge.performAction("DOWN"); }
 		// Moves chap left
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-			chapsChallenge.domainObject.model().player().
-			movePlayer(null, Direction.LEFT, chapsChallenge.domainObject.model());
-		}
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) { chapsChallenge.performAction("LEFT"); }
 		// Moves chap right
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-			chapsChallenge.domainObject.model().player().
-			movePlayer(null, Direction.RIGHT, chapsChallenge.domainObject.model());
-		}
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) { chapsChallenge.performAction("RIGHT"); }
 	}
 
 	@Override
