@@ -1,14 +1,15 @@
 package test.nz.ac.vuw.ecs.swen225.gp22.Fuzz;
 import nz.ac.vuw.ecs.swen225.gp22.App.*;
+
 import static org.junit.Assert.fail;
 import org.junit.Test;
-
-import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
-import javax.swing.SwingUtilities;
+
 /**
  * Fuzz module 
  */
@@ -17,17 +18,8 @@ public class FuzzTest{
     @Test
     public void test1(){
         try {
-            SwingUtilities.invokeLater(ChapsChallenge::new);
-            //ChapsChallenge g = new ChapsChallenge();
-            /*g.LoadGame();
-            g.GameHelp();
-            g.GameScreen();
-            g.MenuScreen();
-            g.ViewControls();
-            Event evt;
-            Object what;
-            g.action(evt, what);
-            */
+            
+            inputs.forEach(i->i.check());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,16 +28,45 @@ public class FuzzTest{
     @Test
     public void test2(){
         try {
-            Main.main();
+            inputs.forEach(i->i.check());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    static List<TestInput> inputs;
-    record TestInput() implements Serializable{
+    //inputs to be tested
+    static List<TestInput> inputs = List.of(new TestInput(randomMove(10)));
+    record TestInput(List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
-            //checks assertions
+            Game g = new FuzzTest().new Game();
+            for (var m:moves){
+                g.doMove(m);
+
+            }
         };
     };
+    //game object for test
+    public class Game{
+        void doMove(Move move){//moves player accordingly
+            switch(move.ordinal()){
+                case 0:
+                ChapsChallenge.performAction("LEFT");
+                case 1:
+                ChapsChallenge.performAction("RIGHT");
+                case 2:
+                ChapsChallenge.performAction("UP");
+                case 3:
+                ChapsChallenge.performAction("DOWN");
+            }
+            
+        }
+    }
+    enum Move{Left, Right, Up, Down}// player moves possible
+    static List<Move> randomMove(int size){//generates random moves
+        return IntStream.range(0, size)
+        .map(i->new Random().nextInt(Move.values().length))
+        .mapToObj(ei->Move.values()[ei])
+        .toList();
+    }
+
+    
 }
