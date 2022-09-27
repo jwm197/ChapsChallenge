@@ -20,11 +20,7 @@ public record Level(Model model) {
         });
     }
 
-    public static Level level1() {
-        return null; // replace with function in Persistency
-    }
-
-    public static Level level2() {
+    public static Level level(String path) {
         return null; // replace with function in Persistency
     }
 }
