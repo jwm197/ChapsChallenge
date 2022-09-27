@@ -3,10 +3,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 import java.awt.Graphics;
 import java.util.HashMap;
 
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Animator;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Entity;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Animator;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.IntPoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Entity;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 
 /**
  * Manages and queues the rolling stack of currently playing animation objects
@@ -17,12 +17,12 @@ class AnimationHandler implements Animator, Drawable {
 	private HashMap<Entity, Animation> animations = new HashMap<>();
 	
 	@Override
-	public void Animate(Entity entity, TextureSequence frames, Position<Integer> initPos, Position<Integer> finalPos,
+	public void Animate(Entity entity, TextureSequence frames, IntPoint initPos, IntPoint finalPos,
 			int duration, int frameDuration, boolean isLooping, Runnable onCompletion) {
 		
 		//generate new properties and add the animation to the HashMap
 		AnimationProperties properties = new AnimationProperties(
-				frames, initPos.doubleValue(), finalPos.doubleValue(), duration, frameDuration, isLooping, onCompletion
+				frames, initPos.toDoublePoint(), finalPos.toDoublePoint(), duration, frameDuration, isLooping, onCompletion
 		);
 		animations.put(entity, new Animation(properties));
 	}

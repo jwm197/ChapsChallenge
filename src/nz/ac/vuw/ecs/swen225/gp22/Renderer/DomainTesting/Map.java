@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Textures;
 
+@Deprecated
 public class Map {//FIXME: replace during merge week
 	private List<List<Tile>> tiles;
 	Map(int xSize, int ySize) {

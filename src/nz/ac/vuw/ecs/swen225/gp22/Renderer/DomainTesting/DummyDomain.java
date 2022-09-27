@@ -8,6 +8,7 @@ import javax.swing.Timer;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.RenderPanel;
 
+@Deprecated
 @SuppressWarnings("serial")
 class DummyDomain extends JFrame {
 	

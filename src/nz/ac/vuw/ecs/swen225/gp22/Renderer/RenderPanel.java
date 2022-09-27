@@ -6,10 +6,11 @@ import java.util.function.Supplier;
 
 import javax.swing.JPanel;
 
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Entity;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Level;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.DoublePoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Entity;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.IntPoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Model;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 
 /**
  * Implements a JPanel renderer which handles drawing the game state to the screen
@@ -30,8 +31,8 @@ public class RenderPanel extends JPanel implements Renderer {
 	private Drawable tileHandler = (g, r) -> {};
 	
 	//default camera supplier
-	Supplier<Position<Double>> camera = () -> new Position<Double>(0.0,0.0);
-	Position<Double> cameraPos;
+	Supplier<DoublePoint> camera = () -> new DoublePoint(0.0,0.0);
+	DoublePoint cameraPos;
 	
 	/**
 	 * Constructor
@@ -45,15 +46,15 @@ public class RenderPanel extends JPanel implements Renderer {
 	 * 
 	 * @param level domain level object to be bound to the renderer
 	 */
-	public void bind(Level level) {
+	public void bind(Model level) {
 		//clears residual animations
 		animationHandler.clear();
 		
 		//constructs the entity handler
 		entityHandler = (g, r) ->
-		         level.getEntities().stream() //get the entity stream from the level
+		         level.entities().stream() //get the entity stream from the level
 				                    .filter(e -> !animationHandler.animating(e)) //if not animating
-				                    .forEach(e -> r.drawTexture(g, e.texture(), e.getPos().doubleValue())); //draw the entity at its current position
+				                    .forEach(e -> r.drawTexture(g, e.texture(), e.location().toDoublePoint())); //draw the entity at its current position
 		
 		//constructs the tile handler
 		tileHandler = (g, r) -> {
@@ -63,10 +64,10 @@ public class RenderPanel extends JPanel implements Renderer {
 			int yRad = (d.height/(TEXTURE_SIZE*RENDER_SCALE*2))+TILE_PAD;
 			
 			//get the center tile position
-			Position<Integer> camRounded = cameraPos.intValue();
+			IntPoint camRounded = cameraPos.toIntPoint();
 			
 			//draw the rough radius of tiles to the screen
-			level.getM().forEach(camRounded, xRad, yRad, t -> r.drawTexture(g, t.texture(), t.pos().doubleValue()));
+			level.tiles().forEach(camRounded, xRad, yRad, t -> r.drawTexture(g, t.texture(), t.location().toDoublePoint()));
 		};
 		
 		//bind the level to the animationHandler to allow the level to queue animations
@@ -74,10 +75,10 @@ public class RenderPanel extends JPanel implements Renderer {
 		
 		//constructs the camera object
 		camera = () -> {
-			Entity player = level.getPlayer();
+			Entity player = level.player();
 			
 			//get the position of the player entity depending on whether it's animating or static
-			return animationHandler.animating(player) ? animationHandler.get(player).position() : player.getPos().doubleValue();
+			return animationHandler.animating(player) ? animationHandler.get(player).position() : player.location().toDoublePoint();
 		};
 		
 		//update cameraPos to fix flicker
@@ -103,7 +104,7 @@ public class RenderPanel extends JPanel implements Renderer {
 	}
 
 	@Override
-	public void drawTexture(Graphics g, LayeredTexture texture, Position<Double> position) {
+	public void drawTexture(Graphics g, LayeredTexture texture, DoublePoint position) {
 		Dimension d = this.getSize();
 		
 		//get the corner coordinates for the textures

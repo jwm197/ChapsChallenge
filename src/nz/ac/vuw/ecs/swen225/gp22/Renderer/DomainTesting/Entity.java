@@ -1,10 +1,12 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Animator;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Animations;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.LayeredTexture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Texture;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.Textures;
 
+@Deprecated
 public interface Entity {
 	Position<Integer> getPos();
 	Boolean locked();

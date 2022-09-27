@@ -2,9 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 
 import java.awt.Graphics;
 
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
-
+import nz.ac.vuw.ecs.swen225.gp22.Domain.DoublePoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 /**
  * Record class to handle Animation Constants
  * 
@@ -12,7 +11,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
  */
 record AnimationProperties(
    	TextureSequence frames,
-   	Position<Double> startPos, Position<Double> endPos,
+   	DoublePoint startPos, DoublePoint endPos,
    	int duration, int frameDuration,
    	boolean isLooping,
    	Runnable onCompletion) {}
@@ -26,7 +25,7 @@ class Animation implements Drawable {
 	private final AnimationProperties properties;
 	private int tick = 0;
 	private int frame = 0;
-	private Position<Double> position;
+	private DoublePoint position;
 	private boolean completed = false;
 	
 	
@@ -63,7 +62,7 @@ class Animation implements Drawable {
 	 * 
 	 * @return position
 	 */
-	Position<Double> position() {
+	DoublePoint position() {
 		return position;
 	}
 	
@@ -74,7 +73,7 @@ class Animation implements Drawable {
 		tick++;
 		
 		//updates the position based on the tween proportion between the start and end positions
-		position = Position.tween(properties.startPos(), properties.endPos(), percentage());
+		position = DoublePoint.tween(properties.startPos(), properties.endPos(), percentage());
 		
 		if (tick%properties.frameDuration() == 0           //if the animation is queued for a frame change
 		&& (properties.isLooping()                         //and either the animation is looping

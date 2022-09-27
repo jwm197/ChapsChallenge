@@ -2,8 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 
 import java.awt.Graphics;
 
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting.Position;
-import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.DoublePoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 
 //FIXME: required? we only have a single renderer?
 /**
@@ -19,5 +19,5 @@ interface Renderer {
 	 * @param texture texture to be drawn
 	 * @param position worldspace position to draw texture to
 	 */
-	public void drawTexture(Graphics g, LayeredTexture texture, Position<Double> position);
+	public void drawTexture(Graphics g, LayeredTexture texture, DoublePoint position);
 }

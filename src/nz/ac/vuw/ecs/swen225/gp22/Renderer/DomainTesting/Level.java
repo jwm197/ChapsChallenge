@@ -2,6 +2,9 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
 import java.util.List;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Animator;
+
+@Deprecated
 public class Level {
 	private Map m;
 	public Map getM() {

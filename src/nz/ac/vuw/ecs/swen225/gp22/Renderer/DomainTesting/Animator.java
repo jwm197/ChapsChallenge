@@ -2,6 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.TextureHandling.TextureSequence;
 
+@Deprecated
 public interface Animator {
 	void Animate(Entity entity, 
 			     TextureSequence frames,
