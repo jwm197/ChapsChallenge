@@ -5,17 +5,17 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
  */
 
 public class Domain {
-    private Level level;
+    /**private Level level;
 
     public Domain() {
         level = Level.level1();
     }
 
-    public Level getLevel() {
+    public Level level() {
         return level;
     }
 
     public void setLevel(Level level) {
         this.level = level;
-    }
+    }*/
 }

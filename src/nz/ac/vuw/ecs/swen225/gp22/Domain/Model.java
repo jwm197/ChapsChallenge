@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface Model {
     Player player();
-    List<Bug> bugs();
-    List<Key> keys();
-    List<Treasure> treasure();
+    List<Entity> entities();
+    int treasureCount();
+    void decreaseTreasureCount();
     Tiles tiles();
     void onGameOver();
     void onNextLevel();

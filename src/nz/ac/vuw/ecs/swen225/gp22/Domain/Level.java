@@ -3,12 +3,14 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 import java.util.List;
 
 record Level(Model model) {
-    static Level makeLevel(Player player, List<Bug> bugs, List<Key> keys, List<Treasure> treasure, Tiles tiles, Runnable next, Runnable first) {
+    static Level makeLevel(Player player, List<Entity> entities, int treasureCount, Tiles tiles, Runnable next, Runnable first) {
         return new Level(new Model() {
+            private int tc = treasureCount;
+
             public Player player() { return player; }
-            public List<Bug> bugs() { return bugs; }
-            public List<Key> keys() { return keys; }
-            public List<Treasure> treasure() { return treasure; }
+            public List<Entity> entities() { return entities; }
+            public int treasureCount() { return tc; }
+            public void decreaseTreasureCount() { tc--; }
             public Tiles tiles() { return tiles; }
             public void onGameOver() { first.run(); }
             public void onNextLevel() { next.run(); }

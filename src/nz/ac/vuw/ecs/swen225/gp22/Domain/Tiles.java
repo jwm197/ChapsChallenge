@@ -12,4 +12,12 @@ public class Tiles {
     public List<List<Tile>> tiles() {
         return tiles;
     }
+
+    public Tile getTile(Point p) {
+        return tiles.get(p.x()).get(p.y());
+    }
+
+    public void setTile(Point p, Tile t) {
+        tiles.get(p.x()).set(p.y(),t);
+    }
 }

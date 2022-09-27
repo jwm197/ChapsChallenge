@@ -1,13 +1,28 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-public class Key implements Item {
-    private Point location;
+import java.awt.Color;
 
-    public Key(Point location) {
-        this.location = location;
+public class Key implements Item {
+    private LayeredTexture texture;
+    private Color color;
+
+    public Key(Color color) {
+        this.color = color;
     }
     
-    public Point location() {
-        return location;
+    public LayeredTexture texture() {
+        return texture;
+    }
+
+    public Color color() {
+        return color;
+    }
+
+    public void pickUp(Model m) {
+        Player p = m.player();
+        int keyCountBefore = p.keys().size();
+        p.keys().add(this);
+        int keyCountAfter = p.keys().size();
+        assert keyCountBefore == keyCountAfter-1;
     }
 }

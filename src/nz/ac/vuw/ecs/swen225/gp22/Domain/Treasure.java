@@ -1,13 +1,17 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 public class Treasure implements Item {
-    private Point location;
-
-    public Treasure(Point location) {
-        this.location = location;
-    }
+    private LayeredTexture texture;
     
-    public Point location() {
-        return location;
+    public LayeredTexture texture() {
+        return texture;
+    }
+
+    public void pickUp(Model m) {
+        int treasureCountBefore = m.treasureCount();
+        m.decreaseTreasureCount();
+        int treasureCountAfter = m.treasureCount();
+        assert treasureCountBefore == treasureCountAfter+1;
+        assert treasureCountAfter >= 0;
     }
 }

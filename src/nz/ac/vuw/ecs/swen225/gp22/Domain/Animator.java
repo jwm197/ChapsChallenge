@@ -11,4 +11,12 @@ public interface Animator {
         boolean isLooping,      // whether to loop the animation or pause on final frame
         Runnable onCompletion   // lambda callback method for completion
     );
+
+    public void Animate(
+        Entity entity,
+        TextureSequence frames,
+        Point finalPos,
+        int duration,
+        Runnable onCompletion
+    );
 }
