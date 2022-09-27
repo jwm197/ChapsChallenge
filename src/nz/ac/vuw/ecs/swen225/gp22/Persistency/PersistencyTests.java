@@ -18,8 +18,7 @@ record PersistencyTests() {
     @Test
     void TestLoadXML1() {
         try {
-            HashMap<String,ObjectBuilder> data = new Persistency().loadXML("levels/","level1.xml");
-//            System.out.println(data.toString());
+            new Persistency().loadXML("levels/","level1.xml");
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }

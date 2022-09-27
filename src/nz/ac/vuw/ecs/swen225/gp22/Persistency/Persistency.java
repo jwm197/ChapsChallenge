@@ -15,7 +15,7 @@ import org.dom4j.io.SAXReader;
 
 public record Persistency(){
     static String path = "levels/";
-    static String filename;
+    //static String filename;
 
     /**
      * Loads a given xml file and returns a hashmap containing all the game objects
@@ -53,7 +53,7 @@ public record Persistency(){
      * @throws IOException if file cannot be read
      * @throws DocumentException if something is wrong with the document
      */
-     public void saveXML(String levelName,HashMap<String,ObjectBuilder> levelData) throws ParserException, IOException, DocumentException{
+     public void saveXML(String levelName,Level levelData) throws ParserException, IOException, DocumentException{
         try{
             File xmlFile = new File(levelName + levelName);
             if (!xmlFile.exists()){
