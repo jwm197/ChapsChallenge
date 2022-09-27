@@ -1,1 +1,308 @@
-<!--Empty file (for now)-->
+<!--Level 1-->
+<level>
+    <player>
+        <location>
+            <x>0</x>
+            <y>0</y>
+        </location>
+        <items>
+            <!-- Item ids: list items followed by comma
+            e.g.
+            aaa,
+            b,
+            cc,
+            ssssss
+            -->
+
+        </items>
+    </player>
+
+    <!-- doors -->
+    <door name="northdoor1">
+        <location>
+            <x>-2</x>
+            <y>3</y>
+        </location>
+        <colour>Green</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="northdoor2">
+        <location>
+            <x>2</x>
+            <y>3</y>
+        </location>
+        <colour>Green</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="westdoor1">
+        <location>
+            <x>-3</x>
+            <y>2</y>
+        </location>
+        <colour>Blue</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="westdoor2">
+        <location>
+            <x>-3</x>
+            <y>-2</y>
+        </location>
+        <colour>Red</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="southdoor1">
+        <location>
+            <x>-1</x>
+            <y>-3</y>
+        </location>
+        <colour>Yellow</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="southdoor2">
+        <location>
+            <x>1</x>
+            <y>-3</y>
+        </location>
+        <colour>Yellow</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="eastdoor1">
+        <location>
+            <x>3</x>
+            <y>2</y>
+        </location>
+        <colour>Red</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <door name="eastdoor2">
+        <location>
+            <x>3</x>
+            <y>-2</y>
+        </location>
+        <colour>Blue</colour>
+        <unlocked>false</unlocked>
+    </door>
+
+    <!-- keys -->
+    <key name="bluekey1">
+        <location>
+            <x>-2</x>
+            <y>1</y>
+        </location>
+        <colour>Blue</colour>
+    </key>
+
+    <key name="bluekey2">
+        <location>
+            <x>-2</x>
+            <y>-1</y>
+        </location>
+        <colour>Blue</colour>
+    </key>
+
+    <key name="redkey1">
+        <location>
+            <x>2</x>
+            <y>1</y>
+        </location>
+        <colour>Red</colour>
+    </key>
+
+    <key name="redkey2">
+        <location>
+            <x>1</x>
+            <y>-6</y>
+        </location>
+        <colour>Red</colour>
+    </key>
+
+    <key name="yellowkey1">
+        <location>
+            <x>2</x>
+            <y>-5</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
+
+    <key name="yellowkey2">
+        <location>
+            <x>2</x>
+            <y>5</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
+
+    <key name="greenkey">
+        <location>
+            <x>2</x>
+            <y>1</y>
+        </location>
+        <colour>Green</colour>
+    </key>
+
+    <!-- chips -->
+    <chip>
+        <location>
+            <x>-2</x>
+            <y>0</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>2</x>
+            <y>0</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>0</x>
+            <y>-2</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>1</x>
+            <y>-5</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-1</x>
+            <y>-5</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>5</x>
+            <y>1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>5</x>
+            <y>-1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-5</x>
+            <y>1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>-5</x>
+            <y>-1</y>
+        </location>
+    </chip>
+
+
+    <chip>
+        <location>
+            <x>-3</x>
+            <y>5</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>3</x>
+            <y>5</y>
+        </location>
+    </chip>
+
+    <lock>
+        <location>
+            <x>0</x>
+            <y>3</y>
+        </location>
+    </lock>
+
+    <info>
+        <location>
+            <x>0</x>
+            <y>1</y>
+        </location>
+        <helptext>Lorem ipsum dolor blah blah blah</helptext>
+    </info>
+
+    <exit>
+        <location>
+            <x>0</x>
+            <y>4</y>
+        </location>
+        <destination>level2.xml</destination>
+    </exit>
+
+    <!-- walls -->
+    <wall>
+        <x1>-1</x1>
+        <y1>6</y1>
+        <x2>-5</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>6</y1>
+        <x2>5</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>-5</x1>
+        <y1>5</y1>
+        <x2>-5</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>5</x1>
+        <y1>5</y1>
+        <x2>5</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>-1</x1>
+        <y1>5</y1>
+        <x2>-1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>5</y1>
+        <x2>1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>-1</x1>
+        <y1>5</y1>
+        <x2>-1</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>5</y1>
+        <x2>1</x2>
+        <y2>3</y2>
+    </wall>
+</level>
