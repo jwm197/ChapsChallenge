@@ -1,5 +1,8 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.IntPoint;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Level;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Player;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.*;
 
@@ -18,25 +21,9 @@ record PersistencyTests() {
     @Test
     void TestLoadXML1() {
         try {
-            HashMap<String,ObjectBuilder> data = new Persistency().loadXML("levels/","level1.xml");
-            System.out.println(data.toString());
-            assert data.toString().equals("""
-                    {door=Item: doors
-                    Location(s): [Location{x=-2, y=3}, Location{x=2, y=3}, Location{x=-3, y=2}, Location{x=-3, y=-2}, Location{x=-1, y=-3}, Location{x=1, y=-3}, Location{x=3, y=2}, Location{x=3, y=-2}]
-                    Colours: [Green, Green, Blue, Red, Yellow, Yellow, Red, Blue], exit=Item: exit
-                    Text: level2.xml
-                    Location(s): [Location{x=0, y=4}], bugs=, chip=Item: chips
-                    Location(s): [Location{x=-2, y=0}, Location{x=2, y=0}, Location{x=0, y=-2}, Location{x=1, y=-5}, Location{x=-1, y=-5}, Location{x=5, y=1}, Location{x=5, y=-1}, Location{x=-5, y=1}, Location{x=-5, y=-1}, Location{x=-3, y=5}, Location{x=3, y=5}], locks=Item: lock
-                    Number of chips required: 11
-                    Location(s): [Location{x=0, y=3}], wall=Item: walls
-                    Paths: [Path{x=-1, y=6, x1=-5, y1=6}, Path{x=1, y=6, x1=5, y1=6}, Path{x=-5, y=5, x1=-5, y1=4}, Path{x=5, y=5, x1=5, y1=4}, Path{x=-1, y=5, x1=-1, y1=3}, Path{x=1, y=5, x1=1, y1=3}, Path{x=-1, y=5, x1=-1, y1=3}, Path{x=1, y=5, x1=1, y1=3}], key=Item: keys
-                    Location(s): [Location{x=-2, y=1}, Location{x=-2, y=-1}, Location{x=2, y=1}, Location{x=1, y=-6}, Location{x=2, y=-5}, Location{x=2, y=5}, Location{x=2, y=1}]
-                    Colours: [Blue, Blue, Red, Red, Yellow, Yellow, Green], player=Item: player
-                    Location(s): [Location{x=0, y=0}]
-                    Items: [], info=Item: info
-                    Text: Lorem ipsum dolor blah blah blah
-                    Location(s): [Location{x=0, y=1}]}
-                    """) : "Output doesn't match expected output";
+            Level l = new Persistency().loadXML("levels/","level1.xml");
+            assert l.model().treasureCount() == 11;
+            assert l.model().player().location().equals(new IntPoint(0,0));
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }

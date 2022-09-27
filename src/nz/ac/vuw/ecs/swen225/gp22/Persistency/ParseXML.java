@@ -1,31 +1,52 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Point;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 
 public class ParseXML {
     /**
-     *
-     * @param n
-     * @return
+     * Converts a node to a set of x and y coords
+     * @param n the node to parse
+     * @return A location instance containing x and y
      */
-    private Location getCoords(Node n) {
+    private IntPoint getCoords(Node n) {
         if (n.selectSingleNode("location").selectSingleNode("x").getText().isEmpty() || n.selectSingleNode("location").selectSingleNode("y").getText().isEmpty())
             throw new ParserException("X or Y coordinate not found");
         int x = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("x").getText());
         int y = Integer.parseInt(n.selectSingleNode("location").selectSingleNode("y").getText());
-        return new Location(x, y);
+        return new IntPoint(x, y);
     }
 
     /**
-     *
-     * @param keys
-     * @param doors
+     * Convert a string to a Java.awt colour object
+     * @param colour the colour to be converted
+     * @return A Java.awt colour object corresponding to the string
+     */
+    private Color getColour(String colour){
+        return switch (colour) {
+            case "Blue" -> Color.BLUE;
+            case "Red" -> Color.RED;
+            case "Yellow" -> Color.YELLOW;
+            case "Green" -> Color.GREEN;
+            default -> Color.BLACK;//Colour not specified.
+        };
+
+    }
+
+    /**
+     * Check to make sure there is enough keys for each door and will throw a parserexeception if this condition isn't met.
+     * @param keys the list of keys to parse
+     * @param doors the list of doors to parse
      */
     private void checkKeysandDoors(List<Node> keys, List<Node> doors){
         if (keys == null) throw new ParserException("List of keys not found");
@@ -48,63 +69,65 @@ public class ParseXML {
     }
 
     /**
-     *
-     * @param keys
-     * @return
+     * Parse all the keys
+     * @param keys a list of keys to parse
+     * @return a list of objectbuilder instances containing info about keys
      */
-    private ObjectBuilder parseKeys(List<Node> keys) {
-        List<String> keyColour = keys.stream()
-                .map(node -> node.selectSingleNode("colour").getText()).toList();
-        List<Location> coords = keys.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("keys").colour(keyColour).location(coords);
+    private List<FreeTile> parseKeys(List<Node> keys) {
+        return keys.stream()
+                .map(node -> new FreeTile(getCoords(node),
+                        new Key(getColour(node.selectSingleNode("colour").getText()))))
+                .toList();
     }
 
     /**
-     *
-     * @param doors
-     * @return
+     * Parse all the doors
+     * @param doors a list of doors to parse
+     * @return a list of objectbuilder instances containing info about doors
      */
-    private ObjectBuilder parseDoors(List<Node> doors) {
-        List<String> doorColour = doors.stream()
-                .map(node -> node.selectSingleNode("colour").getText()).toList();
-        List<Location> coords = doors.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("doors").colour(doorColour).location(coords);
+    private List<LockedDoor> parseDoors(List<Node> doors) {
+        return doors.stream()
+                .map(node -> new LockedDoor(getCoords(node),
+                        getColour(node.selectSingleNode("colour").getText())))
+                .toList();
     }
 
     /**
-     *
-     * @param player
-     * @return
+     * Parse the player
+     * @param player the node to parse
+     * @return a new objectbuilder instance containing info about player
      */
-    private ObjectBuilder parsePlayer(Node player) {
+    private Player parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
-        List<String> items = new ArrayList<>();
-        if(player.selectSingleNode("items").getText().isEmpty()) {
-            String[] temp = player.selectSingleNode("items").getText().split(",");
-            items.addAll(Arrays.asList(temp));
-        }
-        return new ObjectBuilder().name("player").items(items).location(List.of(getCoords(player)));
+//        List<String> items = new ArrayList<>();
+//        if(player.selectSingleNode("items").getText().isEmpty()) {
+//            String[] temp = player.selectSingleNode("items").getText().split(",");
+//            items.addAll(Arrays.asList(temp));
+//        }
+        return new Player(getCoords(player));
     }
 
     /**
-     *
-     * @param chips
-     * @return
+     * Parse all the chips
+     * @param chips a list of chips to parse
+     * @return a list of objectbuilder instances containing info about chips
      */
-    private ObjectBuilder parseChips(List<Node> chips) {
+    private List<FreeTile> parseChips(List<Node> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
-        List<Location> coords = chips.stream().map(this::getCoords).toList();
-        return new ObjectBuilder().name("chips").location(coords);
+        return chips.stream()
+                .map(node -> new FreeTile(getCoords(node),new Treasure()))
+                .toList();
     }
 
     /**
-     *
-     * @param walls
-     * @return
+     * Parse all the walls
+     * @param walls a list of walls to parse
+     * @return a list of objectbuilder instances containing info about walls
      */
-    private ObjectBuilder parseWalls(List<Node> walls) {
+    private List<WallTile> parseWalls(List<Node> walls) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
-        List<Path> coords = walls.stream().map(n -> {
+        List<IntPoint> points = new ArrayList<>();
+        walls.forEach(n -> {
             if (n.selectSingleNode("x1") == null || n.selectSingleNode("y1") == null)
                 throw new ParserException("First set of coordinate(s) not found");
             else if (n.selectSingleNode("x2") == null || n.selectSingleNode("y2") == null)
@@ -113,83 +136,95 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
-            return new Path(x1,y1,x2,y2);
-        }).toList();
-        return new ObjectBuilder().name("walls").paths(coords);
+//            if(x1 != x2){
+//                while(temp++ == x2) {
+//                    points.add(new IntPoint(x1,y1));
+//                }
+//            }
+//            else if(y1 != y2){
+//                temp = y1;
+//                while(temp++ == y2) points.add(new IntPoint(x1,y1));
+//            }
+            points.add(new IntPoint(x1,y1));
+            points.add(new IntPoint(x2,y2));
+        });
+        return points.stream().map(WallTile::new).collect(Collectors.toList());
     }
 
     /**
-     *
-     * @param bugs
-     * @return
+     * Parse all bugs
+     * @param bugs the list of bugs to parse
+     * @return a list of objectbuilder instances containing info about bugs
      */
-    private ObjectBuilder parseBugs(List<Node> bugs) {
+    private void parseBugs(List<Node> bugs) {
+        /*
+        Still WIP
+         */
 //        if (bugs.isEmpty()) return;
         //List<ListInteger> coords =
 
 
         //String bugsData = coords.toString();
         //System.out.println("Bug data " + bugsData);
-        return new ObjectBuilder();
     }
 
     /**
-     *
-     * @param info
-     * @return
+     * Parse info field
+     * @param info the node to parse
+     * @return  a new objectbuilder instance containing info about info field
      */
-    private ObjectBuilder parseInfo(Node info) {
+    private InfoField parseInfo(Node info) {
         if (info == null) throw new ParserException("Info not found");
         String helpText = info.selectSingleNode("helptext").getText();
         if (helpText == null) throw new ParserException("Missing help text");
-        return new ObjectBuilder().name("info").location(List.of(getCoords(info))).text(helpText);
+        return new InfoField(getCoords(info),helpText);
     }
 
     /**
-     *
-     * @param chips
-     * @param lock
-     * @return
+     * Parse the lock
+     * @param lock the node to parse
+     * @return  a new objectbuilder instance containing info about lock
      */
-    private ObjectBuilder parseLock(List<Node> chips, Node lock) {
+    private ExitLock parseLock(Node lock) {
         if (lock == null) throw new ParserException("Lock not found");
-        else if(chips == null) throw new ParserException("List of chips not found");
-        return new ObjectBuilder().name("lock").location(List.of(getCoords(lock))).numChips(chips.size());
+        return new ExitLock(getCoords(lock));
     }
 
     /**
-     *
-     * @param exit
-     * @return
+     * Parse the exit
+     * @param exit the node to parse
+     * @return a new objectbuilder instance containing info about exit
      */
-    private ObjectBuilder parseExit(Node exit) {
+    private Exit parseExit(Node exit) {
         if (exit == null) throw new ParserException("Exit not found");
         String dest = exit.selectSingleNode("destination").getText();
         if (dest == null) throw new ParserException("Destination not specified");
-        return new ObjectBuilder().name("exit").location(List.of(getCoords(exit))).text(dest);//next level file (destination) is stored in text
+        return new Exit(getCoords(exit));
     }
 
     /**
-     *
-     * @param doc
+     * Parses the given file and return a map of game objects
+     * @param doc a dom4j document to parse
      * @return a list of objects for the game to use
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */
-    protected HashMap<String,ObjectBuilder> parse(Document doc) throws ParserException {
-        HashMap<String,ObjectBuilder>  data = new HashMap<>();
+    protected Level parse(Document doc) throws ParserException {
         Node root = doc.selectSingleNode("level");
         checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
-        //Adding all object data to hashmap
-        data.put("player",parsePlayer(root.selectSingleNode("player")));
-        data.put("key",parseKeys(root.selectNodes("key")));
-        data.put("door",parseDoors(root.selectNodes("door")));
-        data.put("chip",parseChips(root.selectNodes("chip")));
-        data.put("info",parseInfo(root.selectSingleNode("info")));
-        data.put("locks",parseLock(root.selectNodes("chip"), root.selectSingleNode("lock")));
-        data.put("exit",parseExit(root.selectSingleNode("exit")));
-        data.put("wall",parseWalls(root.selectNodes("wall")));
-        data.put("bugs",parseBugs(root.selectNodes("bug")));
-        System.out.println("Parsing complete");
-        return data;
+        List<List<? extends Tile>> tiles = List.of(
+                parseWalls(root.selectNodes("wall")),
+                parseDoors(root.selectNodes("door")),
+                parseKeys(root.selectNodes("key")),
+                List.of(parseInfo(root.selectSingleNode("info")),
+                        parseLock(root.selectSingleNode("lock")),
+                        parseExit(root.selectSingleNode("exit")))
+        );
+
+        return Level.makeLevel(parsePlayer(root.selectSingleNode("player")),
+                List.of(),//for bugs
+                parseChips(root.selectNodes("chip")).size(),
+                new Tiles(tiles),
+                null,
+                null);
     }
 }
