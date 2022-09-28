@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public class Tiles {
-    private List<List<Tile>> tiles;
+public class Tiles<T extends Tile> {
+    private List<List<T>> tiles;
     
-    public Tiles(List<List<Tile>> tiles) {
+    public Tiles(List<List<T>> tiles) {
         this.tiles = tiles;
     }
 
-    public List<List<Tile>> tiles() {
+    public List<List<T>> tiles() {
         return tiles;
     }
 
@@ -19,7 +19,7 @@ public class Tiles {
         return tiles.get(p.x()).get(p.y());
     }
 
-    public void setTile(IntPoint p, Tile t) {
+    public void setTile(IntPoint p, T t) {
         tiles.get(p.x()).set(p.y(),t);
     }
     

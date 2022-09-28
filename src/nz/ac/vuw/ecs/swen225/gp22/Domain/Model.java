@@ -7,7 +7,7 @@ public interface Model {
     List<Entity> entities();
     int treasureCount();
     void decreaseTreasureCount();
-    Tiles tiles();
+    Tiles<? extends Tile> tiles();
     void onGameOver();
     void onNextLevel();
     void bindAnimator(Animator a);
