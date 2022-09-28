@@ -273,10 +273,10 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { newGame("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
-		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model()); }
-		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model()); }
-		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model()); }
-		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.UP, domainLevel.model()); }
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.DOWN, domainLevel.model()); }
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.LEFT, domainLevel.model()); }
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
