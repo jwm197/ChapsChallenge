@@ -8,6 +8,7 @@ import javax.swing.Timer;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.RenderPanel;
 
+@Deprecated
 @SuppressWarnings("serial")
 class DummyDomain extends JFrame {
 	
@@ -15,8 +16,9 @@ class DummyDomain extends JFrame {
 	RenderPanel debugRenderer;
 	
 	DummyDomain() {
-		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,3)), Animator.NONE);
-		debugRenderer = new RenderPanel(debugLevel);
+		debugLevel = new Level(new Map(12,12), new DummyPlayer(new Position<Integer>(0,3)));
+		debugRenderer = new RenderPanel();
+		debugRenderer.bind(debugLevel);
 		
 		setSize(400,400);
 		add(debugRenderer);

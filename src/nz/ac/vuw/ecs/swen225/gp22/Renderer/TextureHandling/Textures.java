@@ -6,12 +6,22 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Enum representing the base Texture objects used to build complex images and animations
+ * 
+ * @author anfri
+ */
 public enum Textures implements Texture {
 	Scrungle;
-
-	private final BufferedImage image;
+	
 	public static final String IMAGE_PATH = "assets/textures/";
+	private final BufferedImage image;
+	
+	/**
+	 * Constructor to load images from file
+	 */
 	Textures() {
+		//attempt to read the image from file and throw a blocking exception on fail
 		try {
 			image = ImageIO.read(new File(IMAGE_PATH+this.name()+".png"));
 		} catch (IOException e) {
@@ -19,6 +29,7 @@ public enum Textures implements Texture {
 		}
 	}
 	
+	@Override
 	public BufferedImage getTexture() {
 		return image;
 	}

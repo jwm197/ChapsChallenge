@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp22.Renderer.DomainTesting;
 
+@Deprecated
 public record Position<T extends Number>(T x, T y) {
 	
 	public static Position<Double> tween(Position<?> a, Position<?> b, double tween) {
