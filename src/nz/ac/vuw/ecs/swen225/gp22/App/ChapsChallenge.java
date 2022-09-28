@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -25,26 +27,32 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.dom4j.DocumentException;
+
+/**
+ * Manages GUI for the Chaps Challenge game
+ * 
+ * @author pratapshek
+ */
+
 public class ChapsChallenge extends JFrame{
 	// Final variables
-	final int WIDTH = 1280;
-	final int HEIGHT = 720;
-	final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
-	final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
+	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
 	
 	// Private variables
 	private static final long serialVersionUID = 1L;
 	private Runnable closePhase = ()->{};
-	private String level = "1";
+	private String level = "level1.xml";
 	private float time = 60;
 	private Timer timer;
 	
 	// DOMAIN/RENDERER/RECORDER
-	/*
-	 * RenderPanel renderPanel;
-	 * DomainObject domainObject;
-	 * Recorder recorder;
-	 */
+	RenderPanel renderPanel;
+	Level domainLevel;
+	// Recorder recorder;
 	
 	ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
@@ -62,6 +70,9 @@ public class ChapsChallenge extends JFrame{
 		});
 	}			
 	
+	/**
+	 * Screen for the menu.
+	 */
 	public void menuScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
@@ -87,6 +98,9 @@ public class ChapsChallenge extends JFrame{
 		pack();
 	}
 	
+	/**
+	 * Screen for the game.
+	 */
 	public void gameScreen() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
@@ -105,11 +119,9 @@ public class ChapsChallenge extends JFrame{
 		timer = new Timer(34,unused->{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
-			/*
-			 * renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-			 * domainObject.tick();
-			 * recorder.parse(domainObject);
-			 */
+			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			//domainLevel.tick();
+			//recorder.parse(domainLevel);
 			
 			// updating timer
 			time-=0.034;
@@ -146,6 +158,9 @@ public class ChapsChallenge extends JFrame{
 		panel.requestFocus();
 	}
 	
+	/**
+	 * Loads game from user selected xml file.
+	 */
 	public void loadGame() {
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
@@ -159,6 +174,9 @@ public class ChapsChallenge extends JFrame{
 		}
 	}
 	
+	/**
+	 * Screen to view game help.
+	 */
 	public void gameHelp() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
@@ -190,6 +208,9 @@ public class ChapsChallenge extends JFrame{
 		pack();
 	}
 	
+	/**
+	 * Screen to view controls.
+	 */
 	public void viewControls() {
 		// Panel to stores components
 		JPanel panel = new JPanel();
@@ -237,14 +258,39 @@ public class ChapsChallenge extends JFrame{
 		pack();
 	}
 	
-	// FUZZ
-	/*
-	public DomainObject testInput(Direction dir) {
-		domainObject.moveChap(dir);
-		return domainObject;
+	/**
+	 * Takes input and performs the appropriate action.
+	 * Used for moving player, loading, saving, exiting game.
+	 * It is also used for fuzz testing.
+	 * 
+	 * @param input user input
+	 */
+	public void performAction(String input) {
+		if (input.equals("CTRL-X")) { menuScreen(); }
+		else if (input.equals("CTRL-S")) { saveAndExit();  }
+		else if (input.equals("CTRL-R")) { loadGame(); }
+		else if (input.equals("CTRL-1")) { newGame("level1.xml"); }
+		else if (input.equals("CTRL-2")) { newGame("level2.xml"); }
+		else if (input.equals("SPACE")) { pause(true); }
+		else if (input.equals("ESC")) { pause(false); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(null, Direction.UP, domainLevel.model()); }
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(null, Direction.DOWN, domainLevel.model()); }
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(null, Direction.LEFT, domainLevel.model()); }
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(null, Direction.RIGHT, domainLevel.model()); }
 	}
-	*/
 	
+	/**
+	 * Creates a JButton and sets its parameters.
+	 * 
+	 * @param name text
+	 * @param x x pos
+	 * @param y y pos
+	 * @param w width
+	 * @param h height
+	 * @param f font
+	 * @param l action on press
+	 * @return the new JButton
+	 */
 	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
 		JButton b = new JButton(name);
 		b.setBounds(x,y,w,h);
@@ -253,6 +299,18 @@ public class ChapsChallenge extends JFrame{
 		return b;
 	}
 	
+	/**
+	 * Creates a JLabel and sets its parameters.
+	 * 
+	 * @param name text
+	 * @param i alignment
+	 * @param f font
+	 * @param x x pos
+	 * @param y y pos
+	 * @param w width
+	 * @param h height
+	 * @return the new JLabel
+	 */
 	private JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
 		JLabel l = new JLabel(name, i);
 		l.setBounds(x,y,w,h);
@@ -260,33 +318,62 @@ public class ChapsChallenge extends JFrame{
 		return l;
 	}
 	
+	/**
+	 * Adds a list of components to a JPanel.
+	 * 
+	 * @param p panel to have components added
+	 * @param cs components to be added
+	 */
 	private void addComponents(JPanel p, Component...cs) {
 		for (Component c :cs) { p.add(c); }
 	}
 	
+	/**
+	 * Creates a new game.
+	 * 
+	 * @param name level name
+	 */
 	public void newGame(String name) {
 		// updates level name and resets timer
 		level = name;
 		time = 60;
+		Level l = null;
 		
 		// DOMAIN/RENDERER/RECORDER
-		/* 
-		 * try{ HashMap<String, ObjectBuilder> objects = new Persistency().loadXML("levels/",name); } 
-		 * catch(Exception e){ e.printStackTrace(); }
-		 * domainObject.createObjects(objects);
-		 * renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		 * renderPanel.bind(domainObject);  // this can be done at any time allowing dynamic level switching
-		 * recorder.clear();
-		 * recorder.parse(domainObject);
-		 */
+		try{ l = new Persistency().loadXML("levels/",name); } 
+		catch(Exception e){ e.printStackTrace(); }
+		domainLevel = l;
+		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
+		// recorder.clear();
+		// recorder.parse(domainLevel);
 	}
 	
+	/**
+	 * Pauses/unpauses game which stops timer.
+	 * 
+	 * @param p boolean which decides whether to pause or unpause
+	 */
 	public void pause(Boolean p) {
 		if (p) { timer.stop(); } 
 		else { timer.start(); }
 	}
 	
-	public String setLevelName() {
-		return (String)JOptionPane.showInputDialog("Set Level Name: ");
+	/**
+	 * Saves game to xml and exits
+	 */
+	public void saveAndExit() {
+		pause(true);
+		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ");
+		
+		// DOMAIN/PERSISTENCY/RECORDER?
+		// timer included in level data?
+		try { new Persistency().saveXML(levelName, domainLevel); } 
+		catch (ParserException e1) { e1.printStackTrace(); } 
+		catch (IOException e1) { e1.printStackTrace(); } 
+		catch (DocumentException e1) { e1.printStackTrace(); }
+		
+		// return to menu
+		menuScreen();
 	}
 }
