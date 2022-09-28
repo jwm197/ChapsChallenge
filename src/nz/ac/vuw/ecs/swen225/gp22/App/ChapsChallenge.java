@@ -45,13 +45,13 @@ public class ChapsChallenge extends JFrame{
 	// Private variables
 	private static final long serialVersionUID = 1L;
 	private Runnable closePhase = ()->{};
-	private String level = "1";
+	private String level = "level1.xml";
 	private float time = 60;
 	private Timer timer;
 	
 	// DOMAIN/RENDERER/RECORDER
 	RenderPanel renderPanel;
-	Level domainObject;
+	Level domainLevel;
 	// Recorder recorder;
 	
 	ChapsChallenge(){
@@ -120,8 +120,8 @@ public class ChapsChallenge extends JFrame{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-			//domainObject.tick();
-			//recorder.parse(domainObject);
+			//domainLevel.tick();
+			//recorder.parse(domainLevel);
 			
 			// updating timer
 			time-=0.034;
@@ -269,14 +269,14 @@ public class ChapsChallenge extends JFrame{
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { loadGame(); }
-		else if (input.equals("CTRL-1")) { newGame("1"); }
-		else if (input.equals("CTRL-2")) { newGame("2"); }
+		else if (input.equals("CTRL-1")) { newGame("level1.xml"); }
+		else if (input.equals("CTRL-2")) { newGame("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
-		else if (input.equals("UP")) { domainObject.model().player().movePlayer(null, Direction.UP, domainObject.model()); }
-		else if (input.equals("DOWN")) { domainObject.model().player().movePlayer(null, Direction.DOWN, domainObject.model()); }
-		else if (input.equals("LEFT")) { domainObject.model().player().movePlayer(null, Direction.LEFT, domainObject.model()); }
-		else if (input.equals("RIGHT")) { domainObject.model().player().movePlayer(null, Direction.RIGHT, domainObject.model()); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(null, Direction.UP, domainLevel.model()); }
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(null, Direction.DOWN, domainLevel.model()); }
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(null, Direction.LEFT, domainLevel.model()); }
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(null, Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
@@ -337,15 +337,16 @@ public class ChapsChallenge extends JFrame{
 		// updates level name and resets timer
 		level = name;
 		time = 60;
+		Level l = null;
 		
 		// DOMAIN/RENDERER/RECORDER
-		try{ HashMap<String, ObjectBuilder> objects = new Persistency().loadXML("levels/",name); } 
+		try{ l = new Persistency().loadXML("levels/",name); } 
 		catch(Exception e){ e.printStackTrace(); }
-		// domainObject.createObjects(objects);
+		domainLevel = l;
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		renderPanel.bind(domainObject.model());  // this can be done at any time allowing dynamic level switching
+		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		// recorder.clear();
-		// recorder.parse(domainObject);
+		// recorder.parse(domainLevel);
 	}
 	
 	/**
@@ -366,9 +367,8 @@ public class ChapsChallenge extends JFrame{
 		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ");
 		
 		// DOMAIN/PERSISTENCY/RECORDER?
-		HashMap<String, ObjectBuilder> levelData = new HashMap<>();
 		// timer included in level data?
-		try { new Persistency().saveXML(levelName, levelData); } 
+		try { new Persistency().saveXML(levelName, domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
