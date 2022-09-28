@@ -1,15 +1,14 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
-import nz.ac.vuw.ecs.swen225.gp22.App.*;
 import java.lang.Thread;
 import java.util.ArrayDeque;
 
 
-class Recorder{
+class MyRecorder{
     private ChapsChallenge game;
     static int tickSpeed=1;
     private ArrayDeque<MoveDirection> doneMoves=new ArrayDeque<>();
     private ArrayDeque<MoveDirection> futureMoves=new ArrayDeque<>();
-    Recorder(ChapsChallenge game){
+    MyRecorder(ChapsChallenge game){
         this.game=game;
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
