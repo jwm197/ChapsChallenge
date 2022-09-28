@@ -54,7 +54,7 @@ public class ChapsChallenge extends JFrame{
 	Level domainLevel;
 	// Recorder recorder;
 	
-	ChapsChallenge(){
+	public ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		try { UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); } 
