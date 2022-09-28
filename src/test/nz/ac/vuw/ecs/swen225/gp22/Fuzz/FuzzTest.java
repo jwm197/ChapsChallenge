@@ -34,28 +34,30 @@ public class FuzzTest{
         }
     }
     //inputs to be tested
-    static List<TestInput> inputs = List.of(new TestInput(randomMove(3)));
+    static List<TestInput> inputs = List.of(new TestInput(randomMove(10)));
     record TestInput(List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
+            ChapsChallenge c = new ChapsChallenge();//breakpoint
             for (var m:moves){
-                g.doMove(m);
+                g.doMove(m, c);
 
             }
         };
     };
     //game object for test
     public class Game{
-        void doMove(Move move){//moves player accordingly
+        void doMove(Move move, ChapsChallenge g){//moves player accordingly
+            
             switch(move.ordinal()){
                 case 0:
-                ChapsChallenge.performAction("LEFT");//breakpoint ChapsChallenge 268
+                g.performAction("LEFT");//breakpoint ChapsChallenge 268
                 case 1:
-                ChapsChallenge.performAction("RIGHT");//breakpoint ChapsChallenge 268
+                g.performAction("RIGHT");//breakpoint ChapsChallenge 268
                 case 2:
-                ChapsChallenge.performAction("UP");//breakpoint ChapsChallenge 268
+                g.performAction("UP");//breakpoint ChapsChallenge 268
                 case 3:
-                ChapsChallenge.performAction("DOWN");//breakpoint ChapsChallenge 268
+                g.performAction("DOWN");//breakpoint ChapsChallenge 268
             }
             
         }
