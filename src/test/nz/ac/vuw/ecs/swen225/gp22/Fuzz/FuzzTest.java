@@ -34,7 +34,7 @@ public class FuzzTest{
         }
     }
     //inputs to be tested
-    static List<TestInput> inputs = List.of(new TestInput(randomMove(10)));
+    static List<TestInput> inputs = List.of(new TestInput(randomMove(3)));
     record TestInput(List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
