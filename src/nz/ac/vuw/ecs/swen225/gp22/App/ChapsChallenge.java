@@ -6,18 +6,15 @@ import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -176,12 +173,13 @@ public class ChapsChallenge extends JFrame{
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"),"levels/"));
 		int result = fileChooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
 		    System.out.println("Selected file: " + selectedFile.getName());
-		    newGame(selectedFile.getName());
+		    level = selectedFile.getName();
+		    gameScreen();
 		}
 	}
 	
