@@ -6,6 +6,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -80,7 +81,7 @@ public class ChapsChallenge extends JFrame{
 		// JLabel for displaying game title
 		var title = createLabel("CHAPS CHALLENGE", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// JButton to start game
-		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.25), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen());
+		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.25), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen(level));
 		// JButton to resume saved game from file selector
 		var load = createButton("Load", WIDTH/4, (int)(HEIGHT*0.375), WIDTH/2, HEIGHT/10, SMALL_FONT, e->loadGame());
 		// JButton to view game help info
@@ -102,11 +103,12 @@ public class ChapsChallenge extends JFrame{
 	/**
 	 * Screen for the game.
 	 */
-	public void gameScreen() {
+	public void gameScreen(String name) {
 		// Panel to stores components
 		JPanel panel = new JPanel();
+		closePhase.run();
 		// JLabel to show level player is on
-		var levelText = createLabel("Level: " + level, SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
+		var levelText = createLabel(levelNameFormat(), SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// Timer text
 		var timerText = createLabel("Timer: 60.0s", SwingConstants.CENTER, SMALL_FONT, 0, (int)(-HEIGHT*0.325), WIDTH, HEIGHT);
 		// Inventory text
@@ -117,7 +119,8 @@ public class ChapsChallenge extends JFrame{
 		panel.addKeyListener(new Controller(this));
 		
 		// Creates level (sets up domain/renderer/recorder)
-		newGame(level);
+		if (!newGame(name)) {return;}
+		renderPanel.setBackground(Color.DARK_GRAY);
 
 		timer = new Timer(34,unused->{
 			assert SwingUtilities.isEventDispatchThread();
@@ -127,9 +130,7 @@ public class ChapsChallenge extends JFrame{
 			
 			// updating timer
 			time-=0.034;
-			if (level.equals("level1.xml")) { levelText.setText("Level: 1"); } 
-			else if (level.equals("level2.xml")) { levelText.setText("Level: 2"); }
-			else { levelText.setText("Level: " + level); }
+			levelText.setText(levelNameFormat());
 			timerText.setText("Timer: " + (float)Math.round(time*10)/10 + "s");
 			
 			// repaints gui and renderpanel
@@ -152,9 +153,8 @@ public class ChapsChallenge extends JFrame{
 		});
 		timer.start();
 		panel.setLayout(new BorderLayout());
-		// adds components to panel
-		closePhase.run();
 		closePhase = ()->{remove(panel); timer.stop();};
+		// adds components to panel
 		panel.add(renderPanel, BorderLayout.CENTER);
 		panel.add(levelText, BorderLayout.NORTH);
 		panel.add(timerText, BorderLayout.WEST);
@@ -178,8 +178,7 @@ public class ChapsChallenge extends JFrame{
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
 		    System.out.println("Selected file: " + selectedFile.getName());
-		    level = selectedFile.getName();
-		    gameScreen();
+		    gameScreen(selectedFile.getName());
 		}
 	}
 	
@@ -278,8 +277,8 @@ public class ChapsChallenge extends JFrame{
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { loadGame(); }
-		else if (input.equals("CTRL-1")) { newGame("level1.xml"); }
-		else if (input.equals("CTRL-2")) { newGame("level2.xml"); }
+		else if (input.equals("CTRL-1")) { gameScreen("level1.xml"); }
+		else if (input.equals("CTRL-2")) { gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
 		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.UP, domainLevel.model()); }
@@ -341,19 +340,21 @@ public class ChapsChallenge extends JFrame{
 	 * Creates a new game.
 	 * 
 	 * @param name level name
+	 * @return whether it was successful or not
 	 */
-	public void newGame(String name) {
-		// updates level name and resets timer
-		level = name;
+	public boolean newGame(String name) {
+		// resets timer
 		time = 60;
 		
 		// DOMAIN/RENDERER/RECORDER
 		try{ domainLevel = new Persistency().loadXML("levels/",name); } 
-		catch(Exception e){ e.printStackTrace(); }
+		catch(Exception e){ e.printStackTrace(); menuScreen(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		// recorder.clear();
 		// recorder.parse(domainLevel);
+		level = name;
+		return true;
 	}
 	
 	/**
@@ -382,5 +383,16 @@ public class ChapsChallenge extends JFrame{
 		
 		// return to menu
 		menuScreen();
+	}
+	
+	/**
+	 * Formats level name to be displayed
+	 * 
+	 * @return formatted level name
+	 */
+	private String levelNameFormat() {
+		if (level.equals("level1.xml")) { return "Level: 1"; } 
+		else if (level.equals("level2.xml")) { return "Level: 2"; }
+		else { return"Level: " + level.substring(0,level.length()-4); }
 	}
 }
