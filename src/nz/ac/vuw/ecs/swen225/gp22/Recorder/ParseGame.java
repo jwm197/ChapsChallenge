@@ -14,14 +14,16 @@ public class ParseRecordedGame {
 
     /**Parse the level and load the right level
      *
-     * @param level the node containing the level name
+     * @param level the document containing the level
+     * @return the level name the recording is played off
      */
-    private void parseLevel(Node level){
+    private String parseLevel(Document level){
         if (level==null){
             throw new ParserException("level not found");
         }
-        String levelName=level.selectSingleNode("levelname").getText();
-        //call level here to reset
+
+       return level.selectSingleNode("levelname").getText();
+
     }
 
     /**Parse a move and add it to the
@@ -33,23 +35,14 @@ public class ParseRecordedGame {
            throw new ParserException("Move not found");
         }
         try{
-            accountType = AccountType.valueOf(accountTypeString);
+            parsedFutureMoves.add(new RecordedMove(MoveDirection.valueOf(move.selectSingleNode("move").getText()));
         }catch(IllegalArgumentException e){
-            // report error
+            throw new ParserException("Move direction not found");
         }
 
-        parsedFutureMoves.add(new RecordedMove(super.getCoords(move).get(0),super.getCoords(move).get(1)));
+
     }
-//     @Override
-//    protected HashMap<String, Map<String, String>> parse(Document doc) throws ParserException {
-////        HashMap<String, Map<String, String>> data = new HashMap<>();
-////        Node root = doc.selectSingleNode("recordedGame");
-////        parseLevel("level");
-////        parseMove(root.selectSingleNode("move"));
-////
-////
-////        return data;
-    }
+
 
 
 

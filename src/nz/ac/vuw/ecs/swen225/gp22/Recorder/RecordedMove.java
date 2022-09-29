@@ -10,7 +10,8 @@ import org.dom4j.*;
 record RecordedMove(MoveDirection move) {
     /**do the recorded move*/
     public void execute(){
-        move.move();
+
+        //move().move();
     }
 
 }

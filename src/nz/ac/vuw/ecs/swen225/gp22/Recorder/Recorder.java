@@ -3,19 +3,19 @@ import java.lang.Thread;
 import java.util.ArrayDeque;
 
 
-class MyRecorder{
+class Recorder{
     private ChapsChallenge game;
-    static int tickSpeed=1;
+    static double tickSpeed=1;
     private ArrayDeque<MoveDirection> doneMoves=new ArrayDeque<>();
     private ArrayDeque<MoveDirection> futureMoves=new ArrayDeque<>();
-    MyRecorder(ChapsChallenge game){
+    Recorder(ChapsChallenge game){
         this.game=game;
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
      *
      * @param speed the new tick speed
      */
-    public void setTickSpeed(int speed){
+    public void setTickSpeed(double speed){
         if (speed<=0){
             throw new IllegalArgumentException("Speed has to be greater than 0");
         }
