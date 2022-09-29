@@ -120,12 +120,13 @@ public class ChapsChallenge extends JFrame{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-			//domainLevel.tick();
 			//recorder.parse(domainLevel);
 			
 			// updating timer
 			time-=0.034;
-			levelText.setText("Level: " + level);
+			if (level.equals("level1.xml")) { levelText.setText("Level: 1"); } 
+			else if (level.equals("level2.xml")) { levelText.setText("Level: 2"); }
+			else { levelText.setText("Level: " + level); }
 			timerText.setText("Timer: " + (float)Math.round(time*10)/10 + "s");
 			
 			// repaints gui and renderpanel
