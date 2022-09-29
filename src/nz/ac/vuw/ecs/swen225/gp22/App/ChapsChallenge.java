@@ -5,9 +5,13 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -108,6 +112,8 @@ public class ChapsChallenge extends JFrame{
 		var levelText = createLabel("Level: " + level, SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// Timer text
 		var timerText = createLabel("Timer: 60.0s", SwingConstants.CENTER, SMALL_FONT, 0, (int)(-HEIGHT*0.325), WIDTH, HEIGHT);
+		// Inventory text
+		var inventoryText = createLabel("Inventory", SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// JButton to go back to menu
 		var back = createButton("Back", (int)(WIDTH*0.075), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
 		// Controller for keys
@@ -138,7 +144,7 @@ public class ChapsChallenge extends JFrame{
 				timerText.setText("Timer: NO TIME LEFT");
 				repaint();
 				int result = JOptionPane.showConfirmDialog(this,
-						"<html>You ran out of time!<br/>Would you like to retry level <html>"+level+"?", 
+						"<html>You ran out of time!<br/>Would you like to retry <html>"+level.substring(0,level.length()-4)+"?", 
 						"Level Failed!",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
@@ -148,11 +154,15 @@ public class ChapsChallenge extends JFrame{
 			}
 		});
 		timer.start();
-		panel.setLayout(null);
+		panel.setLayout(new BorderLayout());
 		// adds components to panel
-		addComponents(panel, levelText, back, timerText); // and renderPanel
 		closePhase.run();
 		closePhase = ()->{remove(panel); timer.stop();};
+		panel.add(renderPanel, BorderLayout.CENTER);
+		panel.add(levelText, BorderLayout.NORTH);
+		panel.add(timerText, BorderLayout.WEST);
+		panel.add(inventoryText, BorderLayout.EAST);
+		panel.add(back, BorderLayout.SOUTH);
 		add(panel);
 		setPreferredSize(getSize());
 		pack();
@@ -338,12 +348,10 @@ public class ChapsChallenge extends JFrame{
 		// updates level name and resets timer
 		level = name;
 		time = 60;
-		Level l = null;
 		
 		// DOMAIN/RENDERER/RECORDER
-		try{ l = new Persistency().loadXML("levels/",name); } 
+		try{ domainLevel = new Persistency().loadXML("levels/",name); } 
 		catch(Exception e){ e.printStackTrace(); }
-		domainLevel = l;
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		// recorder.clear();
