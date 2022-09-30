@@ -1,15 +1,22 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
+import org.dom4j.DocumentException;
+
+import java.io.IOException;
 import java.lang.Thread;
 import java.util.ArrayDeque;
 
 
-class Recorder{
+public class Recorder{
     private ChapsChallenge game;
-    static double tickSpeed=1;
-    private ArrayDeque<MoveDirection> doneMoves=new ArrayDeque<>();
-    private ArrayDeque<MoveDirection> futureMoves=new ArrayDeque<>();
-    Recorder(ChapsChallenge game){
+    public static double tickSpeed=1;
+    private RecordedLevel recording;
+    Recorder(ChapsChallenge game,String levelName){
         this.game=game;
+        recording=new RecordedLevel(levelName,new ArrayDeque<>());
+    }
+
+    public void loadRecording(String path, String fileName) throws DocumentException, IOException {
+        recording=ParseRecordedGame.loadXML(path,fileName);
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
      *
@@ -21,20 +28,20 @@ class Recorder{
         }
         tickSpeed=speed;
     }
-    /**Get the next move to do from the future moves arraydeque
+    /**Get the next move to do from the moves arraydeque
      * @return The next recorded move*/
     public MoveDirection getNextMove(){
-        return futureMoves.pollFirst();
+        return recording.moves().pollFirst();
     }
-    /**Get the next move to do from the future moves arraydeque without removing it from it
+    /**Get the next move to do from the moves arraydeque without removing it from it
      * @return The next recorded move*/
     public MoveDirection peekNextMove(){
-        return futureMoves.peekFirst();
+        return recording.moves().peekFirst();
     }
-    /**Add last done move to the arraydeque of done moves
+    /**Add last done move to the arraydeque of  moves
      * @param move the last done move*/
     public void setPreviousMove(MoveDirection move){
-        doneMoves.add(move);
+        recording.moves().add(move);
     }
 
     /**
@@ -45,7 +52,7 @@ class Recorder{
     public void autoReplayGame() throws InterruptedException {
         while(peekNextMove()!=null){
             stepMove();
-            Thread.sleep(1000/tickSpeed);
+            //Thread.sleep(1000/((Long)tickSpeed));
         }
     }
 /**Getter for game
@@ -63,8 +70,6 @@ class Recorder{
         }
 
     }
-
-
 }
 
 

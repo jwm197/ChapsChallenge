@@ -5,47 +5,59 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
 public class ParseRecordedGame {
-    private ArrayDeque<RecordedMove> parsedFutureMoves=new ArrayDeque<>();
+    public static RecordedLevel loadXML(String path, String fileName) throws IOException {
+
+        try{
+            return parseLevel(new SAXReader().read(Persistency.createDoc(path,fileName)));
+        }
+        catch (ParserException | NullPointerException e){
+            throw new ParserException(e.getMessage());
+        }
+        catch (IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
 
     /**Parse the level and load the right level
      *
-     * @param level the document containing the level
-     * @return the level name the recording is played off
+     * @param doc the document containing the level
+     * @return the recorded level object containing the level name and the list of moves
      */
-    private String parseLevel(Document level){
-        if (level==null){
-            throw new ParserException("level not found");
+    private static RecordedLevel parseLevel(Document doc){
+        if (doc==null){
+            throw new ParserException("document not found");
         }
-
-       return level.selectSingleNode("levelname").getText();
+        Node level = doc.selectSingleNode("level");
+        return new RecordedLevel(level.getText(),parseMoves(level.selectNodes("move")));
 
     }
-
     /**Parse a move and add it to the
      *
-     * @param move the move being passed
+     * @param moves the list of recorded moves being passed
      */
-    private void parseMove(Node move) {
-       if (move == null) {
-           throw new ParserException("Move not found");
-        }
+    private static ArrayDeque<MoveDirection> parseMoves(List<Node>moves) {
+        return moves.stream().map(m->parseMove(m)).collect(Collectors.toCollection(ArrayDeque::new));
+    }
+    /**Parse a move and add it to the
+     *
+     * @param move the being passed
+     */
+    private static MoveDirection parseMove(Node move) {
+
         try{
-            parsedFutureMoves.add(new RecordedMove(MoveDirection.valueOf(move.selectSingleNode("move").getText()));
+            return MoveDirection.valueOf(move.selectSingleNode("move").getText());
         }catch(IllegalArgumentException e){
             throw new ParserException("Move direction not found");
         }
 
 
     }
-
-
-
-
-
-
 }
