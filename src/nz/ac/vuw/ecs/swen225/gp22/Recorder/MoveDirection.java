@@ -9,7 +9,7 @@ public enum MoveDirection{
      */
     public void move(ChapsChallenge game){
         if (this!=None){
-            game.performAction();
+            game.performAction(ths.toString());
         }
 
     }
