@@ -3,9 +3,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 import java.awt.Color;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 public class Key implements Item {
-    private LayeredTexture texture;
+    private LayeredTexture texture = Textures.Scrungle;
     private Color color;
 
     public Key(Color color) {
@@ -22,9 +23,13 @@ public class Key implements Item {
 
     public void pickUp(Model m) {
         Player p = m.player();
-        int keyCountBefore = p.keys().size();
+        int playerKeyCountBefore = p.keys().size();
+        int modelKeyCountBefore = m.keys().size();
         p.keys().add(this);
-        int keyCountAfter = p.keys().size();
-        assert keyCountBefore == keyCountAfter-1;
+        m.keys().remove(this);
+        int playerKeyCountAfter = p.keys().size();
+        int modelKeyCountAfter = m.keys().size();
+        assert playerKeyCountBefore == playerKeyCountAfter-1;
+        assert modelKeyCountBefore == modelKeyCountAfter+1;
     }
 }

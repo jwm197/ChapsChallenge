@@ -1,9 +1,10 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 public class WallTile implements Tile {
-    private LayeredTexture texture;
+    private LayeredTexture texture = Textures.Scrungle;
     private IntPoint location;
 
     public WallTile(IntPoint location) {
@@ -19,12 +20,14 @@ public class WallTile implements Tile {
     }
 
     public void playerMovedTo(Model m) {
-        if (canPlayerMoveTo(m)) {
+        /**if (canPlayerMoveTo(m)) {
             return;
-        }
+        }*/
+        return;
     }
 
     public Boolean canPlayerMoveTo(Model m) {
-        throw new Error("Player can't move to wall");
+        // throw new Error("Player can't move to wall");
+        return false;
     }
 }

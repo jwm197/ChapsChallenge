@@ -3,9 +3,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 import java.awt.Color;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 public class LockedDoor extends WallTile {
-    private LayeredTexture texture;
+    private LayeredTexture texture = Textures.Scrungle;
     private Color color;
 
     public LockedDoor(IntPoint location, Color color) {
@@ -37,7 +38,8 @@ public class LockedDoor extends WallTile {
     public Boolean canPlayerMoveTo(Model m) {
         Player p = m.player();
         if (p.keys().stream().filter(k -> k.color().equals(color)).toList().isEmpty()) {
-            throw new Error("Player must have key of the right color to move");
+            // throw new Error("Player must have key of the right color to move");
+            return false;
         }
         return true;
     }

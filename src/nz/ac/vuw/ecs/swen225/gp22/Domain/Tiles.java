@@ -4,23 +4,35 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public class Tiles<T extends Tile> {
-    private List<List<T>> tiles;
+public class Tiles {
+    private List<List<Tile>> tiles;
+    private int width;
+    private int height;
     
-    public Tiles(List<List<T>> tiles) {
+    public Tiles(List<List<Tile>> tiles, int width, int height) {
         this.tiles = tiles;
+        this.width = width;
+        this.height = height;
     }
 
-    public List<List<T>> tiles() {
+    public List<List<Tile>> tiles() {
         return tiles;
     }
 
     public Tile getTile(IntPoint p) {
-        return tiles.get(p.x()).get(p.y());
+        return tiles.get(p.y()).get(p.x());
     }
 
-    public void setTile(IntPoint p, T t) {
+    public void setTile(IntPoint p, Tile t) {
         tiles.get(p.x()).set(p.y(),t);
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
     }
     
     public void forEach(IntPoint center, int wRad, int hRad, Consumer<Tile> command) {

@@ -3,9 +3,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 import java.util.List;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 public class Player implements Entity {
-    private LayeredTexture texture;
+    private LayeredTexture texture = Textures.Scrungle;
     private IntPoint location;
     private List<Key> keys;
     private Boolean locked;
@@ -27,13 +28,16 @@ public class Player implements Entity {
         return keys;
     }
 
-    public void movePlayer(Animator a, Direction d, Model m) {
+    public void movePlayer(Direction d, Model m) {
         if (locked) return;
         locked = true;
 
         IntPoint newPos = location.add(d.direction());
+        if (newPos.x()<0 || newPos.x()>=m.tiles().width()
+        || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
+
         m.tiles().getTile(newPos).playerMovedTo(m);
-        a.Animate(this, null, newPos, 100, () -> {
+        m.animator().Animate(this, texture, newPos, 30, () -> {
             location = newPos;
             locked = false;
         });
