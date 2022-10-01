@@ -1,22 +1,18 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
-import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
-public class ParseRecordedGame {
+public record ParseRecordedGame() {
     public static RecordedLevel loadXML(String path, String fileName) throws IOException {
 
         try{
-            return parseLevel(new SAXReader().read(Persistency.createDoc(path,fileName)));
+            return parseLevel(new SAXReader().read(new Persistency().createDoc(path,fileName)));
         }
         catch (ParserException | NullPointerException e){
             throw new ParserException(e.getMessage());
