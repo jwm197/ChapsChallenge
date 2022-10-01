@@ -38,7 +38,7 @@ public class ParseXML {
             case "Red" -> Color.RED;
             case "Yellow" -> Color.YELLOW;
             case "Green" -> Color.GREEN;
-            default -> Color.BLACK;//Colour not specified.
+            default -> throw new ParserException("Invalid colour");
         };
 
     }
@@ -49,18 +49,15 @@ public class ParseXML {
      * @param doors the list of doors to parse
      */
     private void checkKeysandDoors(List<Node> keys, List<Node> doors){
-        if (keys == null) throw new ParserException("List of keys not found");
-        else if (doors == null) throw new ParserException("List of doors not found");
+        if (keys.isEmpty() || doors.isEmpty()) return;
         List<String> keyColour = keys.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
         List<String> doorColour = doors.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
         Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
         Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-        if (!keyCounts.containsKey("Green")) throw new ParserException("Green key not found");
-        if (!doorCounts.containsKey("Green")) throw new ParserException("No green doors found");
-        keyCounts.entrySet().stream().filter(m -> !m.getKey().equals("Green")).forEach(m -> {
-            if (!keyCounts.get(m.getKey()).equals(doorCounts.get(m.getKey()))) {
+        keyCounts.forEach((key, value) -> {
+            if (!keyCounts.get(key).equals(doorCounts.get(key))) {
                 throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
             }
         });
@@ -136,15 +133,12 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
-//            if(x1 != x2){
-//                while(temp++ == x2) {
-//                    points.add(new IntPoint(x1,y1));
-//                }
-//            }
-//            else if(y1 != y2){
-//                temp = y1;
-//                while(temp++ == y2) points.add(new IntPoint(x1,y1));
-//            }
+            if(x1 != x2){
+                for(int i=x1;i<x2;i++) points.add(new IntPoint(i,y1));
+            }
+            else if(y1 != y2){
+                for(int i=y1;i<y2;i++) points.add(new IntPoint(x1,i));
+            }
             points.add(new IntPoint(x1,y1));
             points.add(new IntPoint(x2,y2));
         });
