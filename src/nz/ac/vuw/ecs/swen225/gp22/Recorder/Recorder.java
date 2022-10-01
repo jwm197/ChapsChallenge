@@ -1,4 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
+import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import org.dom4j.DocumentException;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.ArrayDeque;
 
 public class Recorder{
     private ChapsChallenge game;
-    public static double tickSpeed=1;
+    public static int tickSpeed=1;
     private RecordedLevel recording;
     Recorder(ChapsChallenge game,String levelName){
         this.game=game;
@@ -22,7 +23,7 @@ public class Recorder{
      *
      * @param speed the new tick speed
      */
-    public void setTickSpeed(double speed){
+    public void setTickSpeed(int speed){
         if (speed<=0){
             throw new IllegalArgumentException("Speed has to be greater than 0");
         }
@@ -52,11 +53,10 @@ public class Recorder{
     public void autoReplayGame() throws InterruptedException {
         while(peekNextMove()!=null){
             stepMove();
-            //Thread.sleep(1000/((Long)tickSpeed));
+            Thread.sleep(1000/tickSpeed);
         }
     }
-/**Getter for game
- * @param the chaps challenge game
+/**Getter for the chaps challenge game
  * */
     public ChapsChallenge getGame() {
         return game;

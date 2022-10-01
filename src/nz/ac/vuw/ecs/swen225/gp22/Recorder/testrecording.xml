@@ -1,11 +1,11 @@
 <!--testrecording-->
 <level>
     level1.xml
-    <move>Left</move>
-    <move>Up</move>
-    <move>Down</move>
-    <move>None</move>
-    <move>Right</move>
-    <move>Up</move>
-    <move>Up</move>
+    <move>LEFT</move>
+    <move>UP</move>
+    <move>DOWN</move>
+    <move>NONE</move>
+    <move>RIGHT</move>
+    <move>UP</move>
+    <move>UP</move>
 </level>
