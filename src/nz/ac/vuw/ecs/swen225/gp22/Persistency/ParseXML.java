@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Point;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -40,7 +41,6 @@ public class ParseXML {
             case "Green" -> Color.GREEN;
             default -> throw new ParserException("Invalid colour");
         };
-
     }
 
     /**
@@ -64,16 +64,18 @@ public class ParseXML {
         System.out.println("Keys: " + keyCounts);
         System.out.println("Doors: " + doorCounts);
     }
-
     /**
      * Parse all the keys
      * @param keys a list of keys to parse
      * @return a list of objectbuilder instances containing info about keys
      */
-    private List<FreeTile> parseKeys(List<Node> keys) {
+    private List<Key> parseKeys(List<Node> keys) {
+//        return keys.stream()
+//                .map(node -> (Tile) new FreeTile(getCoords(node),
+//                        new Key(getColour(node.selectSingleNode("colour").getText()))))
+//                .toList();
         return keys.stream()
-                .map(node -> new FreeTile(getCoords(node),
-                        new Key(getColour(node.selectSingleNode("colour").getText()))))
+                .map(node -> new Key(getColour(node.selectSingleNode("colour").getText())))
                 .toList();
     }
 
@@ -82,9 +84,9 @@ public class ParseXML {
      * @param doors a list of doors to parse
      * @return a list of objectbuilder instances containing info about doors
      */
-    private List<LockedDoor> parseDoors(List<Node> doors) {
+    private List<Tile> parseDoors(List<Node> doors) {
         return doors.stream()
-                .map(node -> new LockedDoor(getCoords(node),
+                .map(node -> (Tile) new LockedDoor(getCoords(node),
                         getColour(node.selectSingleNode("colour").getText())))
                 .toList();
     }
@@ -109,10 +111,13 @@ public class ParseXML {
      * @param chips a list of chips to parse
      * @return a list of objectbuilder instances containing info about chips
      */
-    private List<FreeTile> parseChips(List<Node> chips) {
+    private List<Treasure> parseChips(List<Node> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
+//        return chips.stream()
+//                .map(node -> (Tile) new FreeTile(getCoords(node),new Treasure()))
+//                .toList();
         return chips.stream()
-                .map(node -> new FreeTile(getCoords(node),new Treasure()))
+                .map(node -> new Treasure())
                 .toList();
     }
 
@@ -121,7 +126,7 @@ public class ParseXML {
      * @param walls a list of walls to parse
      * @return a list of objectbuilder instances containing info about walls
      */
-    private List<WallTile> parseWalls(List<Node> walls) {
+    private List<Tile> parseWalls(List<Node> walls) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
         List<IntPoint> points = new ArrayList<>();
         walls.forEach(n -> {
@@ -205,20 +210,23 @@ public class ParseXML {
     protected Level parse(Document doc) throws ParserException {
         Node root = doc.selectSingleNode("level");
         checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
-        List<List<? extends Tile>> tiles = List.of(
+        List<List<Tile>> tiles = List.of(
                 parseWalls(root.selectNodes("wall")),
                 parseDoors(root.selectNodes("door")),
-                parseKeys(root.selectNodes("key")),
                 List.of(parseInfo(root.selectSingleNode("info")),
                         parseLock(root.selectSingleNode("lock")),
                         parseExit(root.selectSingleNode("exit")))
         );
 
-        return Level.makeLevel(parsePlayer(root.selectSingleNode("player")),
+        return Level.makeLevel(parsePlayer(
+                root.selectSingleNode("player")),
                 List.of(),//for bugs
-                parseChips(root.selectNodes("chip")).size(),
-                new Tiles(tiles),
-                null,
-                null);
+                parseKeys(root.selectNodes("key")),
+                parseChips(root.selectNodes("chip")),
+                new Tiles(tiles,tiles.get(0).size(),tiles.size()),
+                null,//level 1
+                null//level 1
+        );
+
     }
 }
