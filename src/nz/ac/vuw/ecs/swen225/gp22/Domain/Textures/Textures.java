@@ -12,6 +12,31 @@ import javax.imageio.ImageIO;
  * @author anfri
  */
 public enum Textures implements Texture {
+	/*tiles*/
+    Floor,
+    Wall,
+    LockFrame,
+    LockFill,
+    TreasureLockOverlay,
+    ExitOverlay,
+    
+    /*items*/
+    Key,
+    Note,
+    Treasure,
+    
+    /*player*/
+    PlayerFaceLeft,
+    PlayerFaceRight,
+    
+    /*player animation*/
+    PlayerMoveLeft1,
+    PlayerMoveLeft2,
+    PlayerMoveRight1,
+    PlayerMoveRight2,
+    
+    /*null*/
+    MissingTexture,
 	Scrungle;
 	
 	public static final String IMAGE_PATH = "assets/textures/";

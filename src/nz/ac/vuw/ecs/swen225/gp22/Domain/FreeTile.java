@@ -4,7 +4,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 public class FreeTile implements Tile {
-    private LayeredTexture texture = Textures.Scrungle;
+    private LayeredTexture texture = Textures.Floor;
     private IntPoint location;
     private Item item;
 
