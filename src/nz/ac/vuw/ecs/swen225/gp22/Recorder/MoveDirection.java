@@ -8,13 +8,9 @@ public enum MoveDirection{
      * Apply the move on the entity in this direction
      */
     public void move(ChapsChallenge game){
-<<<<<<< HEAD
-        if (this!=None){
-            game.performAction(ths.toString());
-=======
+
         if (this!=NONE){
             game.performAction(this.toString());
->>>>>>> origin/Recorder
         }
 
     }
