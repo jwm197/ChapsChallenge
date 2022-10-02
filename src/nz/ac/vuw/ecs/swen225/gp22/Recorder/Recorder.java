@@ -24,6 +24,11 @@ public class Recorder{
      * @param fileName the filename of the recording**/
     public void loadRecording(String path, String fileName) throws DocumentException, IOException {
         recording=ParseRecordedGame.loadXML(path,fileName);
+        game.pause(true);
+    }
+    /**Saves a recorded game*/
+    public void saveRecording(String path,String fileName){
+
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
      *
@@ -57,9 +62,10 @@ public class Recorder{
      * @throws InterruptedException if unable to complete
      */
     public void autoReplayGame() throws InterruptedException {
+        game.pause(false);
         while(peekNextMove()!=null){
-            stepMove();
-            Thread.sleep(1000/tickSpeed);
+            doMove();
+            //Thread.sleep(1000/tickSpeed);
         }
     }
 /**Getter for the chaps challenge game
@@ -71,10 +77,15 @@ public class Recorder{
     /**Advance the recorded game 1 move*/
     public void stepMove(){
         if(peekNextMove()!=null){
-            setPreviousMove(peekNextMove());
-            getNextMove().move(game);
+            game.pause(false);
+            doMove();
+            game.pause(true);
         }
 
+    }
+    /**do a single move**/
+    public void doMove(){
+        getNextMove().move(game);
     }
 }
 
