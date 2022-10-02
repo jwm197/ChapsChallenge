@@ -261,13 +261,13 @@ public class ParseXML {
         checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
         List<Key> keys = parseKeys(root.selectNodes("key"), freeTiles);
         List<Treasure> chips = parseChips(root.selectNodes("chip"), freeTiles);
-//        List<List<Tile>> tiles = List.of(
-////                parseWalls(root.selectNodes("wall")),
-////                parseDoors(root.selectNodes("door")),
-//                List.of(parseInfo(root.selectSingleNode("info")),
-//                        parseLock(root.selectSingleNode("lock")),
-//                        parseExit(root.selectSingleNode("exit")))
-//        );
+        List<List<Tile>> tiles = List.of(
+//                parseWalls(root.selectNodes("wall")),
+//                parseDoors(root.selectNodes("door")),
+                List.of(parseInfo(root.selectSingleNode("info")),
+                        parseLock(root.selectSingleNode("lock")),
+                        parseExit(root.selectSingleNode("exit")))
+        );
 
         Player player = parsePlayer(root.selectSingleNode("player"));
         return Level.makeLevel(
@@ -275,7 +275,7 @@ public class ParseXML {
                 List.of(player),//for bugs
                 keys,
                 chips,
-                new Tiles(freeTiles, width,height),
+                new Tiles(tiles, width,height),
                 null,//level 1
                 null//level 1
         );
