@@ -1,6 +1,5 @@
 <!--testrecording-->
-<level>
-    level1.xml
+<level name="level1.xml">
     <move>LEFT</move>
     <move>UP</move>
     <move>DOWN</move>

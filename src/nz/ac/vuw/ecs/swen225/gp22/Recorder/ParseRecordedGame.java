@@ -31,7 +31,7 @@ public record ParseRecordedGame() {
             throw new ParserException("document not found");
         }
         Node level = doc.selectSingleNode("level");
-        return new RecordedLevel(level.getText(),parseMoves(level.selectNodes("move")));
+        return new RecordedLevel(level.selectSingleNode("name").getText(),parseMoves(level.selectNodes("move")));
 
     }
     /**Parse a move and add it to the
