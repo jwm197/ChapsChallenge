@@ -1,6 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
@@ -8,7 +9,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 public class Player implements Entity {
     private LayeredTexture texture = Textures.Scrungle;
     private IntPoint location;
-    private List<Key> keys;
+    private List<Key> keys = new ArrayList<>();
     private Boolean locked;
 
     public Player(IntPoint location) {
