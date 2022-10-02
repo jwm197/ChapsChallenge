@@ -36,7 +36,7 @@ public class WriteXML {
      * @param keys  the list of keys to parse
      * @param doors the list of doors to parse
      */
-    private void checkKeysandDoors(List<FreeTile> keys, List<LockedDoor> doors) {
+    private void checkKeysandDoors(List<Key> keys, List<LockedDoor> doors) {
         if (keys == null) throw new ParserException("List of keys not found");
         else if (doors == null) throw new ParserException("List of doors not found");
 //        List<String> keyColour = keys.stream().map(a->a.item().)
@@ -122,10 +122,8 @@ public class WriteXML {
      * @param levelData
      */
     protected Document write(Document doc, Level levelData) throws IOException {
-//        Model m = levelData.model();
-//        Tiles<? extends Tile> tiles = m.tiles();
         Element root = doc.getRootElement();
-//        checkKeysandDoors(null,null);
+        checkKeysandDoors(levelData.model().keys(),null);
         parsePlayer(root, levelData.model().player());
 //        parseKeys(root, levelData.model().player());
 //        parseDoors(root, levelData.model().player());

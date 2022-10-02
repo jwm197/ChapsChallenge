@@ -166,7 +166,6 @@ public class ParseXML {
      */
     private void parseWalls(List<Node> walls, List<List<Tile>> freeTiles) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
-        List<IntPoint> points = new ArrayList<>();
         walls.forEach(n -> {
             if (n.selectSingleNode("x1") == null || n.selectSingleNode("y1") == null)
                 throw new ParserException("First set of coordinate(s) not found");
@@ -176,22 +175,18 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
+            freeTiles.get(x1).set(y1,new WallTile(new IntPoint(x1,y1)));
             if (x1 != x2) {
-                for (int i = x1; i < x2; i++) points.add(new IntPoint(i, y1));
+                for (int i = x1; i < x2; i++) {
+                    freeTiles.get(i).set(y1,new WallTile(new IntPoint(i,y1)));
+                }
             } else if (y1 != y2) {
-                for (int i = y1; i < y2; i++) points.add(new IntPoint(x1, i));
+                for (int i = y1; i < y2; i++) {
+                    freeTiles.get(x1).set(i,new WallTile(new IntPoint(x1,i)));
+                }
             }
-            points.add(new IntPoint(x1, y1));
-            points.add(new IntPoint(x2, y2));
+            freeTiles.get(x2).set(y2,new WallTile(new IntPoint(x1,y2)));
         });
-
-//        IntStream.range(0, chips.size())
-//                .forEach(i ->
-//                        freeTiles.get(chipLocation.get(i).x())
-//                                .set(chipLocation.get(i).y(), new FreeTile(chipLocation.get(i), chipsList.get(i)))
-//                );
-
-//        return points.stream().map(WallTile::new).collect(Collectors.toList());
     }
 
     /**
