@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.dom4j.DocumentException;
 
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
+import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 
 /**
@@ -46,13 +47,25 @@ public class Controller implements KeyListener{
 		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.performAction("ESC"); }
 		
 		// Moves chap up
-		if (e.getKeyCode()==KeyEvent.VK_UP) { chapsChallenge.performAction("UP"); }
+		if (e.getKeyCode()==KeyEvent.VK_UP) { 
+			chapsChallenge.performAction("UP"); 
+			chapsChallenge.currentMove = MoveDirection.UP;
+		}
 		// Moves chap down
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) { chapsChallenge.performAction("DOWN"); }
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) { 
+			chapsChallenge.performAction("DOWN"); 
+			chapsChallenge.currentMove = MoveDirection.DOWN;
+		}
 		// Moves chap left
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) { chapsChallenge.performAction("LEFT"); }
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) { 
+			chapsChallenge.performAction("LEFT"); 
+			chapsChallenge.currentMove = MoveDirection.LEFT;
+		}
 		// Moves chap right
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) { chapsChallenge.performAction("RIGHT"); }
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) { 
+			chapsChallenge.performAction("RIGHT"); 
+			chapsChallenge.currentMove = MoveDirection.RIGHT;
+		}
 	}
 
 	@Override

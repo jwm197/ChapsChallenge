@@ -3,7 +3,9 @@ package nz.ac.vuw.ecs.swen225.gp22.App;
 import javax.swing.SwingUtilities;
 
 /**
- *  App module
+ * App module
+ *  
+ * @author pratapshek
  */
 
 
