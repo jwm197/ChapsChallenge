@@ -161,7 +161,7 @@ public class ChapsChallenge extends JFrame{
 						"Level Failed!",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
-				if(result == JOptionPane.YES_OPTION){ menuScreen(); gameScreen(level); }
+				if(result == JOptionPane.YES_OPTION){ timer.stop(); gameScreen(level); }
 				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
 				else { closePhase.run(); menuScreen(); }
 			}
@@ -397,8 +397,8 @@ public class ChapsChallenge extends JFrame{
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { loadGame(); }
-		else if (input.equals("CTRL-1")) { gameScreen("level1.xml"); }
-		else if (input.equals("CTRL-2")) { gameScreen("level2.xml"); }
+		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
+		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level_test.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
 		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model()); }
