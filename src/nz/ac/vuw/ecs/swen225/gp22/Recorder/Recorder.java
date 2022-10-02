@@ -11,7 +11,7 @@ public class Recorder{
     private ChapsChallenge game;
     public static int tickSpeed=1;
     private RecordedLevel recording;
-    Recorder(ChapsChallenge game,String levelName){
+    public Recorder(ChapsChallenge game,String levelName){
         this.game=game;
         recording=new RecordedLevel(levelName,new ArrayDeque<>());
     }

@@ -1,5 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
-
+import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 public enum MoveDirection{
     NONE,LEFT,UP,DOWN,RIGHT;
 

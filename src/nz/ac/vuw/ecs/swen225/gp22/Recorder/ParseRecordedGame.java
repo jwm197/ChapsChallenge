@@ -12,7 +12,7 @@ public record ParseRecordedGame() {
     public static RecordedLevel loadXML(String path, String fileName) throws IOException {
 
         try{
-            return parseLevel(new SAXReader().read(new Persistency().createDoc(path,fileName)));
+            return parseLevel(new Persistency().createDoc(path, fileName));
         }
         catch (ParserException | NullPointerException e){
             throw new ParserException(e.getMessage());
