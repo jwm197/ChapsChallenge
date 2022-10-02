@@ -15,7 +15,13 @@ public class Recorder{
         this.game=game;
         recording=new RecordedLevel(levelName,new ArrayDeque<>());
     }
-
+    /**Getter which level the recording is of*/
+    public String getRecordingLevelName(){
+        return recording.levelName();
+    }
+    /**
+     * loads a recorded game
+     * @param fileName the filename of the recording**/
     public void loadRecording(String path, String fileName) throws DocumentException, IOException {
         recording=ParseRecordedGame.loadXML(path,fileName);
     }
