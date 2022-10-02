@@ -1,10 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-public class Bug implements Entity {
-    private LayeredTexture texture;
-    private Point location;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
-    public Bug(Point location) {
+public class Bug implements Entity {
+    private LayeredTexture texture = Textures.Scrungle;
+    private IntPoint location;
+
+    public Bug(IntPoint location) {
         this.location=location;
     }
 
@@ -12,7 +15,7 @@ public class Bug implements Entity {
         return texture;
     }
 
-    public Point location() {
+    public IntPoint location() {
         return location;
     }
 }

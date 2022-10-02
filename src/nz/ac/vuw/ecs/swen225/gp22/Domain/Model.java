@@ -5,10 +5,11 @@ import java.util.List;
 public interface Model {
     Player player();
     List<Entity> entities();
-    int treasureCount();
-    void decreaseTreasureCount();
+    List<Key> keys();
+    List<Treasure> treasure();
     Tiles tiles();
     void onGameOver();
     void onNextLevel();
-    void bindAnimator(Animator a);    
+    void bindAnimator(Animator a);
+    Animator animator();
 }
