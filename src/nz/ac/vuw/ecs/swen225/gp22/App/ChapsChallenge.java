@@ -155,7 +155,7 @@ public class ChapsChallenge extends JFrame{
 			if (time <=0) {
 				time = 0;
 				timerText.setText("<html>Timer:<br/>NO TIME LEFT</html>");
-				repaint();
+				repaint(); 
 				int result = JOptionPane.showConfirmDialog(this,
 						"<html>You ran out of time!<br/>Would you like to retry <html>"+level.substring(0,level.length()-4)+"?", 
 						"Level Failed!",
@@ -398,7 +398,7 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { loadGame(); }
 		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
-		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level_test.xml"); }
+		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
 		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model()); }
