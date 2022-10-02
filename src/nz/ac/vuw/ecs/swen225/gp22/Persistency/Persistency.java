@@ -25,8 +25,8 @@ public record Persistency() {
      */
     public Document createDoc(String path, String fileName) throws IOException, DocumentException {
         File xmlFile = new File(path + fileName + ".xml");
-        if (!xmlFile.exists()) {
-            throw new IOException("XML file doesn't exist");
+        if (xmlFile.createNewFile()) {
+            System.out.println("XML file created successfully");
         }
         SAXReader reader = new SAXReader();
         return reader.read(xmlFile);
@@ -64,10 +64,6 @@ public record Persistency() {
     public void saveXML(String path, String levelName, Level levelData) throws ParserException, IOException, DocumentException {
         try {
             Document doc = new WriteXML().write(createDoc(path, levelName), levelData);
-            OutputFormat format = OutputFormat.createPrettyPrint();
-            XMLWriter writer;
-            writer = new XMLWriter(System.out, format);
-            writer.write(doc);
             System.out.println("Save complete");
         } catch (ParserException | NullPointerException e) {
             throw new ParserException(e.getMessage());

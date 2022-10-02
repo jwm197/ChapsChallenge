@@ -7,7 +7,10 @@ import org.dom4j.Node;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WriteXML {
 
@@ -39,21 +42,19 @@ public class WriteXML {
     private void checkKeysandDoors(List<Key> keys, List<LockedDoor> doors) {
         if (keys == null) throw new ParserException("List of keys not found");
         else if (doors == null) throw new ParserException("List of doors not found");
-//        List<String> keyColour = keys.stream().map(a->a.item().)
+        List<String> keyColour = keys.stream().map(a->getColour(a.color())).toList();
         List<String> doorColour = doors.stream()
-                .map(a -> a.color().toString()).toList();
-        System.out.println(doorColour);
-//        Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-//        Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-//        if (!keyCounts.containsKey("Green")) throw new ParserException("Green key not found");
-//        if (!doorCounts.containsKey("Green")) throw new ParserException("No green doors found");
-//        keyCounts.entrySet().stream().filter(m -> !m.getKey().equals("Green")).forEach(m -> {
-//            if (!keyCounts.get(m.getKey()).equals(doorCounts.get(m.getKey()))) {
-//                throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
-//            }
-//        });
-//        System.out.println("Keys: " + keyCounts);
-//        System.out.println("Doors: " + doorCounts);
+                .map(a -> getColour(a.color())).toList();
+
+        Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+        Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+        keyCounts.forEach((key, value) -> {
+            if (!keyCounts.get(key).equals(doorCounts.get(key))) {
+                throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
+            }
+        });
+        System.out.println("Keys: " + keyCounts);
+        System.out.println("Doors: " + doorCounts);
     }
 
 //    /**
@@ -62,13 +63,11 @@ public class WriteXML {
 //     * @param keys a list of keys to parse
 //     * @return a list of objectbuilder instances containing info about keys
 //     */
-//    private void parseKeys(Element root, List<FreeTile> keys) {
-//        keys.forEach(freeTile -> {
-//            if (freeTile.item() instanceof Key key) {
-//                root.addElement("key").valueOf("name");
-//                root.element("key").element("location").addElement("x").setText(String.valueOf(freeTile.location().x()));
-//                root.element("key").element("location").addElement("y").setText(String.valueOf(freeTile.location().y()));
-//            }
+//    private void parseKeys(Element root, List<Key> keys) {
+//        keys.forEach(key -> {
+//            root.addElement("key").valueOf("name");
+//            root.element("key").element("location").addElement("x").setText(String.valueOf(xxx));
+//            root.element("key").element("location").addElement("y").setText(String.valueOf(xxx));
 //        });
 //    }
 //
@@ -80,6 +79,7 @@ public class WriteXML {
 //     */
 //    private void parseDoors(Element root, List<LockedDoor> doors) {
 //        doors.forEach(lockedDoor -> {
+//
 //            root.addElement("key").valueOf("name");
 //            root.element("key").element("location").addElement("x").setText(String.valueOf(lockedDoor.location().x()));
 //            root.element("key").element("location").addElement("y").setText(String.valueOf(lockedDoor.location().y()));
@@ -96,8 +96,8 @@ public class WriteXML {
     private void parsePlayer(Element root, Player player) {
         if (player == null) throw new ParserException("Player not found");
         checkCoords(player.location());
-        root.element("player").element("location").element("x").setText("999");//String.valueOf(player.location().x())
-        root.element("player").element("location").element("y").setText("999");
+        root.element("player").element("location").element("x").setText(String.valueOf(player.location().x()));
+        root.element("player").element("location").element("y").setText(String.valueOf(player.location().y()));
     }
 
 //    /**
@@ -106,14 +106,13 @@ public class WriteXML {
 //     * @param chips a list of chips to parse
 //     * @return a list of objectbuilder instances containing info about chips
 //     */
-//    private void parseChips(Element root, List<FreeTile> chips) {
+//    private void parseChips(Element root, List<Treasure> chips) {
 //        if (chips.isEmpty()) throw new ParserException("List of chips not found");
 //        chips.forEach(c -> {
-//            if (c.item() instanceof Treasure) {
-//                root.addElement("chip").addElement("location");
-//                root.element("chip").element("location").addElement("x").setText(String.valueOf(c.location().x()));
-//                root.element("chip").element("location").addElement("y").setText(String.valueOf(c.location().y()));
-//            }
+//            root.addElement("chip").addElement("location");
+//            root.element("chip").element("location").addElement("x").setText(String.valueOf(c.location().x()));
+//            root.element("chip").element("location").addElement("y").setText(String.valueOf(c.location().y()));
+//
 //        });
 //    }
 
@@ -123,11 +122,18 @@ public class WriteXML {
      */
     protected Document write(Document doc, Level levelData) throws IOException {
         Element root = doc.getRootElement();
-        checkKeysandDoors(levelData.model().keys(),null);
+
+        List<LockedDoor> doors = new ArrayList<>();
+        levelData.model().tiles().tiles().forEach(tiles -> {
+            tiles.forEach(tile -> {
+                if(tile instanceof LockedDoor t) doors.add(t);
+            });
+        });
+        checkKeysandDoors(levelData.model().keys(),doors);
         parsePlayer(root, levelData.model().player());
-//        parseKeys(root, levelData.model().player());
-//        parseDoors(root, levelData.model().player());
-//        parseChips(root, levelData.model().player());
+//        parseKeys(root, levelData.model().keys());
+//        parseDoors(root, doors);
+//        parseChips(root, levelData.model().treasure());
         return doc;
     }
 }

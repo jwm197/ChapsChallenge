@@ -185,7 +185,7 @@ public class ParseXML {
                     freeTiles.get(x1).set(i,new WallTile(new IntPoint(x1,i)));
                 }
             }
-            freeTiles.get(x2).set(y2,new WallTile(new IntPoint(x1,y2)));
+            freeTiles.get(x2).set(y2,new WallTile(new IntPoint(x2,y2)));
         });
     }
 
@@ -284,8 +284,8 @@ public class ParseXML {
                 keys,
                 chips,
                 new Tiles(freeTiles, width,height),
-                null,
-                null
+                ()->{},
+                ()->{}
         );
     }
 }
