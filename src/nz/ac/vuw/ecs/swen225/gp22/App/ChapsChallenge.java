@@ -39,7 +39,7 @@ import org.dom4j.DocumentException;
 
 public class ChapsChallenge extends JFrame{
 	// Final variables
-	public static final int WIDTH = 1280;
+	public static final int WIDTH = 1080;
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
@@ -54,7 +54,7 @@ public class ChapsChallenge extends JFrame{
 	// DOMAIN/RENDERER/RECORDER
 	RenderPanel renderPanel;
 	Level domainLevel;
-	// Recorder recorder;
+	Recorder recorder;
 	
 	public ChapsChallenge(){
 		assert SwingUtilities.isEventDispatchThread();
@@ -104,13 +104,22 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for the game.
 	 */
 	public void gameScreen(String name) {
-		// Panel to stores components
+		// Panels to stores components
 		JPanel panel = new JPanel();
+		JPanel topPanel = new JPanel();
+		topPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT/12));
+		JPanel leftPanel = new JPanel();
+		leftPanel.setPreferredSize(new Dimension(WIDTH/6, HEIGHT));
+		JPanel rightPanel = new JPanel();
+		rightPanel.setPreferredSize(new Dimension(WIDTH/6, HEIGHT));
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT/14));
+
 		closePhase.run();
 		// JLabel to show level player is on
 		var levelText = createLabel(levelNameFormat(), SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// Timer text
-		var timerText = createLabel("Timer: 60.0s", SwingConstants.CENTER, SMALL_FONT, 0, (int)(-HEIGHT*0.325), WIDTH, HEIGHT);
+		var timerText = createLabel(timerFormat(), SwingConstants.CENTER, SMALL_FONT, 0, (int)(-HEIGHT*0.325), WIDTH, HEIGHT);
 		// Inventory text
 		var inventoryText = createLabel("Inventory", SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// JButton to go back to menu
@@ -131,7 +140,7 @@ public class ChapsChallenge extends JFrame{
 			// updating timer
 			time-=0.034;
 			levelText.setText(levelNameFormat());
-			timerText.setText("Timer: " + (float)Math.round(time*10)/10 + "s");
+			timerText.setText(timerFormat());
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -156,10 +165,14 @@ public class ChapsChallenge extends JFrame{
 		closePhase = ()->{remove(panel); timer.stop();};
 		// adds components to panel
 		panel.add(renderPanel, BorderLayout.CENTER);
-		panel.add(levelText, BorderLayout.NORTH);
-		panel.add(timerText, BorderLayout.WEST);
-		panel.add(inventoryText, BorderLayout.EAST);
-		panel.add(back, BorderLayout.SOUTH);
+		topPanel.add(levelText);
+		panel.add(topPanel, BorderLayout.NORTH);
+		leftPanel.add(timerText);
+		panel.add(leftPanel, BorderLayout.WEST);
+		rightPanel.add(inventoryText);
+		panel.add(rightPanel, BorderLayout.EAST);
+		bottomPanel.add(back);
+		panel.add(bottomPanel, BorderLayout.SOUTH);
 		add(panel);
 		setPreferredSize(getSize());
 		pack();
@@ -281,10 +294,10 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
-		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.UP, domainLevel.model()); }
-		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.DOWN, domainLevel.model()); }
-		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.LEFT, domainLevel.model()); }
-		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(domainLevel.model().animator(), Direction.RIGHT, domainLevel.model()); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model()); }
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model()); }
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model()); }
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
@@ -347,7 +360,7 @@ public class ChapsChallenge extends JFrame{
 		time = 60;
 		
 		// DOMAIN/RENDERER/RECORDER
-		try{ domainLevel = new Persistency().loadXML("levels/",name); } 
+		try{ domainLevel = new Persistency().loadXML("levels/",level.substring(0, level.length()-4)); } 
 		catch(Exception e){ e.printStackTrace(); menuScreen(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
@@ -372,11 +385,14 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void saveAndExit() {
 		pause(true);
-		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ");
+		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0,level.length()-4));
+		if(levelName == null || (levelName != null && (levelName.equals("")))) {
+		    System.out.println("Cancelled save");
+		    return;
+		}
 		
 		// DOMAIN/PERSISTENCY/RECORDER?
-		// timer included in level data?
-		try { new Persistency().saveXML(levelName, domainLevel); } 
+		try { new Persistency().saveXML("levels/", levelName, domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
@@ -394,5 +410,14 @@ public class ChapsChallenge extends JFrame{
 		if (level.equals("level1.xml")) { return "Level: 1"; } 
 		else if (level.equals("level2.xml")) { return "Level: 2"; }
 		else { return"Level: " + level.substring(0,level.length()-4); }
+	}
+	
+	/**
+	 * Formats timer to display
+	 * 
+	 * @return timer string to display
+	 */
+	private String timerFormat() {
+		return "<html>Timer:<br/>" + (float)Math.round(time*10)/10 + "s</html>";
 	}
 }
