@@ -12,7 +12,10 @@ import java.util.stream.IntStream;
  */
 public enum LayeredTextures implements LayeredTexture {
 	//frames are ordered from bottom to top
-	ScrungleLayered(0, Textures.Scrungle, Textures.Scrungle.tint(Color.red));
+	/*tiles*/
+    Exit(Textures.Floor, Textures.ExitOverlay),
+    TreasureLock(Textures.Wall, Textures.TreasureLockOverlay),
+    Lock(1, Textures.Wall, Textures.LockFill, Textures.LockFrame);
 	
 	protected final List<Texture> layers;
 	protected final BiFunction<List<Texture>, Color, List<Texture>> tintStrategy;

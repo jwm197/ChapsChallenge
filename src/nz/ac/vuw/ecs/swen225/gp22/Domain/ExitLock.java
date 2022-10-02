@@ -1,10 +1,10 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTextures;
 
 public class ExitLock extends WallTile {
-    private LayeredTexture texture = Textures.Scrungle;
+    private LayeredTexture texture = LayeredTextures.TreasureLock;
 
     public ExitLock(IntPoint location) {
         super(location);
@@ -15,9 +15,7 @@ public class ExitLock extends WallTile {
     }
 
     public void playerMovedTo(Model m) {
-        if (canPlayerMoveTo(m)) {
-            m.tiles().setTile(location(), new FreeTile(location(), null));
-        }
+        m.tiles().setTile(location(), new FreeTile(location(), null));
     }
 
     public Boolean canPlayerMoveTo(Model m) {

@@ -3,10 +3,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 import java.awt.Color;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTextures;
 
 public class LockedDoor extends WallTile {
-    private LayeredTexture texture = Textures.Scrungle;
+    private LayeredTexture texture = LayeredTextures.Lock;
     private Color color;
 
     public LockedDoor(IntPoint location, Color color) {
@@ -24,15 +24,13 @@ public class LockedDoor extends WallTile {
 
     public void playerMovedTo(Model m) {
         Player p = m.player();
-        if (canPlayerMoveTo(m)) {
-            int sizeBefore = p.keys().size();
-            m.tiles().setTile(location(), new FreeTile(location(), null));
-            Key key = p.keys().stream().filter(k -> k.color().equals(color)).findFirst().get();
-            assert key.color().equals(color);
-            p.keys().remove(key);
-            int sizeAfter = p.keys().size();
-            assert sizeBefore == sizeAfter+1;
-        }
+        int sizeBefore = p.keys().size();
+        m.tiles().setTile(location(), new FreeTile(location(), null));
+        Key key = p.keys().stream().filter(k -> k.color().equals(color)).findFirst().get();
+        assert key.color().equals(color);
+        p.keys().remove(key);
+        int sizeAfter = p.keys().size();
+        assert sizeBefore == sizeAfter+1;
     }
 
     public Boolean canPlayerMoveTo(Model m) {
