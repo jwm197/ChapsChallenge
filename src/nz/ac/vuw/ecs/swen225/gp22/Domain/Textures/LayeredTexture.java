@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 /**
  * Interface representing a Texture with multiple layers
@@ -79,4 +80,14 @@ public interface LayeredTexture extends Iterable<Texture>, Tintable<LayeredTextu
 	
 	//default strategy for tinting layers (applies tint to all layers)
 	static final BiFunction<List<Texture>, Color, List<Texture>> DEFAULT_TINT_METHOD = (l, c) -> l.stream().map(e -> e.tint(c)).toList();
+
+	/**
+     * Stacks one LayeredTexture on top of another
+     * 
+     * @param other the other texture to be stacked on top
+     * @return a new layered texture backed by the combined textures
+     */
+    default LayeredTexture stack(LayeredTexture other) {
+        return () -> Stream.concat(this.layers().stream(), other.layers().stream()).toList();
+    }
 }

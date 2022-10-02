@@ -28,7 +28,7 @@ interface Tintable<R> {
 	 */
 	static BufferedImage tintBufferedImage(BufferedImage source, Color tint) {
 		//generate a new empty image for output
-		BufferedImage tinted = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
+		BufferedImage tinted = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		//for each pixel in the source image
 		for (int x = 0; x < source.getWidth(); x++) {

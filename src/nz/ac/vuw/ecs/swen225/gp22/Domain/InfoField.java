@@ -13,7 +13,7 @@ public class InfoField extends FreeTile {
     }
 
     public LayeredTexture texture() {
-        return texture;
+        return super.texture().stack(texture);
     }
 
     public String info() {

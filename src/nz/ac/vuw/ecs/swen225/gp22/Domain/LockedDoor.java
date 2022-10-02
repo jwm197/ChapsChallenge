@@ -15,7 +15,7 @@ public class LockedDoor extends WallTile {
     }
 
     public LayeredTexture texture() {
-        return texture;
+        return texture.tint(color);
     }
 
     public Color color() {

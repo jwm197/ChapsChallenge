@@ -61,7 +61,7 @@ public enum LayeredTextures implements LayeredTexture {
 	 */
 	static final List<Texture> tintLayer(List<Texture> lt, Color c, int layer) {
 		return IntStream.range(0, lt.size()) //IntStream over length
-				        .mapToObj(i -> i == layer ? lt.get(i): lt.get(i).tint(c)) //map to tinted if index matches
+				        .mapToObj(i -> i != layer ? lt.get(i): lt.get(i).tint(c)) //map to tinted if index matches
 				        .toList(); //condense to list
 	}
 }
