@@ -1,5 +1,5 @@
 <!--Level 1-->
-<level>
+<level width="14" height="13">
     <player>
         <location>
             <x>7</x>
@@ -54,41 +54,41 @@
         <unlocked>false</unlocked>
     </door>
 
-<!--    <door name="southdoor1">-->
-<!--        <location>-->
-<!--            <x>-1</x>-->
-<!--            <y>-3</y>-->
-<!--        </location>-->
-<!--        <colour>Yellow</colour>-->
-<!--        <unlocked>false</unlocked>-->
-<!--    </door>-->
+    <door name="southdoor1">
+        <location>
+            <x>6</x>
+            <y>9</y>
+        </location>
+        <colour>Yellow</colour>
+        <unlocked>false</unlocked>
+    </door>
 
-<!--    <door name="southdoor2">-->
-<!--        <location>-->
-<!--            <x>1</x>-->
-<!--            <y>-3</y>-->
-<!--        </location>-->
-<!--        <colour>Yellow</colour>-->
-<!--        <unlocked>false</unlocked>-->
-<!--    </door>-->
+    <door name="southdoor2">
+        <location>
+            <x>8</x>
+            <y>9</y>
+        </location>
+        <colour>Yellow</colour>
+        <unlocked>false</unlocked>
+    </door>
 
-<!--    <door name="eastdoor1">-->
-<!--        <location>-->
-<!--            <x>3</x>-->
-<!--            <y>2</y>-->
-<!--        </location>-->
-<!--        <colour>Red</colour>-->
-<!--        <unlocked>false</unlocked>-->
-<!--    </door>-->
+    <door name="eastdoor1">
+        <location>
+            <x>10</x>
+            <y>4</y>
+        </location>
+        <colour>Red</colour>
+        <unlocked>false</unlocked>
+    </door>
 
-<!--    <door name="eastdoor2">-->
-<!--        <location>-->
-<!--            <x>3</x>-->
-<!--            <y>-2</y>-->
-<!--        </location>-->
-<!--        <colour>Blue</colour>-->
-<!--        <unlocked>false</unlocked>-->
-<!--    </door>-->
+    <door name="eastdoor2">
+        <location>
+            <x>10</x>
+            <y>8</y>
+        </location>
+        <colour>Blue</colour>
+        <unlocked>false</unlocked>
+    </door>
 
     <!-- keys -->
     <key name="bluekey1">
@@ -107,53 +107,53 @@
         <colour>Blue</colour>
     </key>
 
-<!--    <key name="redkey1">-->
-<!--        <location>-->
-<!--            <x>2</x>-->
-<!--            <y>1</y>-->
-<!--        </location>-->
-<!--        <colour>Red</colour>-->
-<!--    </key>-->
+    <key name="redkey1">
+        <location>
+            <x>9</x>
+            <y>5</y>
+        </location>
+        <colour>Red</colour>
+    </key>
 
-<!--    <key name="redkey2">-->
-<!--        <location>-->
-<!--            <x>1</x>-->
-<!--            <y>-6</y>-->
-<!--        </location>-->
-<!--        <colour>Red</colour>-->
-<!--    </key>-->
+    <key name="redkey2">
+        <location>
+            <x>9</x>
+            <y>7</y>
+        </location>
+        <colour>Red</colour>
+    </key>
 
-<!--    <key name="yellowkey1">-->
-<!--        <location>-->
-<!--            <x>2</x>-->
-<!--            <y>-5</y>-->
-<!--        </location>-->
-<!--        <colour>Yellow</colour>-->
-<!--    </key>-->
+    <key name="yellowkey1">
+        <location>
+            <x>2</x>
+            <y>4</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
 
-<!--    <key name="yellowkey2">-->
-<!--        <location>-->
-<!--            <x>2</x>-->
-<!--            <y>5</y>-->
-<!--        </location>-->
-<!--        <colour>Yellow</colour>-->
-<!--    </key>-->
+    <key name="yellowkey2">
+        <location>
+            <x>12</x>
+            <y>4</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
 
-<!--    <key name="greenkey1">-->
-<!--        <location>-->
-<!--            <x>2</x>-->
-<!--            <y>1</y>-->
-<!--        </location>-->
-<!--        <colour>Green</colour>-->
-<!--    </key>-->
+    <key name="greenkey1">
+        <location>
+            <x>8</x>
+            <y>12</y>
+        </location>
+        <colour>Green</colour>
+    </key>
 
-<!--    <key name="greenkey2">-->
-<!--        <location>-->
-<!--            <x>1</x>-->
-<!--            <y>5</y>-->
-<!--        </location>-->
-<!--        <colour>Green</colour>-->
-<!--    </key>-->
+    <key name="greenkey2">
+        <location>
+            <x>6</x>
+            <y>12</y>
+        </location>
+        <colour>Green</colour>
+    </key>
 
     <!-- chips -->
     <chip name="chip1">
@@ -254,6 +254,7 @@
             <x>7</x>
             <y>2</y>
         </location>
+        <destination>test</destination>
     </exit>
 
     <!-- walls -->
