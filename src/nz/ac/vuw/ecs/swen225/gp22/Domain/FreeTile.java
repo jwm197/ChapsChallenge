@@ -14,7 +14,7 @@ public class FreeTile implements Tile {
     }
 
     public LayeredTexture texture() {
-        return texture;
+        return item == null ? texture : texture.stack(item.texture());
     }
 
     public IntPoint location() {

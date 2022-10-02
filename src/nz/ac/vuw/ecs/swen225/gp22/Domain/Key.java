@@ -14,7 +14,7 @@ public class Key implements Item {
     }
     
     public LayeredTexture texture() {
-        return texture;
+        return texture.tint(color);
     }
 
     public Color color() {
