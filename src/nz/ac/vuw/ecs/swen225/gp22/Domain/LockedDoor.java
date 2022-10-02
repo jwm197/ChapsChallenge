@@ -24,15 +24,13 @@ public class LockedDoor extends WallTile {
 
     public void playerMovedTo(Model m) {
         Player p = m.player();
-        if (canPlayerMoveTo(m)) {
-            int sizeBefore = p.keys().size();
-            m.tiles().setTile(location(), new FreeTile(location(), null));
-            Key key = p.keys().stream().filter(k -> k.color().equals(color)).findFirst().get();
-            assert key.color().equals(color);
-            p.keys().remove(key);
-            int sizeAfter = p.keys().size();
-            assert sizeBefore == sizeAfter+1;
-        }
+        int sizeBefore = p.keys().size();
+        m.tiles().setTile(location(), new FreeTile(location(), null));
+        Key key = p.keys().stream().filter(k -> k.color().equals(color)).findFirst().get();
+        assert key.color().equals(color);
+        p.keys().remove(key);
+        int sizeAfter = p.keys().size();
+        assert sizeBefore == sizeAfter+1;
     }
 
     public Boolean canPlayerMoveTo(Model m) {

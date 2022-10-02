@@ -26,11 +26,9 @@ public class FreeTile implements Tile {
     }
 
     public void playerMovedTo(Model m) {
-        if (canPlayerMoveTo(m)) {
-            if (item == null) { return; }
-            item.pickUp(m);
-            item = null;
-        }
+        if (item == null) { return; }
+        item.pickUp(m);
+        item = null;
     }
 
     public Boolean canPlayerMoveTo(Model m) {

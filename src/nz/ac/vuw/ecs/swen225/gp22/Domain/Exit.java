@@ -15,8 +15,6 @@ public class Exit extends FreeTile {
     }
 
     public void playerMovedTo(Model m) {
-        if (canPlayerMoveTo(m)) {
-            m.onNextLevel();
-        }
+        m.onNextLevel();
     }
 }

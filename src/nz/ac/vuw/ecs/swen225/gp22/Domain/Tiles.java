@@ -20,7 +20,7 @@ public class Tiles {
     }
 
     public Tile getTile(IntPoint p) {
-        return tiles.get(p.y()).get(p.x());
+        return tiles.get(p.x()).get(p.y());
     }
 
     public void setTile(IntPoint p, Tile t) {

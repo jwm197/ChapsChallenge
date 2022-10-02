@@ -20,9 +20,6 @@ public class WallTile implements Tile {
     }
 
     public void playerMovedTo(Model m) {
-        /**if (canPlayerMoveTo(m)) {
-            return;
-        }*/
         return;
     }
 

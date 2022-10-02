@@ -15,9 +15,7 @@ public class ExitLock extends WallTile {
     }
 
     public void playerMovedTo(Model m) {
-        if (canPlayerMoveTo(m)) {
-            m.tiles().setTile(location(), new FreeTile(location(), null));
-        }
+        m.tiles().setTile(location(), new FreeTile(location(), null));
     }
 
     public Boolean canPlayerMoveTo(Model m) {
