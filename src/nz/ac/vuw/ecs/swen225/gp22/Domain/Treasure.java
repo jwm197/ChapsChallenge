@@ -15,6 +15,5 @@ public class Treasure implements Item {
         m.treasure().remove(this);
         int treasureCountAfter = m.treasure().size();
         assert treasureCountBefore == treasureCountAfter+1;
-        assert treasureCountAfter >= 0;
     }
 }
