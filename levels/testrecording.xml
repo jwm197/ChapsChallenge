@@ -1,10 +1,10 @@
 <!--testrecording-->
 <level name="level1.xml">
-    <move>LEFT</move>
-    <move>UP</move>
-    <move>DOWN</move>
-    <move>NONE</move>
-    <move>RIGHT</move>
-    <move>UP</move>
-    <move>UP</move>
+    <move time="59">LEFT</move>
+    <move time="58">UP</move>
+    <move time="50">DOWN</move>
+    <move time="50">NONE</move>
+    <move time="45">RIGHT</move>
+    <move time="40">UP</move>
+    <move time="30">UP</move>
 </level>

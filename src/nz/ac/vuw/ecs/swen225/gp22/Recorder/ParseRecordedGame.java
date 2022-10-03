@@ -39,17 +39,17 @@ public record ParseRecordedGame() {
      *
      * @param moves the list of recorded moves being passed
      */
-    private static ArrayDeque<MoveDirection> parseMoves(List<Node>moves) {
+    private static ArrayDeque<RecordedMove> parseMoves(List<Node>moves) {
         return moves.stream().map(m->parseMove(m)).collect(Collectors.toCollection(ArrayDeque::new));
     }
     /**Parse a move and add it to the
      *
      * @param move the being passed
      */
-    private static MoveDirection parseMove(Node move) {
+    private static RecordedMove parseMove(Node move) {
 
         try{
-            return MoveDirection.valueOf(move.getText());
+            return new RecordedMove(MoveDirection.valueOf(move.getText()),Float.parseFloat(move.valueOf("@name")));
         }catch(IllegalArgumentException e){
             throw new ParserException("Move direction not found");
         }

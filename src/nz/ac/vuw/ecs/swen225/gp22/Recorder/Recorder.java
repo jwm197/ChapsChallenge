@@ -9,7 +9,7 @@ import java.util.ArrayDeque;
 
 public class Recorder{
     private ChapsChallenge game;
-    public static int tickSpeed=1;
+    private float tickSpeed=1;
     private RecordedLevel recording;
     public Recorder(ChapsChallenge game,String levelName){
         this.game=game;
@@ -24,7 +24,6 @@ public class Recorder{
      * @param fileName the filename of the recording**/
     public void loadRecording(String path, String fileName) throws DocumentException, IOException {
         recording=ParseRecordedGame.loadXML(path,fileName);
-        //game.pause(true);
     }
     /**Saves a recorded game*/
     public void saveRecording(String path,String fileName){
@@ -34,25 +33,28 @@ public class Recorder{
      *
      * @param speed the new tick speed
      */
-    public void setTickSpeed(int speed){
+    public void setTickSpeed(float speed){
         if (speed<=0){
             throw new IllegalArgumentException("Speed has to be greater than 0");
         }
         tickSpeed=speed;
     }
+    public float getTickSpeed(){
+       return tickSpeed;
+    }
     /**Get the next move to do from the moves arraydeque
      * @return The next recorded move*/
-    public MoveDirection getNextMove(){
+    public RecordedMove getNextMove(){
         return recording.moves().pollFirst();
     }
     /**Get the next move to do from the moves arraydeque without removing it from it
      * @return The next recorded move*/
-    public MoveDirection peekNextMove(){
+    public RecordedMove peekNextMove(){
         return recording.moves().peekFirst();
     }
     /**Add last done move to the arraydeque of  moves
      * @param move the last done move*/
-    public void setPreviousMove(MoveDirection move){
+    public void setPreviousMove(RecordedMove move){
         recording.moves().add(move);
     }
 
@@ -62,7 +64,6 @@ public class Recorder{
      * @throws InterruptedException if unable to complete
      */
     public void autoReplayGame() throws InterruptedException {
-        game.pause(false);
         while(peekNextMove()!=null){
             doMove();
             //Thread.sleep(1000/tickSpeed);
@@ -77,9 +78,7 @@ public class Recorder{
     /**Advance the recorded game 1 move*/
     public void stepMove(){
         if(peekNextMove()!=null){
-            game.pause(false);
             doMove();
-            game.pause(true);
         }
 
     }
