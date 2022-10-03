@@ -84,7 +84,7 @@ public class ChapsChallenge extends JFrame{
 		// JLabel for displaying game title
 		var title = createLabel("CHAPS CHALLENGE", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.425), WIDTH, HEIGHT);
 		// JButton to start game
-		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.15), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen(level));
+		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.15), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen("level1.xml"));
 		// JButton to resume saved game from file selector
 		var load = createButton("Load Level", WIDTH/4, (int)(HEIGHT*0.275), WIDTH/2, HEIGHT/10, SMALL_FONT, e->loadGame());
 		// JButton to resume saved game from file selector
@@ -493,9 +493,16 @@ public class ChapsChallenge extends JFrame{
 		autoReplay = false;
 		
 		// DOMAIN/RENDERER/RECORDER
+		// Load recorder for xml
 		try { recorder.loadRecording("levels/", name.substring(0, name.length()-4)); } 
 		catch (DocumentException e) { e.printStackTrace(); menuScreen(); return false;} 
 		catch (IOException e) { e.printStackTrace(); menuScreen(); return false;}
+		String recorderName = recorder.getRecordingLevelName();
+		
+		// Load level from xml
+		try{ domainLevel = new Persistency().loadXML("levels/",recorderName.substring(0, recorderName.length()-4)); } 
+		catch(Exception e){ e.printStackTrace(); menuScreen(); return false;}
+		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		level = name;
@@ -560,8 +567,8 @@ public class ChapsChallenge extends JFrame{
 	 * Public if fuzz testing requires it.
 	 */
 	public void stepMove() {
-		renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 		recorder.stepMove();
+		renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 		// updating timer
 		time-=Recorder.tickSpeed/1000;
 	}
