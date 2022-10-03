@@ -31,7 +31,8 @@ public record ParseRecordedGame() {
             throw new ParserException("document not found");
         }
         Node level = doc.selectSingleNode("level");
-        return new RecordedLevel(level.selectSingleNode("name").getText(),parseMoves(level.selectNodes("move")));
+
+        return new RecordedLevel(level.valueOf("@name"),parseMoves(level.selectNodes("move")));
 
     }
     /**Parse a move and add it to the
@@ -48,7 +49,7 @@ public record ParseRecordedGame() {
     private static MoveDirection parseMove(Node move) {
 
         try{
-            return MoveDirection.valueOf(move.selectSingleNode("move").getText());
+            return MoveDirection.valueOf(move.getText());
         }catch(IllegalArgumentException e){
             throw new ParserException("Move direction not found");
         }

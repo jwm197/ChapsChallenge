@@ -24,7 +24,7 @@ public class Recorder{
      * @param fileName the filename of the recording**/
     public void loadRecording(String path, String fileName) throws DocumentException, IOException {
         recording=ParseRecordedGame.loadXML(path,fileName);
-        game.pause(true);
+        //game.pause(true);
     }
     /**Saves a recorded game*/
     public void saveRecording(String path,String fileName){
