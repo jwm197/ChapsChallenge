@@ -62,7 +62,6 @@ public class ChapsChallenge extends JFrame{
 	Recorder recorder;
 	
 	public ChapsChallenge(){
-		assert SwingUtilities.isEventDispatchThread();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		try { UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); } 
 		catch (ClassNotFoundException e1) { e1.printStackTrace(); } 
