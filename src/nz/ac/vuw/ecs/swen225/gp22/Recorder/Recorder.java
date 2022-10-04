@@ -84,7 +84,7 @@ public class Recorder{
     }
     /**do a single move**/
     public void doMove(){
-        getNextMove().move(game);
+        getNextMove().direction().move(game);
     }
 }
 

@@ -49,7 +49,7 @@ public record ParseRecordedGame() {
     private static RecordedMove parseMove(Node move) {
 
         try{
-            return new RecordedMove(MoveDirection.valueOf(move.getText()),Float.parseFloat(move.valueOf("@name")));
+            return new RecordedMove(MoveDirection.valueOf(move.getText()),Float.parseFloat(move.valueOf("@time")));
         }catch(IllegalArgumentException e){
             throw new ParserException("Move direction not found");
         }
