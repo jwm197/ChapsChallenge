@@ -33,15 +33,18 @@ public class FuzzTest{
     }
     //inputs to be tested
     
-    static List<TestInput> inputs1 = List.of(new TestInput(Move.Load1, randomMoves(100)));
-    static List<TestInput> inputs2 = List.of(new TestInput(Move.Load2, randomMoves(100)));
+    static List<TestInput> inputs1 = List.of(new TestInput(Move.Load1, randomMoves(1000)));
+    static List<TestInput> inputs2 = List.of(new TestInput(Move.Load2, randomMoves(1000))); 
     record TestInput(Move level, List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
             ChapsChallenge c = new ChapsChallenge();
+            c.menuScreen();
+            System.out.println(level);
             g.doMove(level, c);
             for (var m:moves){
                 g.doMove(m, c);
+                
             }
             g.doMove(Move.Exit, c);
         };
