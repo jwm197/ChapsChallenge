@@ -2,15 +2,12 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Point;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
