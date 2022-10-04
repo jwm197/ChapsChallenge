@@ -485,7 +485,7 @@ public class ChapsChallenge extends JFrame{
 		currentMove = MoveDirection.NONE;
 		
 		// DOMAIN/RENDERER/RECORDER
-		domainObject.setLevel(name.substring(0, name.length()-4));
+		domainObject.setLevel(name);
 		if (domainObject.level() == null) return false;
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainObject.level().model());  // this can be done at any time allowing dynamic level switching
@@ -508,13 +508,13 @@ public class ChapsChallenge extends JFrame{
 		
 		// DOMAIN/RENDERER/RECORDER
 		// Load recorder for xml
-		try { recorder.loadRecording("levels/", name.substring(0, name.length()-4)); } 
+		try { recorder.loadRecording("levels/", name); } 
 		catch (DocumentException e) { e.printStackTrace(); menuScreen(); return false;} 
 		catch (IOException e) { e.printStackTrace(); menuScreen(); return false;}
 		String recorderName = recorder.getRecordingLevelName();
 		
 		// Load level from xml
-		domainObject.setLevel(name.substring(0, recorderName.length()-4));
+		domainObject.setLevel(recorderName);
 		if (domainObject.level() == null) return false;
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
@@ -547,7 +547,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// DOMAIN/PERSISTENCY/RECORDER?
-		try { new Persistency().saveXML("levels/", levelName, domainObject.level()); } 
+		try { new Persistency().saveXML("levels/", levelName + ".xml", domainObject.level()); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
