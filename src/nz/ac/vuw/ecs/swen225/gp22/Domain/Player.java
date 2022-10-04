@@ -45,7 +45,7 @@ public class Player implements Entity {
         return keys;
     }
 
-    public void movePlayer(Direction d, Model m) {
+    public void movePlayer(Direction d, Model m, Runnable r) {
         direction = d;
         texture = playerTextures.get(direction);
 
@@ -63,6 +63,7 @@ public class Player implements Entity {
         m.animator().Animate(this, playerAnimations.get(direction), newPos, 5, () -> {
             location = newPos;
             locked = false;
+            r.run();
         });
     }
 }
