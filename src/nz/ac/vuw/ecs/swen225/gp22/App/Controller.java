@@ -17,57 +17,22 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
  * @author pratapshek
  */
 
-public class Controller implements KeyListener{
-	final ChapsChallenge chapsChallenge;
-	
-	Controller(ChapsChallenge c) { this.chapsChallenge = c; }	
-	
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	@Override
-	public void keyPressed(KeyEvent e) {		
-		// Checks if control is held down
-		if (e.isControlDown()) {
-			// Ctrl+x exits the game, doesn't save
-			if (e.getKeyCode()==KeyEvent.VK_X) { chapsChallenge.performAction("CTRL-X"); }
-			// Ctrl+s exits and saves the game
-			if (e.getKeyCode()==KeyEvent.VK_S) { chapsChallenge.performAction("CTRL-S"); }
-			// Ctrl+r file selector to resume a saved game
-			if (e.getKeyCode()==KeyEvent.VK_R) { chapsChallenge.performAction("CTRL-R"); }
-			// Ctrl+1 starts a new game at level 1
-			if (e.getKeyCode()==KeyEvent.VK_1) { chapsChallenge.performAction("CTRL-1"); }
-			// Ctrl+2 starts a new game at level 2
-			if (e.getKeyCode()==KeyEvent.VK_2) { chapsChallenge.performAction("CTRL-2"); }
-		}
-		
-		// Space pauses game
-		if (e.getKeyCode()==KeyEvent.VK_SPACE) { chapsChallenge.performAction("SPACE"); }
-		// Esc resumes game
-		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { chapsChallenge.performAction("ESC"); }
-		
-		// Moves chap up
-		if (e.getKeyCode()==KeyEvent.VK_UP) { 
-			chapsChallenge.performAction("UP"); 
-			chapsChallenge.currentMove = MoveDirection.UP;
-		}
-		// Moves chap down
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) { 
-			chapsChallenge.performAction("DOWN"); 
-			chapsChallenge.currentMove = MoveDirection.DOWN;
-		}
-		// Moves chap left
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) { 
-			chapsChallenge.performAction("LEFT"); 
-			chapsChallenge.currentMove = MoveDirection.LEFT;
-		}
-		// Moves chap right
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) { 
-			chapsChallenge.performAction("RIGHT"); 
-			chapsChallenge.currentMove = MoveDirection.RIGHT;
-		}
+public class Controller extends Keys{
+	Controller(ChapsChallenge c) { 
+		setAction(KeyEvent.VK_X,()->c.performAction("CTRL-X"),()->{},true);
+		setAction(KeyEvent.VK_S,()->c.performAction("CTRL-S"),()->{},true);
+		setAction(KeyEvent.VK_R,()->c.performAction("CTRL-R"),()->{},true);
+		setAction(KeyEvent.VK_1,()->c.performAction("CTRL-1"),()->{},true);
+		setAction(KeyEvent.VK_2,()->c.performAction("CTRL-2"),()->{},true);
+		setAction(KeyEvent.VK_SPACE,()->c.performAction("SPACE"),()->{},false);
+		setAction(KeyEvent.VK_ESCAPE,()->c.performAction("ESC"),()->{},false);
+		setAction(KeyEvent.VK_UP, ()->{c.performAction("UP");c.currentMove=MoveDirection.UP;},
+				()->{if(c.currentMove==MoveDirection.UP) {c.currentMove=MoveDirection.NONE;}}, false);
+		setAction(KeyEvent.VK_DOWN, ()->{c.performAction("DOWN");c.currentMove=MoveDirection.DOWN;},
+				()->{if(c.currentMove==MoveDirection.DOWN) {c.currentMove=MoveDirection.NONE;}}, false);
+		setAction(KeyEvent.VK_LEFT, ()->{c.performAction("LEFT");c.currentMove=MoveDirection.LEFT;},
+				()->{if(c.currentMove==MoveDirection.LEFT) {c.currentMove=MoveDirection.NONE;}}, false);
+		setAction(KeyEvent.VK_RIGHT, ()->{c.performAction("RIGHT");c.currentMove=MoveDirection.RIGHT;},
+				()->{if(c.currentMove==MoveDirection.RIGHT) {c.currentMove=MoveDirection.NONE;}}, false);
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
 }
