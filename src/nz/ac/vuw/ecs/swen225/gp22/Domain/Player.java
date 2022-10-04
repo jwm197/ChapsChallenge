@@ -60,7 +60,7 @@ public class Player implements Entity {
 
         locked = true;
         t.playerMovedTo(m);
-        m.animator().Animate(this, playerAnimations.get(direction), newPos, 5, () -> {
+        m.animator().Animate(this, playerAnimations.get(direction), newPos, 10, () -> {
             location = newPos;
             locked = false;
             r.run();
