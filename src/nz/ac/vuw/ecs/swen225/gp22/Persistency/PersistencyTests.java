@@ -46,7 +46,7 @@ record PersistencyTests() {
     void TestReadWriteXML1() {
         try {
             Level l = new Persistency().loadXML("levels/","level1");
-            l.model().player().movePlayer(Direction.RIGHT,l.model());
+            l.model().player().movePlayer(Direction.RIGHT,l.model(),()->{});
             new Persistency().saveXML("test_levels/","level1_test",l);
 //            assert
         } catch (ParserException | IOException | DocumentException e) {

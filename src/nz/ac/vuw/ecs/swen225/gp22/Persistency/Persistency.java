@@ -46,9 +46,9 @@ public record Persistency() {
         try {
             return new ParseXML().parse(createDoc(path, fileName));
         } catch (ParserException | NullPointerException e) {
-            throw new ParserException(e.getMessage());
+            throw new ParserException(e.toString());
         } catch (IOException e) {
-            throw new IOException(e.getMessage());
+            throw new IOException(e.toString());
         }
     }
 
@@ -64,11 +64,12 @@ public record Persistency() {
     public void saveXML(String path, String levelName, Level levelData) throws ParserException, IOException, DocumentException {
         try {
             Document doc = new WriteXML().write(createDoc(path, levelName), levelData);
+            System.out.println(doc.toString());
             System.out.println("Save complete");
         } catch (ParserException | NullPointerException e) {
-            throw new ParserException(e.getMessage());
+            throw new ParserException(e.toString());
         } catch (IOException e) {
-            throw new IOException(e.getMessage());
+            throw new IOException(e.toString());
         }
     }
 
