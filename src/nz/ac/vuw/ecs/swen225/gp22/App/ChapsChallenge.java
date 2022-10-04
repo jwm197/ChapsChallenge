@@ -44,7 +44,7 @@ public class ChapsChallenge extends JFrame{
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
-	public static final double delay = 0.034;
+	public static final double delay = 0.017;
 	
 	// Private variables
 	private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class ChapsChallenge extends JFrame{
 	
 	// DOMAIN/RENDERER/RECORDER
 	RenderPanel renderPanel;
-	Level domainLevel;
+	Domain domainObject = new Domain();
 	Recorder recorder;
 	
 	public ChapsChallenge(){
@@ -138,12 +138,12 @@ public class ChapsChallenge extends JFrame{
 		// Controller for keys
 		panel.addKeyListener(new Controller(this));
 		
-		timer = new Timer(34,unused->{
+		timer = new Timer((int)(delay*1000),unused->{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			// recorder
-			recorder.setPreviousMove(currentMove);
+			recorder.setPreviousMove(new RecordedMove(currentMove, time));
 			if (currentMove!=MoveDirection.NONE) performAction(currentMove.toString());
 			//currentMove = MoveDirection.NONE;
 			
@@ -258,25 +258,25 @@ public class ChapsChallenge extends JFrame{
 		// Set speed
 		var setSpeed = new JSlider(1,10,1);
 		// Speed label
-		var speedText = createLabel("Speed x" + Recorder.tickSpeed, SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
+		var speedText = createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
 		var stepMove = createButton("Step Move", WIDTH*3/4, HEIGHT*3/4, WIDTH/5, HEIGHT/10, SMALL_FONT, 
 				e->{if (!autoReplay) stepMove();});
 				
 		renderPanel.setBackground(Color.DARK_GRAY);
 		
-		timer = new Timer(34,unused->{
-			assert SwingUtilities.isEventDispatchThread();
+		timer = new Timer((int)(delay*1000),unused->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
+			for (int i=0; i<recorder.getTickSpeed(); i++) {
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			time-=delay;}
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
-			time-=delay*Recorder.tickSpeed;
 			levelText.setText(levelNameFormat());
 			timerText.setText(timerFormat());
 			inventoryText.setText(inventoryFormat());
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
-			speedText.setText("Speed x" + Recorder.tickSpeed);
+			speedText.setText("Speed x" + recorder.getTickSpeed());
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -415,12 +415,12 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { pause(true); }
 		else if (input.equals("ESC")) { pause(false); }
-		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model(), afterMove); }
-		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model(), afterMove); }
-		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model(), afterMove); }
-		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model(), afterMove); }
-		System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
-				+ domainLevel.model().player().location().y());
+		else if (input.equals("UP")) { domainObject.level().model().player().movePlayer(Direction.UP, domainObject.level().model(), afterMove); }
+		else if (input.equals("DOWN")) { domainObject.level().model().player().movePlayer(Direction.DOWN, domainObject.level().model(), afterMove); }
+		else if (input.equals("LEFT")) { domainObject.level().model().player().movePlayer(Direction.LEFT, domainObject.level().model(), afterMove); }
+		else if (input.equals("RIGHT")) { domainObject.level().model().player().movePlayer(Direction.RIGHT, domainObject.level().model(), afterMove); }
+		System.out.println(input + ", Player pos: " + domainObject.level().model().player().location().x() + " "
+				+ domainObject.level().model().player().location().y());
 	}
 	
 	/**
@@ -485,10 +485,10 @@ public class ChapsChallenge extends JFrame{
 		currentMove = MoveDirection.NONE;
 		
 		// DOMAIN/RENDERER/RECORDER
-		try{ domainLevel = new Persistency().loadXML("levels/",name.substring(0, name.length()-4)); } 
-		catch(Exception e){ e.printStackTrace(); menuScreen(); return false;}
+		domainObject.setLevel(name.substring(0, name.length()-4));
+		if (domainObject.level() == null) return false;
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
+		renderPanel.bind(domainObject.level().model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
 	}
@@ -514,11 +514,11 @@ public class ChapsChallenge extends JFrame{
 		String recorderName = recorder.getRecordingLevelName();
 		
 		// Load level from xml
-		try{ domainLevel = new Persistency().loadXML("levels/",recorderName.substring(0, recorderName.length()-4)); } 
-		catch(Exception e){ e.printStackTrace(); menuScreen(); return false;}
+		domainObject.setLevel(name.substring(0, recorderName.length()-4));
+		if (domainObject.level() == null) return false;
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
+		renderPanel.bind(domainObject.level().model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
 	}
@@ -547,7 +547,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// DOMAIN/PERSISTENCY/RECORDER?
-		try { new Persistency().saveXML("levels/", levelName, domainLevel); } 
+		try { new Persistency().saveXML("levels/", levelName, domainObject.level()); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
@@ -579,8 +579,8 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	private String inventoryFormat() {
-		return "<html>INVENTORY:<br/><br/>Keys <br/>" + domainLevel.model().player().keys().size() 
-				+ "<br/><br/>Treasure<br/>remaining <br/>" + domainLevel.model().treasure().size();
+		return "<html>INVENTORY:<br/><br/>Keys <br/>" + domainObject.level().model().player().keys().size() 
+				+ "<br/><br/>Treasure<br/>remaining <br/>" + domainObject.level().model().treasure().size();
 	}
 	
 	/**
@@ -591,14 +591,6 @@ public class ChapsChallenge extends JFrame{
 		if (autoReplay) {afterMove = ()->stepMove();}
 		else { afterMove = ()->timer.stop();}
 		timer.start();
-		while (true) {
-			if (recorder.peekNextMove()!=null) {
-				if (recorder.peekNextMove().equals(MoveDirection.NONE)) recorder.stepMove();
-				else break;
-			} else {
-				break;
-			}
-		}
 		recorder.stepMove();
 	}
 }
