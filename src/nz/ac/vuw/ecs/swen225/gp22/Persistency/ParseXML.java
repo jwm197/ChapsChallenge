@@ -2,15 +2,12 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Point;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -127,11 +124,6 @@ public class ParseXML {
      */
     private Player parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
-//        List<String> items = new ArrayList<>();
-//        if(player.selectSingleNode("items").getText().isEmpty()) {
-//            String[] temp = player.selectSingleNode("items").getText().split(",");
-//            items.addAll(Arrays.asList(temp));
-//        }
         return new Player(getCoords(player));
     }
 
@@ -258,8 +250,6 @@ public class ParseXML {
     protected Level parse(Document doc) throws ParserException {
         Node root = doc.selectSingleNode("level");
         getLevelDim(root);
-        assert width == 14;
-        assert height == 13;
         List<List<Tile>> freeTiles = IntStream.range(0, width)
                 .mapToObj(
                         x -> IntStream.range(0, height)
