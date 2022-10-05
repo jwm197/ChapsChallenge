@@ -8,7 +8,6 @@ import org.dom4j.Node;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import java.util.stream.IntStream;
 public class WriteXML {
 
     /**
-     *
      * @param n
      */
     private void checkCoords(IntPoint n) {
@@ -69,26 +67,32 @@ public class WriteXML {
      * @return a list of objectbuilder instances containing info about keys
      */
     private void parseKeys(Element root, List<IntPoint> keys) {
-        keys.forEach(key -> {
-            root.addElement("key").valueOf("name");
-            root.element("key").element("location").addElement("x").setText(String.valueOf(key.x()));
-            root.element("key").element("location").addElement("y").setText(String.valueOf(key.y()));
+        root.elements("key").forEach(Node::detach);
+        IntStream.range(0, keys.size()).forEach(i -> {
+            root.addElement("key").addAttribute("name", "key" + (i + 1)).addElement("location");
+            root.elements("key")
+                    .forEach(e -> {
+                        if (e.attributeValue("name").equals("key" + (i + 1))) {
+                            e.element("location").addElement("x").setText(String.valueOf(keys.get(i).x()));
+                            e.element("location").addElement("y").setText(String.valueOf(keys.get(i).y()));
+                        }
+                    });
         });
     }
 
-    /**
-     * Parse all the doors
-     *
-     * @param doors a list of doors to parse
-     * @return a list of objectbuilder instances containing info about doors
-     */
-    private void parseDoors(Element root, List<LockedDoor> doors) {
-        doors.forEach(lockedDoor -> {
-            root.addElement("key").valueOf("name");
-            root.element("key").element("location").addElement("x").setText(String.valueOf(lockedDoor.location().x()));
-            root.element("key").element("location").addElement("y").setText(String.valueOf(lockedDoor.location().y()));
-        });
-    }
+//    /**
+//     * Parse all the doors
+//     *
+//     * @param doors a list of doors to parse
+//     * @return a list of objectbuilder instances containing info about doors
+//     */
+//    private void parseDoors(Element root, List<LockedDoor> doors) {
+//        doors.forEach(lockedDoor -> {
+//            root.addElement("key").valueOf("name");
+//            root.element("key").element("location").addElement("x").setText(String.valueOf(lockedDoor.location().x()));
+//            root.element("key").element("location").addElement("y").setText(String.valueOf(lockedDoor.location().y()));
+//        });
+//    }
 
     /**
      * Parse the player
@@ -111,12 +115,16 @@ public class WriteXML {
      */
     private void parseChips(Element root, List<IntPoint> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
-        IntStream.range(0,chips.size()).forEach(i-> {
-            IntPoint p = chips.get(i);
-            root.addElement("chip").addAttribute("name","chip"+ i);
-
-            //root.element("chip").element("location").addElement("x").setText(String.valueOf(p.x()));
-            //root.element("chip").element("location").addElement("y").setText(String.valueOf(p.y()));
+        root.elements("chip").forEach(Node::detach);
+        IntStream.range(0, chips.size()).forEach(i -> {
+            root.addElement("chip").addAttribute("name", "chip" + (i + 1)).addElement("location");
+            root.elements("chip")
+                    .forEach(e -> {
+                        if (e.attributeValue("name").equals("chip" + (i + 1))) {
+                            e.element("location").addElement("x").setText(String.valueOf(chips.get(i).x()));
+                            e.element("location").addElement("y").setText(String.valueOf(chips.get(i).y()));
+                        }
+                    });
         });
     }
 
@@ -149,7 +157,6 @@ public class WriteXML {
         parsePlayer(root, levelData.model().player());
         parseKeys(root, keyPositions);
         parseChips(root, treasurePositions);
-        parseDoors(root, doors);
         return doc;
     }
 }

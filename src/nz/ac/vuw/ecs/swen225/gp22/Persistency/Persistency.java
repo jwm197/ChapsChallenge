@@ -1,14 +1,15 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Level;
-import org.dom4j.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -24,9 +25,9 @@ public record Persistency() {
      * @throws DocumentException
      */
     public Document createDoc(String path, String fileName) throws IOException, DocumentException {
-        File xmlFile = new File(path + fileName + ".xml");
-        if (xmlFile.createNewFile()) {
-            System.out.println("XML file created successfully");
+        File xmlFile = new File(path + fileName);
+        if (!xmlFile.exists()) {
+            throw new IOException("Level file doesn't exist: " + fileName);
         }
         SAXReader reader = new SAXReader();
         return reader.read(xmlFile);
@@ -61,10 +62,13 @@ public record Persistency() {
      * @throws IOException       if file cannot be read
      * @throws DocumentException if something is wrong with the document
      */
-    public void saveXML(String path, String levelName, Level levelData) throws ParserException, IOException, DocumentException {
+    public void saveXML(String levelPath, String levelName, String savedPath,String savedFile,Level levelData) throws ParserException, IOException, DocumentException {
         try {
-            Document doc = new WriteXML().write(createDoc(path, levelName), levelData);
-            System.out.println(doc.toString());
+            OutputFormat format = OutputFormat.createPrettyPrint();
+            Document doc = new WriteXML().write(createDoc(levelPath, levelName), levelData);
+            FileOutputStream fos = new FileOutputStream(savedPath+savedFile);
+            XMLWriter writer = new XMLWriter(fos, format);
+            writer.write(doc);
             System.out.println("Save complete");
         } catch (ParserException | NullPointerException e) {
             throw new ParserException(e.toString());

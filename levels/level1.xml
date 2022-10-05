@@ -6,19 +6,12 @@
             <y>6</y>
         </location>
         <items>
-            <!-- Item ids: list items followed by comma
-            e.g.
-            aaa,
-            b,
-            cc,
-            ssssss
-            -->
 
         </items>
     </player>
 
     <!-- doors -->
-    <door name="northdoor1">
+    <door name="door1">
         <location>
             <x>5</x>
             <y>3</y>
@@ -26,7 +19,7 @@
         <colour>Green</colour>
     </door>
 
-    <door name="northdoor2">
+    <door name="door2">
         <location>
             <x>9</x>
             <y>3</y>
@@ -34,7 +27,7 @@
         <colour>Green</colour>
     </door>
 
-    <door name="westdoor1">
+    <door name="door3">
         <location>
             <x>4</x>
             <y>4</y>
@@ -42,7 +35,7 @@
         <colour>Blue</colour>
     </door>
 
-    <door name="westdoor2">
+    <door name="door4">
         <location>
             <x>4</x>
             <y>8</y>
@@ -50,7 +43,7 @@
         <colour>Red</colour>
     </door>
 
-    <door name="southdoor1">
+    <door name="door5">
         <location>
             <x>6</x>
             <y>9</y>
@@ -58,7 +51,7 @@
         <colour>Yellow</colour>
     </door>
 
-    <door name="southdoor2">
+    <door name="door6">
         <location>
             <x>8</x>
             <y>9</y>
@@ -66,7 +59,7 @@
         <colour>Yellow</colour>
     </door>
 
-    <door name="eastdoor1">
+    <door name="door7">
         <location>
             <x>10</x>
             <y>4</y>
@@ -74,7 +67,7 @@
         <colour>Red</colour>
     </door>
 
-    <door name="eastdoor2">
+    <door name="door8">
         <location>
             <x>10</x>
             <y>8</y>
@@ -83,7 +76,7 @@
     </door>
 
     <!-- keys -->
-    <key name="bluekey1">
+    <key name="key1">
         <location>
             <x>5</x>
             <y>5</y>
@@ -91,7 +84,7 @@
         <colour>Blue</colour>
     </key>
 
-    <key name="bluekey2">
+    <key name="key2">
         <location>
             <x>5</x>
             <y>7</y>
@@ -99,7 +92,7 @@
         <colour>Blue</colour>
     </key>
 
-    <key name="redkey1">
+    <key name="key3">
         <location>
             <x>9</x>
             <y>5</y>
@@ -107,7 +100,7 @@
         <colour>Red</colour>
     </key>
 
-    <key name="redkey2">
+    <key name="key4">
         <location>
             <x>9</x>
             <y>7</y>
@@ -115,7 +108,7 @@
         <colour>Red</colour>
     </key>
 
-    <key name="yellowkey1">
+    <key name="key5">
         <location>
             <x>2</x>
             <y>4</y>
@@ -123,7 +116,7 @@
         <colour>Yellow</colour>
     </key>
 
-    <key name="yellowkey2">
+    <key name="key6">
         <location>
             <x>12</x>
             <y>4</y>
@@ -131,7 +124,7 @@
         <colour>Yellow</colour>
     </key>
 
-    <key name="greenkey1">
+    <key name="key7">
         <location>
             <x>8</x>
             <y>12</y>
@@ -139,7 +132,7 @@
         <colour>Green</colour>
     </key>
 
-    <key name="greenkey2">
+    <key name="key8">
         <location>
             <x>6</x>
             <y>12</y>

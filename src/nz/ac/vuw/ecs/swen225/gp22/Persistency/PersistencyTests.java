@@ -19,7 +19,7 @@ record PersistencyTests() {
     @Test
     void TestLoadXML1() {
         try {
-            Level l = new Persistency().loadXML("levels/","level1");
+            Level l = new Persistency().loadXML("levels/","level1.xml");
             assert l.model().treasure().size() == 11;
             assert l.model().player().location().equals(new IntPoint(7,6));
         } catch (ParserException | IOException | DocumentException e) {
@@ -33,7 +33,7 @@ record PersistencyTests() {
     @Test
     void TestLoadXML2() {
         try {
-            new Persistency().loadXML("levels/","level2");
+            new Persistency().loadXML("levels/","level2.xml");
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
@@ -45,10 +45,8 @@ record PersistencyTests() {
     @Test
     void TestReadWriteXML1() {
         try {
-            Level l = new Persistency().loadXML("levels/","level1");
-            l.model().player().movePlayer(Direction.RIGHT,l.model(),()->{});
-            new Persistency().saveXML("test_levels/","level1_test",l);
-//            assert
+            Level l = new Persistency().loadXML("levels/","level1.xml");
+            new Persistency().saveXML("levels/","level1.xml","test_levels/","l1.xml",l);
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
@@ -60,8 +58,8 @@ record PersistencyTests() {
     @Test
     void TestCreateXML1() {
         try {
-            Level l = new Persistency().loadXML("levels/","level1");
-            new Persistency().saveXML("test_levels/","levelxx_test",l);
+            Level l = new Persistency().loadXML("levels/","level1.xml");
+            new Persistency().saveXML("levels/","level1.xml","test_levels/","l1_test.xml",l);
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
@@ -73,7 +71,7 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML1() {
         try {
-            new Persistency().loadXML("test_levels/","level_broken1");
+            new Persistency().loadXML("test_levels/","level_broken1.xml");
             assert false : "Parsing exception not thrown";
         } catch (ParserException | IOException | DocumentException e) {
             return;
@@ -86,7 +84,7 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML2() {
         try {
-            new Persistency().loadXML("test_levels/","level_broken2");
+            new Persistency().loadXML("test_levels/","level_broken2.xml");
             assert false : "Parsing exception not thrown";
         } catch (ParserException | IOException | DocumentException e) {
             return;
@@ -99,7 +97,7 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML3() {
         try {
-            new Persistency().loadXML("test_levels/","level_broken3");
+            new Persistency().loadXML("test_levels/","level_broken3.xml");
             assert false : "Parsing exception not thrown";
         } catch (ParserException | IOException | DocumentException e) {
             return;
@@ -112,7 +110,7 @@ record PersistencyTests() {
     @Test
     void TestInvalidLoadXML4() {
         try {
-            new Persistency().loadXML("test_levels/","level_broken4");
+            new Persistency().loadXML("test_levels/","level_broken4.xml");
             assert false : "Parsing exception not thrown";
         } catch (ParserException | IOException | DocumentException e) {
             return;
