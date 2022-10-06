@@ -60,6 +60,7 @@ public class ChapsChallenge extends JFrame{
 	RenderPanel renderPanel;
 	Domain domainObject = new Domain();
 	Recorder recorder;
+	// Sound
 	
 	public ChapsChallenge(){
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -254,9 +255,12 @@ public class ChapsChallenge extends JFrame{
 		var back = createButton("Back", WIDTH*3/40, HEIGHT*3/4, WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
 		// Auto replay
 		var autoReplayToggle = createButton("Auto Replay: " + (autoReplay?"ON":"OFF"), WIDTH/4, HEIGHT*3/4, WIDTH/5, HEIGHT/10, 
-				SMALL_FONT, e->{autoReplay=!autoReplay; stepMove();});
+				SMALL_FONT, e->{});
+		autoReplayToggle.addActionListener(e->{ 
+			autoReplay=!autoReplay; if (autoReplay) {timer.start();} else {timer.stop();}
+			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
-		var setSpeed = new JSlider(1,10,1);
+		var setSpeed = new JSlider(1,5,1);
 		// Speed label
 		var speedText = createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
@@ -277,6 +281,11 @@ public class ChapsChallenge extends JFrame{
 			inventoryText.setText(inventoryFormat());
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
 			speedText.setText("Speed x" + recorder.getTickSpeed());
+			if (autoReplay && recorder.peekNextMove()!=null) {
+				if (time<=recorder.peekNextMove().time()) {
+					stepMove();
+				}
+			}
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -297,7 +306,6 @@ public class ChapsChallenge extends JFrame{
 			}
 		});
 		closePhase.run();
-		timer.start();
 		panel.setLayout(new BorderLayout());
 		closePhase = ()->{remove(panel); timer.stop();};
 		// adds components to panel
@@ -553,6 +561,7 @@ public class ChapsChallenge extends JFrame{
 		catch (DocumentException e1) { e1.printStackTrace(); }
 		
 		// save recording
+		recorder.saveRecording("levels/", levelName + "_recording.xml");
 		
 		// return to menu
 		menuScreen();
@@ -588,9 +597,33 @@ public class ChapsChallenge extends JFrame{
 	 * Public if fuzz testing requires it.
 	 */
 	public void stepMove() {
-		if (autoReplay) {afterMove = ()->stepMove();}
-		else { afterMove = ()->timer.stop();}
+		if (autoReplay) {afterMove = ()->{};}
+		else { 
+			if (timer.isRunning()) return;
+			afterMove = ()->timer.stop();
+		}
+		if (recorder.peekNextMove()!=null) {
+			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
+				System.out.println("SKIPPED NONE");
+				recorder.stepMove();
+			}
+		}
+		if (recorder.peekNextMove()==null) {
+			time = 0;
+			timer.start();
+			return;
+		};
 		timer.start();
+		time = recorder.peekNextMove().time();
 		recorder.stepMove();
+	}
+	
+	/**
+	 * Sets aftermove
+	 * 
+	 * @param r aftermove to be set
+	 */
+	public void setAfterMove(Runnable r) {
+		afterMove = r;          
 	}
 }
