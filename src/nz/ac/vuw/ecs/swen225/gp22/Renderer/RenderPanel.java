@@ -21,8 +21,8 @@ public class RenderPanel extends JPanel implements Renderer {
 	private static final long serialVersionUID = 1L;
 	
 	//drawing consts
-	public static final int TEXTURE_SIZE = 8;
-	public static final int RENDER_SCALE = 8;
+	public static final int TEXTURE_SIZE = 16;
+	public static final int RENDER_SCALE = 4;
 	public static final int TILE_PAD = 2;
 	
 	//default handler implementations
