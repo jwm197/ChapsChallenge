@@ -20,6 +20,9 @@ public record Level(Model model) {
     }
 
     public static Level level(String levelName) {
-        return null; // replace with function in Persistency
+        Level level;
+        try{ level = new Persistency().loadXML("levels/",levelName); } 
+        catch(Exception e){ e.printStackTrace(); return null;}
+        return level; 
     }
 }

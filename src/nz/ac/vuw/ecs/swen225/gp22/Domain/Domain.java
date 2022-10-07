@@ -8,10 +8,11 @@ public class Domain {
     private Level level;
 
     public Domain() {
-        level = Level.level("level1");
+        level = Level.level("level1.xml");
     }
 
     public Level level() {
+        if (level == null) throw new IllegalStateException("No level has been loaded");
         return level;
     }
 
