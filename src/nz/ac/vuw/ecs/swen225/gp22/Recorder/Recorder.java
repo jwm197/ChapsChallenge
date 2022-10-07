@@ -26,8 +26,8 @@ public class Recorder{
         recording=ParseRecordedGame.loadXML(path,fileName);
     }
     /**Saves a recorded game*/
-    public void saveRecording(String path,String fileName){
-
+    public void saveRecording(String path,String fileName)throws DocumentException, IOException{
+        new SaveRecordedGame(recording).saveXML(path, fileName);
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
      *
