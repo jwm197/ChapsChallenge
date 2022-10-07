@@ -8,6 +8,7 @@ import org.dom4j.Node;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,15 +74,38 @@ public class WriteXML {
      * @param root the root element to add all the keys to
      * @param keys a list of keys to parse
      */
-    private void parseKeys(Element root, List<IntPoint> keys) {
+    private void parseKeys(Element root, Map<Key,IntPoint> keys) {
         root.elements("key").forEach(Node::detach);
-        IntStream.range(0, keys.size()).forEach(i -> {
-            root.addElement("key").addAttribute("name", "key" + (i + 1)).addElement("location");
-            root.elements("key")
+        int i = 1;
+        for(Map.Entry<Key,IntPoint> entry : keys.entrySet()){
+            root.addElement("key").addAttribute("name", "key" + (i)).addElement("location");
+            for(Element e : root.elements("key")){
+                if (e.attributeValue("name").equals("key" + (i))) {
+                    e.element("location").addElement("x").setText(String.valueOf(entry.getValue().x()));
+                    e.element("location").addElement("y").setText(String.valueOf(entry.getValue().y()));
+                    e.addElement("colour").setText(getColour(entry.getKey().color()));
+                }
+            }
+            i++;
+        }
+    }
+
+    /**
+     * Write all the locked doors to the file
+     *
+     * @param doors a list of doors to parse
+     * @param root the root element to add all the doors to
+     */
+    private void parseDoors(Element root, List<LockedDoor> doors) {
+        root.elements("door").forEach(Node::detach);
+        IntStream.range(0, doors.size()).forEach(i -> {
+            root.addElement("door").addAttribute("name", "door" + (i + 1)).addElement("location");
+            root.elements("door")
                     .forEach(e -> {
-                        if (e.attributeValue("name").equals("key" + (i + 1))) {
-                            e.element("location").addElement("x").setText(String.valueOf(keys.get(i).x()));
-                            e.element("location").addElement("y").setText(String.valueOf(keys.get(i).y()));
+                        if (e.attributeValue("name").equals("door" + (i + 1))) {
+                            e.element("location").addElement("x").setText(String.valueOf(doors.get(i).location().x()));
+                            e.element("location").addElement("y").setText(String.valueOf(doors.get(i).location().y()));
+                            e.addElement("colour").setText(getColour(doors.get(i).color()));
                         }
                     });
         });
@@ -121,6 +145,8 @@ public class WriteXML {
         });
     }
 
+
+
     /**
      * Write all the necessary objects in level data and return a document when successful
      * @param doc a dom4j document to parse
@@ -135,13 +161,13 @@ public class WriteXML {
         levelData.model().tiles().tiles().forEach(tile -> tile.forEach(t -> {
             if (t instanceof LockedDoor t2) doors.add(t2);
         }));
-        List<IntPoint> keyPositions = new ArrayList<>();
+        Map<Key,IntPoint> keyPositions = new HashMap<>();
         List<IntPoint> treasurePositions = new ArrayList<>();
         IntStream.range(0, tiles.size())
                 .forEach(i -> tiles.get(i).forEach(tile -> {
                     if (tile instanceof FreeTile t) {
                         if (t.item() instanceof Key) {
-                            keyPositions.add(tile.location());
+                            keyPositions.put((Key) t.item(),tile.location());
                         } else if (t.item() instanceof Treasure) {
                             treasurePositions.add(tile.location());
                         }
@@ -149,8 +175,9 @@ public class WriteXML {
                 }));
         checkKeysandDoors(levelData.model().keys(), doors);
         parsePlayer(root, levelData.model().player());
-        parseKeys(root, keyPositions);
         parseChips(root, treasurePositions);
+        parseKeys(root, keyPositions);
+        parseDoors(root,doors);
         return doc;
     }
 }

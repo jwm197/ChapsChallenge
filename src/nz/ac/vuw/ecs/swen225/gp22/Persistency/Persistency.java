@@ -56,7 +56,10 @@ public record Persistency() {
     /**
      * Saves the game by taking in all the game objects and writing them to the xml file
      *
+     * @param levelPath the path of the file to parse
      * @param levelName the name of the file to parse
+     * @param savedPath the path to the file to save
+     * @param savedFile the name of the file to save
      * @param levelData the map of objects to parse
      * @throws ParserException   if parsing goes wrong
      * @throws IOException       if file cannot be read
