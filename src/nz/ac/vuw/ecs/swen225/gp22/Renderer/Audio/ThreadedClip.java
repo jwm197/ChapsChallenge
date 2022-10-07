@@ -2,8 +2,6 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer.Audio;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -13,16 +11,41 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * An implementation of Playable utilizing preloaded byte array sources
+ * 
+ * <p>This implementation is only suitable for short clips due to its large memory footprint.
+ * For a more memory-friendly implementation, see ThreadedLine.
+ * This implementation also ensures auto-closure on completion to prevent resource leaks<p>
+ * 
+ * @see ThreadedLine
+ * @author anfri
+ */
 public class ThreadedClip implements Playable {
+	//inner audio clip
 	private Clip inner;
 	private boolean looping;
+	
+	//runnable for closure
 	private Runnable onClose = () -> {};
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param source buffered stream for sourcing clip data
+	 * @throws IOException
+	 * @throws UnsupportedAudioFileException
+	 * @throws LineUnavailableException
+	 */
 	public ThreadedClip(InputStream source) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+		//create audio stream
 		AudioInputStream audioStream = AudioSystem.getAudioInputStream(source);
 		inner = AudioSystem.getClip();
 		inner.open(audioStream);
+		
+		//adds a listener to bind onClose
 		inner.addLineListener((event) -> {
+			//if audio is stopped on completion
 			if (event.getType() == LineEvent.Type.STOP && inner.getFramePosition() == inner.getFrameLength()) {
 				close();
 				onClose.run();
@@ -34,9 +57,6 @@ public class ThreadedClip implements Playable {
 	public void play() {
 		inner.loop(looping ? -1 : 0);
 		inner.start();
-		
-		new ArrayList<String>(List.of(""));
-		
 	}
 
 	@Override
