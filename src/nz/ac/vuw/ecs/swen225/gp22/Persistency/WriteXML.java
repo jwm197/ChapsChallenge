@@ -59,11 +59,11 @@ public class WriteXML {
                 .map(a -> getColour(a.color())).toList();
         Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
         Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-        keyCounts.forEach((key, value) -> {
-            if (!keyCounts.get(key).equals(doorCounts.get(key))) {
-                throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
-            }
-        });
+//        keyCounts.forEach((key, value) -> {
+//            if (!keyCounts.get(key).equals(doorCounts.get(key))) {
+//                throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
+//            }
+//        });
         System.out.println("Keys: " + keyCounts);
         System.out.println("Doors: " + doorCounts);
     }
