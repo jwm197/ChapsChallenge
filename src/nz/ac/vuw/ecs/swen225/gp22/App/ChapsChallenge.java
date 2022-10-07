@@ -552,7 +552,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void saveAndExit() {
 		pause(true);
-		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0,level.length()-4));
+		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0,level.length()-4) + "_save");
 		if(levelName == null || (levelName != null && (levelName.equals("")))) {
 		    System.out.println("Cancelled save");
 		    menuScreen();
@@ -560,7 +560,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// DOMAIN/PERSISTENCY/RECORDER?
-		try { new Persistency().saveXML("levels/", levelName + ".xml", domainObject.level()); } 
+		try { new Persistency().saveXML("levels/", level, "levels/", levelName + ".xml", domainObject.level()); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
