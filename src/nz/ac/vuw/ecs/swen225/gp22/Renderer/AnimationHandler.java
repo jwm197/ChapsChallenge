@@ -10,7 +10,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 
 /**
  * Manages and queues the rolling stack of currently playing animation objects
- * 
+ *
  * @author anfri
  */
 class AnimationHandler implements Animator, Drawable {

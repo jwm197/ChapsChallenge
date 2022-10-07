@@ -14,7 +14,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 
 /**
  * Implements a JPanel renderer which handles drawing the game state to the screen
- * 
+ *
  * @author anfri
  */
 public class RenderPanel extends JPanel implements Renderer {

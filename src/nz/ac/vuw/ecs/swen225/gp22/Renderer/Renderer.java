@@ -8,7 +8,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 //FIXME: required? we only have a single renderer?
 /**
  * Interface representing a renderer able to draw textures to a given graphics context
- * 
+ *
  * @author anfri
  */
 interface Renderer {

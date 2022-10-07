@@ -6,7 +6,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.DoublePoint;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 /**
  * Record class to handle Animation Constants
- * 
+ *
  * @author anfri
  */
 record AnimationProperties(
