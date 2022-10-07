@@ -2,10 +2,9 @@ package nz.ac.vuw.ecs.swen225.gp22.Renderer;
 
 import java.awt.Graphics;
 
-//FIXME: is this required, or would a BiConsumer be more appropriate?
 /**
  * Interface representing an object which is able to be drawn to the graphics panel
- * 
+ *
  * @author anfri
  */
 interface Drawable {
