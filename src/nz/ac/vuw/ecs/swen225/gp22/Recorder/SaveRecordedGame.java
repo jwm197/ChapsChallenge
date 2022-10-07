@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record SaveRecordedGame(RecordedLevel level) {
+    /**Saves a recorded game
+     * @param path the directory save in
+     * @param fileName the name of the file to save*/
     public void saveXML(String path, String fileName) throws ParserException, IOException, DocumentException {
         try {
             OutputFormat format = OutputFormat.createPrettyPrint();
-            System.out.println("doesn't");
             Document doc = saveLevel(new Persistency().createDoc(path, fileName));
-            System.out.println("makesdoc");
             FileOutputStream fos = new FileOutputStream(path+fileName);
             XMLWriter writer = new XMLWriter(fos, format);
             writer.write(doc);
@@ -35,25 +36,22 @@ public record SaveRecordedGame(RecordedLevel level) {
 
     /**Saves the level to the file
      *
-     * @param doc the document containing the level
-     * @return the recorded level object containing the level name and the list of moves
+     * @param doc the document being saved to
+     * @return document being saved
      */
     private Document saveLevel(Document doc){
-        System.out.println("starts to save");
         if (doc==null){
             throw new ParserException("document not found");
         }
-        System.out.println("starts to save");
         Element level= doc.getRootElement().element("level");
         level.addAttribute("name", level().levelName());
         level.setText(String.valueOf(level().levelName()));
         saveMoves(level);
-        System.out.println("saveslevel");
         return doc;
 
 
     }
-    /**saves the moves to the xml file
+    /**saves the moves to the document
      *
      * @param level the list of recorded moves being passed
      */
