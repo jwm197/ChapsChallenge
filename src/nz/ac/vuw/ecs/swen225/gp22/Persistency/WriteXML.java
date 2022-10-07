@@ -13,10 +13,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Write the necessary objects from the level object back to a level XML file
+ */
 public class WriteXML {
 
     /**
-     * @param n
+     * A quick check to make sure the coordinates are valid, throws a parser exception if not.
+     * @param n the point to parse
+     * @throws ParserException if x or y coords are not valid
      */
     private void checkCoords(IntPoint n) {
         if (n.x() < 0 || n.y() < 0)
@@ -28,6 +33,7 @@ public class WriteXML {
      *
      * @param colour the colour to be converted
      * @return A Java.awt colour object corresponding to the string
+     * @throws ParserException if invalid colour
      */
     private String getColour(Color colour) {
         if (colour.equals(Color.BLUE)) return "Blue";
@@ -42,6 +48,7 @@ public class WriteXML {
      *
      * @param keys  the list of keys to parse
      * @param doors the list of doors to parse
+     * @throws ParserException if either, the list of keys or doors are missing or the number of keys don't match with num of doors
      */
     private void checkKeysandDoors(List<Key> keys, List<LockedDoor> doors) {
         if (keys == null) throw new ParserException("List of keys not found");
@@ -61,10 +68,10 @@ public class WriteXML {
     }
 
     /**
-     * Parse all the keys
+     * Write all the keys to the root element
      *
+     * @param root the root element to add all the keys to
      * @param keys a list of keys to parse
-     * @return a list of objectbuilder instances containing info about keys
      */
     private void parseKeys(Element root, List<IntPoint> keys) {
         root.elements("key").forEach(Node::detach);
@@ -80,25 +87,11 @@ public class WriteXML {
         });
     }
 
-//    /**
-//     * Parse all the doors
-//     *
-//     * @param doors a list of doors to parse
-//     * @return a list of objectbuilder instances containing info about doors
-//     */
-//    private void parseDoors(Element root, List<LockedDoor> doors) {
-//        doors.forEach(lockedDoor -> {
-//            root.addElement("key").valueOf("name");
-//            root.element("key").element("location").addElement("x").setText(String.valueOf(lockedDoor.location().x()));
-//            root.element("key").element("location").addElement("y").setText(String.valueOf(lockedDoor.location().y()));
-//        });
-//    }
-
     /**
-     * Parse the player
+     * Write the player to the root element
      *
+     * @param root the root element to add the player to
      * @param player the node to parse
-     * @return a new objectbuilder instance containing info about player
      */
     private void parsePlayer(Element root, Player player) {
         if (player == null) throw new ParserException("Player not found");
@@ -108,10 +101,10 @@ public class WriteXML {
     }
 
     /**
-     * Parse all the chips
+     * Write all the chips/treasures to the file
      *
      * @param chips a list of chips to parse
-     * @return a list of objectbuilder instances containing info about chips
+     * @param root the root element to add all the treasure to
      */
     private void parseChips(Element root, List<IntPoint> chips) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
@@ -129,10 +122,11 @@ public class WriteXML {
     }
 
     /**
-     * @param doc
-     * @param levelData
-     * @return
-     * @throws IOException
+     * Write all the necessary objects in level data and return a document when successful
+     * @param doc a dom4j document to parse
+     * @param levelData the level data to get the objects from
+     * @return an updated dom4j document
+     * @throws IOException if an I/O exception occured
      */
     protected Document write(Document doc, Level levelData) throws IOException {
         Element root = doc.getRootElement();
