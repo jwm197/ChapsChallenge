@@ -44,8 +44,8 @@ public class ChapsChallenge extends JFrame{
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
-	public static final double delay = 0.017;
-	
+	public static final double delay = 1.0/60.0;
+
 	// Private variables
 	private static final long serialVersionUID = 1L;
 	private Runnable closePhase = ()->{};
@@ -55,6 +55,7 @@ public class ChapsChallenge extends JFrame{
 	private boolean autoReplay;
 	MoveDirection currentMove;
 	private Runnable afterMove;
+	private boolean finishedMove;
 	
 	// DOMAIN/RENDERER/RECORDER
 	RenderPanel renderPanel;
@@ -260,7 +261,7 @@ public class ChapsChallenge extends JFrame{
 			autoReplay=!autoReplay; if (autoReplay) {timer.start();} else {timer.stop();}
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
-		var setSpeed = new JSlider(1,5,1);
+		var setSpeed = new JSlider(1,10,1);
 		// Speed label
 		var speedText = createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
@@ -281,11 +282,15 @@ public class ChapsChallenge extends JFrame{
 			inventoryText.setText(inventoryFormat());
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
 			speedText.setText("Speed x" + recorder.getTickSpeed());
-			if (autoReplay && recorder.peekNextMove()!=null) {
-				if (time<=recorder.peekNextMove().time()) {
-					stepMove();
+			if (autoReplay) {
+				if (recorder.peekNextMove()!=null) {
+					if (time<=recorder.peekNextMove().time()) {
+						stepMove();
+					}
+				} else if (finishedMove) {
+					timer.stop();
 				}
-			}
+			}	
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -597,22 +602,27 @@ public class ChapsChallenge extends JFrame{
 	 * Public if fuzz testing requires it.
 	 */
 	public void stepMove() {
-		if (autoReplay) {afterMove = ()->{};}
+		finishedMove = false;
+		if (autoReplay) {afterMove = ()->finishedMove = true;}
 		else { 
 			if (timer.isRunning()) return;
 			afterMove = ()->timer.stop();
 		}
-		if (recorder.peekNextMove()!=null) {
+		if (!autoReplay && recorder.peekNextMove()!=null) {
 			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
 				System.out.println("SKIPPED NONE");
 				recorder.stepMove();
 			}
 		}
 		if (recorder.peekNextMove()==null) {
-			time = 0;
-			timer.start();
+			System.out.println("NO MORE MOVES TO STEP");
 			return;
-		};
+		}
+//		if (recorder.peekNextMove()==null) {
+//			time = 0;
+//			timer.start();
+//			return;
+//		};
 		timer.start();
 		time = recorder.peekNextMove().time();
 		recorder.stepMove();
