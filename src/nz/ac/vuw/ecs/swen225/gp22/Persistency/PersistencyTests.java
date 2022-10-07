@@ -2,11 +2,10 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 import org.dom4j.DocumentException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * A bunch of tests to test the persistency module
@@ -40,7 +39,7 @@ record PersistencyTests() {
     }
 
     /**
-     * Test that it loads the second level without any issues
+     * Test that it can read a given level file and then write the level data to a new file
      */
     @Test
     void TestReadWriteXML1() {
@@ -53,13 +52,13 @@ record PersistencyTests() {
     }
 
     /**
-     * Test that it loads the second level without any issues
+     * Test that it can read a given level file and then write the level data to a new file
      */
     @Test
-    void TestCreateXML1() {
+    void TestReadWriteXML2() {
         try {
-            Level l = new Persistency().loadXML("levels/","level1.xml");
-            new Persistency().saveXML("levels/","level1.xml","test_levels/","l1_test.xml",l);
+            Level l = new Persistency().loadXML("levels/","level2.xml");
+            new Persistency().saveXML("levels/","level2.xml","test_levels/","l2.xml",l);
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }

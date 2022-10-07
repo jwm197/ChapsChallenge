@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
+/**
+ * Converts the level XML file into a level object
+ */
 public class ParseXML {
     private int width = 0;
     private int height = 0;
@@ -80,6 +82,7 @@ public class ParseXML {
      * Parse all the keys
      *
      * @param keys a list of keys to parse
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      * @return a list of objectbuilder instances containing info about keys
      */
     private List<Key> parseKeys(List<Node> keys, List<List<Tile>> freeTiles) {
@@ -103,7 +106,7 @@ public class ParseXML {
      * Parse all the doors
      *
      * @param doors a list of doors to parse
-     * @return a list of objectbuilder instances containing info about doors
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseDoors(List<Node> doors, List<List<Tile>> freeTiles) {
         List<LockedDoor> doorsList = doors.stream()
@@ -128,9 +131,10 @@ public class ParseXML {
     }
 
     /**
-     * Parse all the chips
+     * Parse all the chips/treasures
      *
      * @param chips a list of chips to parse
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      * @return a list of objectbuilder instances containing info about chips
      */
     private List<Treasure> parseChips(List<Node> chips, List<List<Tile>> freeTiles) {
@@ -154,7 +158,7 @@ public class ParseXML {
      * Parse all the walls
      *
      * @param walls a list of walls to parse
-     * @return a list of objectbuilder instances containing info about walls
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseWalls(List<Node> walls, List<List<Tile>> freeTiles) {
         if (walls.isEmpty()) throw new ParserException("List of walls not found");
@@ -182,28 +186,10 @@ public class ParseXML {
     }
 
     /**
-     * Parse all bugs
-     *
-     * @param bugs the list of bugs to parse
-     * @return a list of objectbuilder instances containing info about bugs
-     */
-    private void parseBugs(List<Node> bugs) {
-        /*
-        Still WIP
-         */
-//        if (bugs.isEmpty()) return;
-        //List<ListInteger> coords =
-
-
-        //String bugsData = coords.toString();
-        //System.out.println("Bug data " + bugsData);
-    }
-
-    /**
-     * Parse info field
+     * Parse info field node and add it to the list of tiles
      *
      * @param info the node to parse
-     * @return a new objectbuilder instance containing info about info field
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseInfo(Node info,List<List<Tile>> freeTiles) {
         if (info == null) throw new ParserException("Info not found");
@@ -215,10 +201,10 @@ public class ParseXML {
     }
 
     /**
-     * Parse the lock
+     * Parse the lock node are add it to the list of tiles
      *
      * @param lock the node to parse
-     * @return a new objectbuilder instance containing info about lock
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseLock(Node lock,List<List<Tile>> freeTiles) {
         if (lock == null) throw new ParserException("Lock not found");
@@ -228,10 +214,10 @@ public class ParseXML {
     }
 
     /**
-     * Parse the exit
+     * Parse the exit node and add it to the list of tiles
      *
      * @param exit the node to parse
-     * @return a new objectbuilder instance containing info about exit
+     * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseExit(Node exit,List<List<Tile>> freeTiles) {
         if (exit == null) throw new ParserException("Exit not found");
@@ -244,7 +230,7 @@ public class ParseXML {
      * Parses the given file and return a map of game objects
      *
      * @param doc a dom4j document to parse
-     * @return a list of objects for the game to use
+     * @return a level object
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */
     protected Level parse(Document doc) throws ParserException {
@@ -275,7 +261,7 @@ public class ParseXML {
                 chips,
                 new Tiles(freeTiles, width,height),
                 ()->{},
-                ()->{}
+                ()->{}//not sure?
         );
     }
 }

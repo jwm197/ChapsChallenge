@@ -13,16 +13,16 @@ import java.io.IOException;
 
 
 /**
- * Persistency module
+ * The main persistency module
  */
-
 public record Persistency() {
     /**
-     * @param path
-     * @param fileName
-     * @return
-     * @throws IOException
-     * @throws DocumentException
+     * Creates a DOM4j document with a give path and filename to the level file
+     * @param path the path to the level
+     * @param fileName the filename to the levelfile ending with .xml
+     * @return A DOM4j document
+     * @throws IOException if there's something wrong with the I/O
+     * @throws DocumentException if the document cannot be read
      */
     public Document createDoc(String path, String fileName) throws IOException, DocumentException {
         File xmlFile = new File(path + fileName);
@@ -34,7 +34,7 @@ public record Persistency() {
     }
 
     /**
-     * Loads a given xml file and returns a hashmap containing all the game objects
+     * Loads a given xml file and returns a level containing all the game objects
      *
      * @param path     the path to the file
      * @param fileName the name of the file to parse
