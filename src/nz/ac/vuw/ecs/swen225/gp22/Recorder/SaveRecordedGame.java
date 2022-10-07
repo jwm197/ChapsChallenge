@@ -1,5 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
-
+import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record SaveRecordedGame(RecordedLevel level) {
-    public void saveXML(String path, String levelName) throws IOException {
+    public void saveXML(String path, String levelName) throws ParserException, IOException, DocumentException {
         try {
-            saveLevel(createDoc(path, levelName));
+            saveLevel(new Persistency().createDoc(path, levelName));
         } catch (ParserException | NullPointerException e) {
             throw new ParserException(e.getMessage());
         } catch (IOException e) {
@@ -29,7 +29,7 @@ public record SaveRecordedGame(RecordedLevel level) {
         if (doc==null){
             throw new ParserException("document not found");
         }
-        Element level= doc.getRootElement().element("level");
+        Element level= doc.getRootElement().element("level").addAttribute("name", level().levelName());
         level.setText(String.valueOf(level().levelName()));
         saveMoves(level);
 
@@ -48,9 +48,11 @@ public record SaveRecordedGame(RecordedLevel level) {
      * @param level the level element of the document being saved
      */
     private void saveMove(Element level, RecordedMove move) {
-        level.element("move").setText(String.valueOf(move.direction().toString()));
+        Element node= level.element("move");
+        node.setText(String.valueOf(move.direction()));
+        node.addAttribute("time",move.time()+"");
 
 
     }
 }
-}
+
