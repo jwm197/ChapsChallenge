@@ -51,7 +51,7 @@ public class ChapsChallenge extends JFrame{
 	private Runnable closePhase = ()->{};
 	private String level = "level1.xml";
 	private float time = 60;
-	private Timer timer;
+	private BetterTimer timer;
 	private boolean autoReplay;
 	MoveDirection currentMove;
 	private Runnable afterMove;
@@ -140,7 +140,7 @@ public class ChapsChallenge extends JFrame{
 		// Controller for keys
 		panel.addKeyListener(new Controller(this));
 		
-		timer = new Timer((int)(delay*1000),unused->{
+		timer = new BetterTimer((int)(delay*1000),()->{
 			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
@@ -270,7 +270,7 @@ public class ChapsChallenge extends JFrame{
 				
 		renderPanel.setBackground(Color.DARK_GRAY);
 		
-		timer = new Timer((int)(delay*1000),unused->{
+		timer = new BetterTimer((int)(delay*1000),()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			for (int i=0; i<recorder.getTickSpeed(); i++) {
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
