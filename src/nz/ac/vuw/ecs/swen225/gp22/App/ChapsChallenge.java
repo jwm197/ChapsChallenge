@@ -150,7 +150,7 @@ public class ChapsChallenge extends JFrame{
 			//currentMove = MoveDirection.NONE;
 			
 			// updating timer
-			time-=delay*100;
+			time-=delay;
 			levelText.setText(levelNameFormat());
 			timerText.setText(timerFormat());
 			inventoryText.setText(inventoryFormat());
@@ -562,7 +562,7 @@ public class ChapsChallenge extends JFrame{
 		String recorderName = recorder.getRecordingLevelName();
 		
 		// Load level from xml
-		try{ domainLevel = new Persistency().loadXML("levels/",recorderName); } 
+		try{ domainLevel = new Persistency().loadXML("levels/", recorderName, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
