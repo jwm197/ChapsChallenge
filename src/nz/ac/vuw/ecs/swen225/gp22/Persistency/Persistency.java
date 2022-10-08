@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
+import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Level;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -10,12 +11,32 @@ import org.dom4j.io.XMLWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
 
 /**
  * The main persistency module
  */
 public record Persistency() {
+
+    public void writeJAR(){
+
+        try {
+            JarTool tool = new JarTool();
+            tool.startManifest();
+            JarOutputStream target = tool.openJar("levels/level2.jar");
+            tool.addFile(target, System.getProperty("user.dir") + "\\src\\main\\",
+                    System.getProperty("user.dir") + "\\src\\main\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
+            target.close();
+            System.out.println("JAR write complete");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     /**
      * Creates a DOM4j document with a give path and filename to the level file
      * @param path the path to the level
@@ -43,9 +64,9 @@ public record Persistency() {
      * @throws IOException       if file cannot be read
      * @throws DocumentException if something is wrong with the document
      */
-    public Level loadXML(String path, String fileName) throws ParserException, IOException, DocumentException {
+    public Level loadXML(String path, String fileName, ChapsChallenge chapsChallenge) throws ParserException, IOException, DocumentException {
         try {
-            return new ParseXML().parse(createDoc(path, fileName));
+            return new ParseXML().parse(createDoc(path, fileName), chapsChallenge);
         } catch (ParserException | NullPointerException e) {
             throw new ParserException(e.toString());
         } catch (IOException e) {
