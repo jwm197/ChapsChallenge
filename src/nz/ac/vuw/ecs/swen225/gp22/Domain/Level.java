@@ -18,11 +18,4 @@ public record Level(Model model) {
             public Animator animator() { return animator; }
         });
     }
-
-    public static Level level(String levelName) {
-        Level level;
-        try{ level = new Persistency().loadXML("levels/",levelName); } 
-        catch(Exception e){ e.printStackTrace(); return null;}
-        return level; 
-    }
 }

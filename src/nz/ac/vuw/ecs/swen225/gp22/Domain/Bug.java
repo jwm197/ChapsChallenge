@@ -27,6 +27,7 @@ public class Bug implements Entity {
     private LayeredTexture texture;
     private IntPoint location;
     private Direction direction = Direction.NONE;
+    private Boolean locked = false;
 
     public Bug(IntPoint location) {
         this.location = location;
@@ -42,6 +43,8 @@ public class Bug implements Entity {
     }
 
     public void moveBug(Model m) {
+        if (locked) return;
+
         NavigableMap<Integer, Direction> directions = new TreeMap<>();
         int cumulative = 0;
         directions.put(cumulative += (direction.probUp()*100), Direction.UP);
@@ -60,12 +63,14 @@ public class Bug implements Entity {
         Tile t = m.tiles().getTile(newPos);
         if (t instanceof WallTile) return;
 
+        locked = true;
         m.animator().Animate(this, bugAnimations.get(direction), newPos, 20, () -> {
             location = newPos;
+            locked = false;
         });
     }
 
-    public void ping(Model m) {
+    public void tick(Model m) {
         moveBug(m);
         if (location == m.player().location()) m.onGameOver();
     }

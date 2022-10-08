@@ -47,12 +47,11 @@ public class Player implements Entity {
     }
 
     public void movePlayer(Direction d, Model m, Runnable r) {
+        if (locked) return;
         if (d == Direction.NONE) return;
 
         direction = d;
         texture = playerTextures.get(direction);
-
-        if (locked) return;
         
         IntPoint newPos = location.add(d.direction());
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
@@ -70,5 +69,5 @@ public class Player implements Entity {
         });
     }
 
-    public void ping(Model m) {}
+    public void tick(Model m) {}
 }
