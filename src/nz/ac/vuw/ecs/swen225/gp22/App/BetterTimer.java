@@ -1,7 +1,10 @@
 package nz.ac.vuw.ecs.swen225.gp22.App;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.swing.SwingUtilities;
 
 /**
  * An improved implementation of a thread-safe swing timer utilising java.util.timer
