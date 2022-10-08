@@ -559,14 +559,16 @@ public class ChapsChallenge extends JFrame{
 		    return;
 		}
 		
-		// DOMAIN/PERSISTENCY/RECORDER?
+		// saves level state
 		try { new Persistency().saveXML("levels/", level, "levels/", levelName + ".xml", domainObject.level()); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
 		
 		// save recording
-		recorder.saveRecording("levels/", levelName + "_recording.xml");
+		try { recorder.saveRecording("levels/", levelName + "_recording.xml"); } 
+		catch (DocumentException e) { e.printStackTrace(); } 
+		catch (IOException e) { e.printStackTrace(); }
 		
 		// return to menu
 		menuScreen();
