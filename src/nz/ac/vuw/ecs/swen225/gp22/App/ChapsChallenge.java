@@ -44,7 +44,7 @@ public class ChapsChallenge extends JFrame{
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
-	public static final Font MASSIVE_FONT = new Font("Trebuchet MS", Font.PLAIN, 56);
+	public static final Font MASSIVE_FONT = new Font("Trebuchet MS", Font.PLAIN, 54);
 	public static final double delay = 1.0/60.0;
 
 	// Private variables
@@ -54,14 +54,15 @@ public class ChapsChallenge extends JFrame{
 	private float time = 60;
 	private BetterTimer timer;
 	private boolean autoReplay;
-	MoveDirection currentMove;
 	private Runnable afterMove;
 	private boolean finishedMove;
 	
 	// DOMAIN/RENDERER/RECORDER
-	RenderPanel renderPanel;
-	Level domainLevel;
-	Recorder recorder;
+	private RenderPanel renderPanel;
+	private Level domainLevel;
+	private Recorder recorder;
+	
+	MoveDirection currentMove;
 	// Sound
 	
 	public ChapsChallenge(){
@@ -161,16 +162,6 @@ public class ChapsChallenge extends JFrame{
 			// checks if ran out of time
 			if (time <=0) {
 				time = 0;
-				timerText.setText("<html>TIMER:<br/>NO TIME LEFT</html>");
-				repaint(); 
-//				int result = JOptionPane.showConfirmDialog(this,
-//						"<html>You ran out of time!<br/>Would you like to retry <html>"+level.substring(0,level.length()-4)+"?", 
-//						"Level Failed!",
-//						JOptionPane.YES_NO_OPTION,
-//						JOptionPane.QUESTION_MESSAGE);
-//				if(result == JOptionPane.YES_OPTION){ timer.stop(); gameScreen(level); }
-//				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
-//				else { closePhase.run(); menuScreen(); }
 				timer.stop();
 				gameEnd(false);
 			}
@@ -308,7 +299,6 @@ public class ChapsChallenge extends JFrame{
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if(result == JOptionPane.YES_OPTION){ timer.stop(); recordedGame(level); }
-				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
 				else { closePhase.run(); menuScreen(); }
 			}
 		});
@@ -419,6 +409,18 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for when player has completed/failed the level
 	 */
 	public void gameEnd(boolean completed) {
+		// Goes to level 2 once level 1 completed
+		if (level.equals("level1.xml") && completed) {
+			int result = JOptionPane.showConfirmDialog(this,
+					"<html>Level 1 complete with: " + (float)Math.round(time*10)/10 + "s left!" + "<br/>Would you like to save recording?<html>", 
+					"Level 1 Completed!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if(result == JOptionPane.YES_OPTION){ saveRecording(); }
+			timer.stop();
+			gameScreen("level2.xml");
+			return;
+		}
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		JPanel bottomPanel = new JPanel();
@@ -533,7 +535,7 @@ public class ChapsChallenge extends JFrame{
 		currentMove = MoveDirection.NONE;
 		
 		// DOMAIN/RENDERER/RECORDER
-        try{ domainLevel = new Persistency().loadXML("levels/",name,this); } 
+        try{ domainLevel = new Persistency().loadXML("levels/", name, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
