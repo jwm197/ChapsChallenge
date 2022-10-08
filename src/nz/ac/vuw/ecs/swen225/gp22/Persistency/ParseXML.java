@@ -1,6 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 
+import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 import org.dom4j.Document;
 import org.dom4j.Node;
@@ -233,7 +234,7 @@ public class ParseXML {
      * @return a level object
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */
-    protected Level parse(Document doc) throws ParserException {
+    protected Level parse(Document doc, ChapsChallenge cc) throws ParserException {
         Node root = doc.selectSingleNode("level");
         getLevelDim(root);
         List<List<Tile>> freeTiles = IntStream.range(0, width)
@@ -260,8 +261,8 @@ public class ParseXML {
                 keys,
                 chips,
                 new Tiles(freeTiles, width,height),
-                ()->{},
-                ()->{}
+                ()->cc.gameEnd(true),
+                ()->cc.gameEnd(false)
         );
     }
 }
