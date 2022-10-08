@@ -533,7 +533,7 @@ public class ChapsChallenge extends JFrame{
 		currentMove = MoveDirection.NONE;
 		
 		// DOMAIN/RENDERER/RECORDER
-        try{ domainLevel = new Persistency().loadXML("levels/",name); } 
+        try{ domainLevel = new Persistency().loadXML("levels/",name,this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
