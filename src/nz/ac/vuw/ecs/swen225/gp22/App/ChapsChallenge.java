@@ -422,15 +422,17 @@ public class ChapsChallenge extends JFrame{
 	public void performAction(String input) {
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
-		else if (input.equals("CTRL-R")) { loadGame(); }
+		else if (input.equals("CTRL-R")) { timer.stop(); loadGame(); }
 		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
 		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
-		else if (input.equals("SPACE")) { pause(true); }
-		else if (input.equals("ESC")) { pause(false); }
-		else if (input.equals("UP")) { domainObject.level().model().player().movePlayer(Direction.UP, domainObject.level().model(), afterMove); }
-		else if (input.equals("DOWN")) { domainObject.level().model().player().movePlayer(Direction.DOWN, domainObject.level().model(), afterMove); }
-		else if (input.equals("LEFT")) { domainObject.level().model().player().movePlayer(Direction.LEFT, domainObject.level().model(), afterMove); }
-		else if (input.equals("RIGHT")) { domainObject.level().model().player().movePlayer(Direction.RIGHT, domainObject.level().model(), afterMove); }
+		else if (input.equals("SPACE")) { timer.stop(); }
+		else if (input.equals("ESC")) { timer.start(); }
+		if (timer.isRunning()) {
+			if (input.equals("UP")) { domainObject.level().model().player().movePlayer(Direction.UP, domainObject.level().model(), afterMove); }
+			else if (input.equals("DOWN")) { domainObject.level().model().player().movePlayer(Direction.DOWN, domainObject.level().model(), afterMove); }
+			else if (input.equals("LEFT")) { domainObject.level().model().player().movePlayer(Direction.LEFT, domainObject.level().model(), afterMove); }
+			else if (input.equals("RIGHT")) { domainObject.level().model().player().movePlayer(Direction.RIGHT, domainObject.level().model(), afterMove); }
+		}
 		System.out.println(input + ", Player pos: " + domainObject.level().model().player().location().x() + " "
 				+ domainObject.level().model().player().location().y());
 	}
@@ -536,21 +538,10 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	/**
-	 * Pauses/unpauses game which stops timer.
-	 * 
-	 * @param p boolean which decides whether to pause or unpause
-	 */
-	public void pause(Boolean p) {
-		if (p) { timer.stop(); } 
-		else { timer.start(); }
-		System.out.println(p?"Paused":"Unpaused");
-	}
-	
-	/**
 	 * Saves game to xml and exits
 	 */
 	public void saveAndExit() {
-		pause(true);
+		timer.stop();
 		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0,level.length()-4) + "_save");
 		if(levelName == null || (levelName != null && (levelName.equals("")))) {
 		    System.out.println("Cancelled save");
