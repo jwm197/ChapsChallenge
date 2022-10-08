@@ -44,6 +44,7 @@ public class ChapsChallenge extends JFrame{
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
+	public static final Font MASSIVE_FONT = new Font("Trebuchet MS", Font.PLAIN, 56);
 	public static final double delay = 1.0/60.0;
 
 	// Private variables
@@ -59,7 +60,7 @@ public class ChapsChallenge extends JFrame{
 	
 	// DOMAIN/RENDERER/RECORDER
 	RenderPanel renderPanel;
-	Domain domainObject = new Domain();
+	Level domainLevel;
 	Recorder recorder;
 	// Sound
 	
@@ -162,14 +163,16 @@ public class ChapsChallenge extends JFrame{
 				time = 0;
 				timerText.setText("<html>TIMER:<br/>NO TIME LEFT</html>");
 				repaint(); 
-				int result = JOptionPane.showConfirmDialog(this,
-						"<html>You ran out of time!<br/>Would you like to retry <html>"+level.substring(0,level.length()-4)+"?", 
-						"Level Failed!",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				if(result == JOptionPane.YES_OPTION){ timer.stop(); gameScreen(level); }
-				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
-				else { closePhase.run(); menuScreen(); }
+//				int result = JOptionPane.showConfirmDialog(this,
+//						"<html>You ran out of time!<br/>Would you like to retry <html>"+level.substring(0,level.length()-4)+"?", 
+//						"Level Failed!",
+//						JOptionPane.YES_NO_OPTION,
+//						JOptionPane.QUESTION_MESSAGE);
+//				if(result == JOptionPane.YES_OPTION){ timer.stop(); gameScreen(level); }
+//				else if (result == JOptionPane.NO_OPTION){ closePhase.run(); menuScreen(); }
+//				else { closePhase.run(); menuScreen(); }
+				timer.stop();
+				gameEnd(false);
 			}
 		});
 		closePhase.run();
@@ -413,6 +416,37 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	/**
+	 * Screen for when player has completed/failed the level
+	 */
+	public void gameEnd(boolean completed) {
+		// Panel to stores components
+		JPanel panel = new JPanel();
+		JPanel bottomPanel = new JPanel();
+		// JLabel for displaying help title
+		var endTitle = createLabel(completed?"LEVEL COMPLETE!":"LEVEL FAILED!", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
+		// JLabel to display help info
+		var endInfo = createLabel(completed?"You completed the level with: " + (float)Math.round(time*10)/10 + "s left!"
+				:"You failed the level by: " + (time==0?"No time left!":"Eaten by bug!"), 
+				SwingConstants.CENTER, MASSIVE_FONT, 0, -HEIGHT/20, WIDTH, HEIGHT);
+		// JButton to go back to menu
+		var back = createButton("Back", (int)(WIDTH*0.075), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
+		var retry = createButton("Retry", (int)(WIDTH*0.35), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->{timer.stop(); gameScreen(level);});
+		var saveRecording = createButton("Save Recording", (int)(WIDTH*0.5), (int)(HEIGHT*0.75), WIDTH/5, HEIGHT/10, SMALL_FONT, e->saveRecording());
+		
+		// adds components to panel
+		panel.setLayout(new BorderLayout());
+		panel.add(endTitle);
+		panel.add(endInfo);
+		addComponents(bottomPanel, back, retry, saveRecording);
+		panel.add(bottomPanel, BorderLayout.SOUTH);
+		closePhase.run();
+		closePhase = ()->{remove(panel);};
+		add(panel);
+		setPreferredSize(getSize());
+		pack();
+	}
+	
+	/**
 	 * Takes input and performs the appropriate action.
 	 * Used for moving player, loading, saving, exiting game.
 	 * It is also used for fuzz testing.
@@ -428,13 +462,13 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("SPACE")) { timer.stop(); }
 		else if (input.equals("ESC")) { timer.start(); }
 		if (timer.isRunning()) {
-			if (input.equals("UP")) { domainObject.level().model().player().movePlayer(Direction.UP, domainObject.level().model(), afterMove); }
-			else if (input.equals("DOWN")) { domainObject.level().model().player().movePlayer(Direction.DOWN, domainObject.level().model(), afterMove); }
-			else if (input.equals("LEFT")) { domainObject.level().model().player().movePlayer(Direction.LEFT, domainObject.level().model(), afterMove); }
-			else if (input.equals("RIGHT")) { domainObject.level().model().player().movePlayer(Direction.RIGHT, domainObject.level().model(), afterMove); }
+			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model(), afterMove); }
+			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model(), afterMove); }
+			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model(), afterMove); }
+			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model(), afterMove); }
 		}
-		System.out.println(input + ", Player pos: " + domainObject.level().model().player().location().x() + " "
-				+ domainObject.level().model().player().location().y());
+		System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
+				+ domainLevel.model().player().location().y());
 	}
 	
 	/**
@@ -499,10 +533,10 @@ public class ChapsChallenge extends JFrame{
 		currentMove = MoveDirection.NONE;
 		
 		// DOMAIN/RENDERER/RECORDER
-		domainObject.setLevel(name);
-		if (domainObject.level() == null) return false;
+        try{ domainLevel = new Persistency().loadXML("levels/",name,this); } 
+        catch(Exception e){ e.printStackTrace(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		renderPanel.bind(domainObject.level().model());  // this can be done at any time allowing dynamic level switching
+		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
 	}
@@ -528,11 +562,11 @@ public class ChapsChallenge extends JFrame{
 		String recorderName = recorder.getRecordingLevelName();
 		
 		// Load level from xml
-		domainObject.setLevel(recorderName);
-		if (domainObject.level() == null) return false;
+		try{ domainLevel = new Persistency().loadXML("levels/", recorderName, this); } 
+        catch(Exception e){ e.printStackTrace(); return false;}
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
-		renderPanel.bind(domainObject.level().model());  // this can be done at any time allowing dynamic level switching
+		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
 	}
@@ -550,18 +584,32 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// saves level state
-		try { new Persistency().saveXML("levels/", level, "levels/", levelName + ".xml", domainObject.level()); } 
+		try { new Persistency().saveXML("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
 		
-		// save recording
-		try { recorder.saveRecording("levels/", levelName + "_recording.xml"); } 
-		catch (DocumentException e) { e.printStackTrace(); } 
-		catch (IOException e) { e.printStackTrace(); }
+		saveRecording();
 		
 		// return to menu
 		menuScreen();
+	}
+	
+	/**
+	 * Saves recorded game to xml and exits
+	 */
+	public void saveRecording() {
+		String levelName = (String)JOptionPane.showInputDialog("Set Recording Name: ", level.substring(0,level.length()-4) + "_recording");
+		if(levelName == null || (levelName != null && (levelName.equals("")))) {
+		    System.out.println("Cancelled save");
+		    menuScreen();
+		    return;
+		}
+		
+		// save recording
+		try { recorder.saveRecording("levels/", levelName + ".xml"); } 
+		catch (DocumentException e) { e.printStackTrace(); } 
+		catch (IOException e) { e.printStackTrace(); }
 	}
 	
 	/**
@@ -584,9 +632,14 @@ public class ChapsChallenge extends JFrame{
 		return "<html>TIMER:<br/>" + (float)Math.round(time*10)/10 + "s</html>";
 	}
 	
+	/**
+	 * Formats inventory information
+	 * 
+	 * @return inventory string to display
+	 */
 	private String inventoryFormat() {
-		return "<html>INVENTORY:<br/><br/>Keys <br/>" + domainObject.level().model().player().keys().size() 
-				+ "<br/><br/>Treasure<br/>remaining <br/>" + domainObject.level().model().treasure().size();
+		return "<html>INVENTORY:<br/><br/>Keys <br/>" + domainLevel.model().player().keys().size() 
+				+ "<br/><br/>Treasure<br/>remaining <br/>" + domainLevel.model().treasure().size();
 	}
 	
 	/**
