@@ -17,6 +17,7 @@ public class Player implements Entity {
         Direction.LEFT, Animations.PlayerMoveLeft
     );
     private Map<Direction, LayeredTexture> playerTextures = Map.of(
+        Direction.NONE, Textures.MissingTexture,
         Direction.UP, Textures.MissingTexture,
         Direction.RIGHT, Textures.PlayerFaceRight,
         Direction.DOWN, Textures.MissingTexture,
@@ -24,7 +25,7 @@ public class Player implements Entity {
     );
     private LayeredTexture texture;
     private IntPoint location;
-    private Direction direction = Direction.DOWN;
+    private Direction direction = Direction.NONE;
     private List<Key> keys = new ArrayList<>();
     private Boolean locked = false;
 
@@ -46,6 +47,8 @@ public class Player implements Entity {
     }
 
     public void movePlayer(Direction d, Model m, Runnable r) {
+        if (d == Direction.NONE) return;
+
         direction = d;
         texture = playerTextures.get(direction);
 
@@ -60,10 +63,12 @@ public class Player implements Entity {
 
         locked = true;
         t.playerMovedTo(m);
-        m.animator().Animate(this, playerAnimations.get(direction), newPos, 10, () -> {
+        m.animator().Animate(this, playerAnimations.get(direction), newPos, 20, () -> {
             location = newPos;
             locked = false;
             r.run();
         });
     }
+
+    public void ping(Model m) {}
 }

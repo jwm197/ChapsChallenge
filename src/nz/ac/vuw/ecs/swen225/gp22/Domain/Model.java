@@ -12,4 +12,8 @@ public interface Model {
     void onNextLevel();
     void bindAnimator(Animator a);
     Animator animator();
+
+    default void ping() {
+        entities().forEach(e->e.ping(this));
+    }
 }
