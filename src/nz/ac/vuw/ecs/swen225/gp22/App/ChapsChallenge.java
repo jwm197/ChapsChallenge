@@ -141,7 +141,6 @@ public class ChapsChallenge extends JFrame{
 		panel.addKeyListener(new Controller(this));
 		
 		timer = new BetterTimer((int)(delay*1000),()->{
-			assert SwingUtilities.isEventDispatchThread();
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			// recorder
