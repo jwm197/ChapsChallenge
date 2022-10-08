@@ -13,7 +13,7 @@ public interface Model {
     void bindAnimator(Animator a);
     Animator animator();
 
-    default void ping() {
-        entities().forEach(e->e.ping(this));
+    default void tick() {
+        entities().forEach(e->e.tick(this));
     }
 }
