@@ -44,7 +44,7 @@ public class ChapsChallenge extends JFrame{
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
 	public static final Font SMALL_FONT = new Font("Trebuchet MS", Font.PLAIN, 28);
-	public static final Font MASSIVE_FONT = new Font("Trebuchet MS", Font.PLAIN, 58);
+	public static final Font MASSIVE_FONT = new Font("Trebuchet MS", Font.PLAIN, 56);
 	public static final double delay = 1.0/60.0;
 
 	// Private variables
@@ -425,7 +425,7 @@ public class ChapsChallenge extends JFrame{
 		// JLabel for displaying help title
 		var endTitle = createLabel(completed?"LEVEL COMPLETE!":"LEVEL FAILED!", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.4), WIDTH, HEIGHT);
 		// JLabel to display help info
-		var endInfo = createLabel(completed?"You completed the level with: " + time + "s left!"
+		var endInfo = createLabel(completed?"You completed the level with: " + (float)Math.round(time*10)/10 + "s left!"
 				:"You failed the level by: " + (time==0?"No time left!":"Eaten by bug!"), 
 				SwingConstants.CENTER, MASSIVE_FONT, 0, -HEIGHT/20, WIDTH, HEIGHT);
 		// JButton to go back to menu
