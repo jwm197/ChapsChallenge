@@ -237,6 +237,11 @@ public class ParseXML {
         return inventory.stream().map(node -> new Key(getColour(node.selectSingleNode("colour").getText()))).collect(Collectors.toList());
     }
 
+    /**
+     * Create a list of bugs by laoding the logic and textures from the JAR file and making a new instance of a bug.
+     * @param bugs the list of nodes to parse
+     * @return a list of bugs
+     */
     private List<Bug> parseBugs(List<Node> bugs) {
         if(bugs.isEmpty()) return List.of();
 
@@ -253,6 +258,7 @@ public class ParseXML {
      * Parses the given file and return a map of game objects
      *
      * @param doc a dom4j document to parse
+     * @param cc a chapschallenge game object to set the runnables
      * @return a level object
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */

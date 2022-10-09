@@ -21,6 +21,9 @@ import java.util.jar.Manifest;
  */
 public record Persistency() {
 
+    /**
+     * Create a new JAR file containing all the textures and logic for the bug
+     */
     public void writeJAR(){
         try {
             JarTool tool = new JarTool();
