@@ -150,6 +150,7 @@ public class WriteXML {
 
 
     private void parseInventory(Element root, List<Key> inventory) {
+        root.element("player").element("items").elements("key").forEach(Node::detach);
         IntStream.range(0, inventory.size()).forEach(i -> {
             root.element("player").element("items").addElement("key").addAttribute("name", "key" + (i + 1))
                     .addElement("colour").setText(getColour(inventory.get(i).color()));
