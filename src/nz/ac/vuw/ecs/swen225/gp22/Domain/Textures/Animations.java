@@ -11,7 +11,9 @@ public enum Animations implements TextureSequence {
 	RainbowScrungle(Textures.Scrungle.tint(Color.red),Textures.Scrungle.tint(Color.green),Textures.Scrungle.tint(Color.blue)),
 	/*player*/
     PlayerMoveLeft(Textures.PlayerMoveLeft1, Textures.PlayerMoveLeft2),
-    PlayerMoveRight(Textures.PlayerMoveRight1, Textures.PlayerMoveRight2);
+    PlayerMoveRight(Textures.PlayerMoveRight1, Textures.PlayerMoveRight2),
+    PlayerMoveUp(Textures.PlayerMoveUp1, Textures.PlayerMoveUp2),
+    PlayerMoveDown(Textures.PlayerMoveDown1, Textures.PlayerMoveDown2);
 	
 	private final List<LayeredTexture> frames;
 	
