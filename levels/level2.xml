@@ -41,120 +41,24 @@
 
     <!-- bugs -->
     <bug>
-        <start>
+        <location>
             <x>6</x>
             <y>4</y>
-        </start>
-        <path>
-            <x>6</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>8</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>8</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>6</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>6</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>5</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>4</y>
-        </path>
+        </location>
     </bug>
 
     <bug>
-        <start>
+        <location>
             <x>7</x>
             <y>5</y>
-        </start>
-        <path>
-            <x>7</x>
-            <y>4</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>4</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>8</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>8</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>6</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>6</y>
-        </path>
+        </location>
     </bug>
 
     <bug>
-        <start>
+        <location>
             <x>6</x>
             <y>6</y>
-        </start>
-        <path>
-            <x>7</x>
-            <y>6</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>5</y>
-        </path>
-        <path>
-            <x>7</x>
-            <y>4</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>4</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>2</y>
-        </path>
-        <path>
-            <x>4</x>
-            <y>8</y>
-        </path>
-        <path>
-            <x>6</x>
-            <y>8</y>
-        </path>
+        </location>
     </bug>
 
 

@@ -22,13 +22,12 @@ import java.util.jar.Manifest;
 public record Persistency() {
 
     public void writeJAR(){
-
         try {
             JarTool tool = new JarTool();
             tool.startManifest();
             JarOutputStream target = tool.openJar("levels/level2.jar");
-            tool.addFile(target, System.getProperty("user.dir") + "\\src\\main\\",
-                    System.getProperty("user.dir") + "\\src\\main\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
+            tool.addFile(target, System.getProperty("user.dir") + "\\src\\production\\chaps-challenge",
+                    System.getProperty("user.dir") + "\\out\\production\\chaps-challenge\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
             target.close();
             System.out.println("JAR write complete");
         } catch (IOException e) {

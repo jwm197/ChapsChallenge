@@ -3,10 +3,12 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
+import nz.ac.vuw.ecs.swen225.gp22.Persistency.JarTool;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,12 +64,14 @@ public class ParseXML {
      * @param keys  the list of keys to parse
      * @param doors the list of doors to parse
      */
-    private void checkKeysandDoors(List<Node> keys, List<Node> doors) {
+    private void checkKeysandDoors(List<Node> keys,Node player, List<Node> doors) {
         if (keys.isEmpty() || doors.isEmpty()) return;
-        List<String> keyColour = keys.stream()
-                .map(node -> node.selectSingleNode("colour").getText()).toList();
+        List<String> keyColour = new ArrayList<>(keys.stream()
+                .map(node -> node.selectSingleNode("colour").getText()).toList());
         List<String> doorColour = doors.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
+
+        player.selectNodes("key").forEach(node -> keyColour.add(node.getText()));
         Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
         Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 //        keyCounts.forEach((key, value) -> {
@@ -227,6 +231,24 @@ public class ParseXML {
                 .set(exitTile.location().y(), exitTile);
     }
 
+    private List<Key> parseInventory(Node player) {
+        List<Node> inventory = player.selectSingleNode("items").selectNodes("key");
+        if(inventory.isEmpty()) return List.of();
+        return inventory.stream().map(node -> new Key(getColour(node.selectSingleNode("colour").getText()))).collect(Collectors.toList());
+    }
+
+    private List<Bug> parseBugs(List<Node> bugs) {
+        if(bugs.isEmpty()) return List.of();
+
+        JarTool jarTool = new JarTool();
+        try {
+            jarTool.openJar("levels/level2.jar");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return List.of();
+    }
+
     /**
      * Parses the given file and return a map of game objects
      *
@@ -245,7 +267,8 @@ public class ParseXML {
                 )
                 .collect(Collectors.toList());
 
-        checkKeysandDoors(root.selectNodes("key"), root.selectNodes("door"));
+
+        checkKeysandDoors(root.selectNodes("key"),root.selectSingleNode("player"), root.selectNodes("door"));
         List<Key> keys = parseKeys(root.selectNodes("key"), freeTiles);
         List<Treasure> chips = parseChips(root.selectNodes("chip"), freeTiles);
         parseWalls(root.selectNodes("wall"),freeTiles);
@@ -253,8 +276,9 @@ public class ParseXML {
         parseInfo(root.selectSingleNode("info"),freeTiles);
         parseLock(root.selectSingleNode("lock"),freeTiles);
         parseExit(root.selectSingleNode("exit"),freeTiles);
-
+        parseBugs(root.selectNodes("bugs"));
         Player player = parsePlayer(root.selectSingleNode("player"));
+        player.keys().addAll(parseInventory(root.selectSingleNode("player")));
         return Level.makeLevel(
                 player,
                 new ArrayList<>(List.of(player)),//including bugs
@@ -265,4 +289,6 @@ public class ParseXML {
                 ()->cc.gameEnd(false)
         );
     }
+
+
 }
