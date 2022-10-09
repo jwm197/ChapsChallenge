@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp22.Renderer.Audio;
+package nz.ac.vuw.ecs.swen225.gp22.Domain.Audio;
 
 /**
  * Represents a threaded audio object which can be played
