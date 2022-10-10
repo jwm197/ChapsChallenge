@@ -279,6 +279,7 @@ public class ChapsChallenge extends JFrame{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			for (int i=0; i<recorder.getTickSpeed(); i++) {
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			domainLevel.model().tick(); 
 			time-=delay;}
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
