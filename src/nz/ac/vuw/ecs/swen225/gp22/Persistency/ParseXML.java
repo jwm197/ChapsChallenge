@@ -252,9 +252,9 @@ public class ParseXML {
 //            JarFile jar = new JarFile("levels/level2.jar");
 //            JarEntry bugLogic = jar.getJarEntry("nz/ac/vuw/ecs/swen225/gp22/Domain/Bug.class");
 //            JarEntry texture = jar.getJarEntry("assets/textures/MissingTexture.png");
-          bugs.forEach(node ->{
-              bugsList.add(new Bug(getCoords(node)));
-          });
+      bugs.forEach(node ->{
+          bugsList.add(new Bug(getCoords(node)));
+      });
 //
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
@@ -292,7 +292,8 @@ public class ParseXML {
         parseExit(root.selectSingleNode("exit"),freeTiles);
         Player player = parsePlayer(root.selectSingleNode("player"));
         player.keys().addAll(parseInventory(root.selectSingleNode("player")));
-        List<Entity> entities = parseBugs(root.selectNodes("bug"));
+        List<Entity> entities = new ArrayList<>();
+        entities.addAll(parseBugs(root.selectNodes("bug")));
         entities.add(player);
         return Level.makeLevel(
                 player,
@@ -304,6 +305,4 @@ public class ParseXML {
                 ()->cc.gameEnd(false)
         );
     }
-
-
 }
