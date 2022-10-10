@@ -28,4 +28,11 @@ public record IntPoint(int x, int y){
     public DoublePoint toDoublePoint() {
     	return new DoublePoint(x, y);
     }
+
+    public boolean equals(Object other) {
+      if (!(other instanceof IntPoint)) return false;
+      IntPoint ip = (IntPoint) other;
+      if (ip.x() != x || ip.y() != y) return false;
+      return true;
+    }
 }

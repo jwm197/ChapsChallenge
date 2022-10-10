@@ -2,10 +2,13 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.util.List;
 
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
+
 public record Level(Model model) {
     public static Level makeLevel(Player player, List<Entity> entities, List<Key> keys, List<Treasure> treasure, Tiles tiles, Runnable next, Runnable gameOver) {
         return new Level(new Model() {
             private Animator animator;
+            private AudioMixer mixer;
 
             public Player player() { return player; }
             public List<Entity> entities() { return entities; }
@@ -16,6 +19,8 @@ public record Level(Model model) {
             public void onNextLevel() { next.run(); }
             public void bindAnimator(Animator a) { animator = a; }
             public Animator animator() { return animator; }
+            public void bindMixer(AudioMixer m) { mixer = m; }
+            public AudioMixer mixer() { return mixer; }
         });
     }
 }

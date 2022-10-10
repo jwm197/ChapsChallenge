@@ -72,6 +72,6 @@ public class Bug implements Entity {
 
     public void tick(Model m) {
         moveBug(m);
-        if (location == m.player().location()) m.onGameOver();
+        if (location.equals(m.player().location())) m.onGameOver();
     }
 }
