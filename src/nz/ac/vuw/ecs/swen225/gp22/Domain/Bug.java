@@ -76,7 +76,7 @@ public class Bug implements Entity {
         if (t instanceof WallTile) return;
 
         locked = true;
-        m.animator().Animate(this, bugAnimations.get(direction), newPos, 20, () -> {
+        m.animator().Animate(this, bugAnimations.get(direction), newPos, 30, () -> {
             location = newPos;
             locked = false;
         });
