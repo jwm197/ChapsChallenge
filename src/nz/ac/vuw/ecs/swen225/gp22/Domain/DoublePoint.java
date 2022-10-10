@@ -35,4 +35,11 @@ public record DoublePoint(double x, double y){
     public IntPoint toIntPoint() {
     	return new IntPoint((int)Math.round(x), (int)Math.round(y));
     }
+
+    public boolean equals(Object other) {
+      if (!(other instanceof DoublePoint)) return false;
+      DoublePoint dp = (DoublePoint) other;
+      if (dp.x() != x || dp.y() != y) return false;
+      return true;
+    }
 }

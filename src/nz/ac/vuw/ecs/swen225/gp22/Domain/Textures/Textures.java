@@ -28,12 +28,18 @@ public enum Textures implements Texture {
     /*player*/
     PlayerFaceLeft,
     PlayerFaceRight,
+    PlayerFaceUp,
+    PlayerFaceDown,
     
     /*player animation*/
     PlayerMoveLeft1,
     PlayerMoveLeft2,
     PlayerMoveRight1,
     PlayerMoveRight2,
+    PlayerMoveUp1,
+    PlayerMoveUp2,
+    PlayerMoveDown1,
+    PlayerMoveDown2,
     
     /*null*/
     MissingTexture,

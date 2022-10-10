@@ -11,16 +11,16 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 
 public class Player implements Entity {
     private Map<Direction, TextureSequence> playerAnimations = Map.of(
-        Direction.UP, Textures.MissingTexture,
+        Direction.UP, Animations.PlayerMoveUp,
         Direction.RIGHT, Animations.PlayerMoveRight,
-        Direction.DOWN, Textures.MissingTexture,
+        Direction.DOWN, Animations.PlayerMoveDown,
         Direction.LEFT, Animations.PlayerMoveLeft
     );
     private Map<Direction, LayeredTexture> playerTextures = Map.of(
-        Direction.NONE, Textures.MissingTexture,
-        Direction.UP, Textures.MissingTexture,
+        Direction.NONE, Textures.PlayerFaceDown,
+        Direction.UP, Textures.PlayerFaceUp,
         Direction.RIGHT, Textures.PlayerFaceRight,
-        Direction.DOWN, Textures.MissingTexture,
+        Direction.DOWN, Textures.PlayerFaceDown,
         Direction.LEFT, Textures.PlayerFaceLeft
     );
     private LayeredTexture texture;
@@ -61,8 +61,9 @@ public class Player implements Entity {
         if (!t.canPlayerMoveTo(m)) return;
 
         locked = true;
-        t.playerMovedTo(m);
+        if (t instanceof WallTile) t.playerMovedTo(m);
         m.animator().Animate(this, playerAnimations.get(direction), newPos, 20, () -> {
+            if (!(t instanceof WallTile)) t.playerMovedTo(m);
             location = newPos;
             locked = false;
             r.run();

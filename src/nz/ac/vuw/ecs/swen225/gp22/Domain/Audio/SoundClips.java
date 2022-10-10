@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp22.Renderer.Audio;
+package nz.ac.vuw.ecs.swen225.gp22.Domain.Audio;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
