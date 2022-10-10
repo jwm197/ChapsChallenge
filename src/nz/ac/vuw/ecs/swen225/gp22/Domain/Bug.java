@@ -28,9 +28,11 @@ public class Bug implements Entity {
     private IntPoint location;
     private Direction direction = Direction.NONE;
     private Boolean locked = false;
+    private int id;
 
-    public Bug(IntPoint location) {
+    public Bug(IntPoint location, int id) {
         this.location = location;
+        this.id = id;
         texture = bugTextures.get(direction);
     }
 
@@ -40,6 +42,10 @@ public class Bug implements Entity {
 
     public IntPoint location() {
         return location;
+    }
+
+    public int id() {
+        return id;
     }
 
     public Direction calculateDirection() {
@@ -54,7 +60,7 @@ public class Bug implements Entity {
         return directions.higherEntry(randomNum.nextInt(cumulative)).getValue();
     }
 
-    public void moveBug(Direction d, Model m) {
+    public void move(Direction d, Model m) {
         if (locked) return;
 
         direction = d;
@@ -63,7 +69,7 @@ public class Bug implements Entity {
         IntPoint newPos = location.add(direction.direction());
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
         || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
-        if (!m.entities().stream().filter(e->!(e instanceof Player) && location.equals(e.location()))
+        if (!m.entities().values().stream().filter(e->!(e instanceof Player) && location.equals(e.location()))
         .findFirst().isEmpty()) return;
 
         Tile t = m.tiles().getTile(newPos);
@@ -77,7 +83,7 @@ public class Bug implements Entity {
     }
 
     public void tick(Model m) {
-        moveBug(calculateDirection(), m);
+        move(calculateDirection(), m);
         if (location.equals(m.player().location())) m.onGameOver();
     }
 }
