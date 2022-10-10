@@ -42,9 +42,7 @@ public class Bug implements Entity {
         return location;
     }
 
-    public void moveBug(Model m) {
-        if (locked) return;
-
+    public Direction calculateDirection() {
         NavigableMap<Integer, Direction> directions = new TreeMap<>();
         int cumulative = 0;
         directions.put(cumulative += (direction.probUp()*100), Direction.UP);
@@ -53,7 +51,13 @@ public class Bug implements Entity {
         directions.put(cumulative += (direction.probLeft()*100), Direction.LEFT);
 
         Random randomNum = new Random();
-        direction = directions.higherEntry(randomNum.nextInt(cumulative)).getValue();
+        return directions.higherEntry(randomNum.nextInt(cumulative)).getValue();
+    }
+
+    public void moveBug(Direction d, Model m) {
+        if (locked) return;
+
+        direction = d;
         texture = bugTextures.get(direction);
 
         IntPoint newPos = location.add(direction.direction());
@@ -73,7 +77,7 @@ public class Bug implements Entity {
     }
 
     public void tick(Model m) {
-        moveBug(m);
+        moveBug(calculateDirection(), m);
         if (location.equals(m.player().location())) m.onGameOver();
     }
 }
