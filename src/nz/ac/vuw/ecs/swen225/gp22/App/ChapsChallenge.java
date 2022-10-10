@@ -2,6 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp22.App;
 
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.*;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.*;
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 
@@ -63,7 +64,10 @@ public class ChapsChallenge extends JFrame{
 	private Recorder recorder;
 	
 	MoveDirection currentMove;
+	
 	// Sound
+	private final AudioMixer soundMixer = new AudioMixer();
+	private final AudioMixer musicMixer = new AudioMixer();
 	
 	public ChapsChallenge(){
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -76,7 +80,10 @@ public class ChapsChallenge extends JFrame{
 		setVisible(true);
 		setResizable(false);
 		addWindowListener(new WindowAdapter(){
-			public void windowClosed(WindowEvent e) { closePhase.run(); }
+			public void windowClosed(WindowEvent e) { 
+				closePhase.run(); 
+				closeTheSounds();
+			}
 		});
 	}			
 	
@@ -84,6 +91,7 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for the menu.
 	 */
 	public void menuScreen() {
+		closeTheSounds();
 		// Panel to stores components
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
@@ -118,6 +126,7 @@ public class ChapsChallenge extends JFrame{
 		
 		// Creates level (sets up domain/renderer/recorder)
 		if (!newGame(name)) {return;}
+		prepareMusic();
 		renderPanel.setBackground(Color.DARK_GRAY);
 		
 		// Panels to stores components
@@ -149,6 +158,7 @@ public class ChapsChallenge extends JFrame{
 			recorder.setPreviousMove(new RecordedMove(currentMove, time));
 			if (currentMove!=MoveDirection.NONE) performAction(currentMove.toString());
 			//currentMove = MoveDirection.NONE;
+			domainLevel.model().tick(); 
 			
 			// updating timer
 			time-=delay;
@@ -226,6 +236,8 @@ public class ChapsChallenge extends JFrame{
 	public void recordedGame(String name) {
 		// Creates new recorded game
 		if (!newRecordedGame(name)) return;
+		prepareMusic();
+		renderPanel.setBackground(Color.DARK_GRAY);
 		
 		// Panels to stores components
 		JPanel panel = new JPanel();
@@ -320,7 +332,7 @@ public class ChapsChallenge extends JFrame{
 		pack();
 		panel.requestFocus();
 	}
-	
+	 
 	/**
 	 * Screen to view game help.
 	 */
@@ -409,6 +421,7 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for when player has completed/failed the level
 	 */
 	public void gameEnd(boolean completed) {
+		closeTheSounds();
 		// Goes to level 2 once level 1 completed
 		if (level.equals("level1.xml") && completed) {
 			int result = JOptionPane.showConfirmDialog(this,
@@ -461,16 +474,16 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-R")) { timer.stop(); loadGame(); }
 		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
 		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
-		else if (input.equals("SPACE")) { timer.stop(); }
-		else if (input.equals("ESC")) { timer.start(); }
+		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds();}
+		else if (input.equals("ESC")) { timer.start(); resumeTheSounds();}
 		if (timer.isRunning()) {
 			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model(), afterMove); }
 			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model(), afterMove); }
 			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model(), afterMove); }
 			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model(), afterMove); }
 		}
-		System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
-				+ domainLevel.model().player().location().y());
+		//System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
+		//		+ domainLevel.model().player().location().y());
 	}
 	
 	/**
@@ -538,6 +551,7 @@ public class ChapsChallenge extends JFrame{
         try{ domainLevel = new Persistency().loadXML("levels/", name, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		domainLevel.model().bindMixer(soundMixer); //bind the global mixer object to the level so Domain can use audio
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
@@ -650,10 +664,10 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void stepMove() {
 		finishedMove = false;
-		if (autoReplay) {afterMove = ()->finishedMove = true;}
+		if (autoReplay) {afterMove = ()->{finishedMove = true;};}
 		else { 
 			if (timer.isRunning()) return;
-			afterMove = ()->timer.stop();
+			afterMove = ()->{timer.stop();};
 		}
 		if (!autoReplay && recorder.peekNextMove()!=null) {
 			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
@@ -665,11 +679,6 @@ public class ChapsChallenge extends JFrame{
 			System.out.println("NO MORE MOVES TO STEP");
 			return;
 		}
-//		if (recorder.peekNextMove()==null) {
-//			time = 0;
-//			timer.start();
-//			return;
-//		};
 		timer.start();
 		time = recorder.peekNextMove().time();
 		recorder.stepMove();
@@ -682,5 +691,35 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void setAfterMove(Runnable r) {
 		afterMove = r;          
+	}
+	
+	/**
+	 * Pauses the sounds
+	 */
+	public void pauseTheSounds() {
+	    soundMixer.pauseAll();
+	}
+	
+	/**
+	 * Resumes the sounds
+	 */
+	public void resumeTheSounds() {
+		soundMixer.playAll();
+	}
+	
+	/**
+	 * Closes the sounds
+	 */
+	public void closeTheSounds() {
+		soundMixer.closeAll();
+		musicMixer.closeAll();
+	}
+	
+	public void prepareMusic() {
+		closeTheSounds();
+//		Playable music = SoundLines.GAME.generate();
+//		music.setVolume(40);
+//		music.setLooping(true);
+//		musicMixer.add(music);
 	}
 }
