@@ -37,6 +37,8 @@ public class ThreadedLine implements Playable {
 	private byte[] buffer;
 	private int count;
 	
+	private float volume = 100;
+	
 	//thread for concurrent audio execution
 	Thread current;
 	private boolean isActive = false;
@@ -63,13 +65,14 @@ public class ThreadedLine implements Playable {
 				close();
 				
 				//if the audio is looping, create a new audio stream thread, else call the callback
-				if (loopCount != 0) {
+				if (loopCount != 0 && isActive) {
 					try {
 						//construct a new audio thread
 						constructStream(source);
 					} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
 						//if we reach here, something has gone horribly wrong
 					}
+					setVolume(volume);
 					play();
 					if (loopCount != -1) loopCount--;
 				} else {
@@ -168,6 +171,7 @@ public class ThreadedLine implements Playable {
 
 	@Override
 	public void setVolume(float volume) {
+		this.volume = volume;
 		FloatControl control = (FloatControl) inner.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue(Playable.normalizeVolume(volume));
 	}
