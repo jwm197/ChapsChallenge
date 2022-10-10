@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.stream.IntStream;
 
 
@@ -32,24 +33,33 @@ public class FuzzTest{
         }
     }
     //inputs to be tested
-    
-    static List<TestInput> inputs1 = List.of(new TestInput(Move.Load1, randomMoves(1000)));
+    static List<TestInput> inputs1 = List.of(new TestInput(Move.Load1, randomMoves(5)));
     static List<TestInput> inputs2 = List.of(new TestInput(Move.Load2, randomMoves(1000))); 
+    
+    /**
+     * input to be tested
+     */
     record TestInput(Move level, List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
             ChapsChallenge c = new ChapsChallenge();
-            c.menuScreen();
-            System.out.println(level);
+            Stack<Move> stackOfMoves = new Stack<>();
+            stackOfMoves.addAll(moves);
+            g.doMove(Move.Menu, c);
             g.doMove(level, c);
-            for (var m:moves){
-                g.doMove(m, c);
-                
+            while(!stackOfMoves.isEmpty()) {
+            	if (!c.animating()) {
+            		g.doMove(stackOfMoves.pop(), c);
+            	}
             }
-            g.doMove(Move.Exit, c);
+           
+        }
+           // g.doMove(Move.Exit, c);
         };
-    };
-    //game object for test
+    
+    /**
+     * Matches with performaction in ChapsChallenge.java
+     */
     public class Game{
         void doMove(Move move, ChapsChallenge g){//moves player accordingly   
             switch(move.ordinal()){
@@ -64,25 +74,32 @@ public class FuzzTest{
                 case 4:
                 g.performAction("ESC");
                 case 5:
-                g.performAction("CTRL-1");
+                g.performAction("SPACE");
                 case 6:
-                g.performAction("CTRL-2");
+                g.performAction("CTRL-1");
                 case 7:
-                g.performAction("CTRL-R");
+                g.performAction("CTRL-2");
                 case 8:
-                g.performAction("CTRl-S");
+                g.performAction("CTRL-R");
                 case 9:
+                g.performAction("CTRl-S");
+                case 10:
                 g.performAction("CTRL-X");
 
             }
         }
     }
-    interface Input{}
-    enum Move implements Input {Left, Right, Up, Down, Pause, Load1, Load2, Load, Exit, Menu}// player moves possible
+    enum Move {Left, Right, Up, Down, Pause, Continue, Load1, Load2, Load, Exit, Menu}// player moves possible
+    /**
+     * Generates a list of random moves.
+     * @param size size of move list
+     * @return list of moves
+     */
     static List<Move> randomMoves(int size){//generates random moves
+    	Random r = new Random();
         return IntStream.range(0, size)
-        .map(i->new Random().nextInt(3))
-        .mapToObj(ei->Move.values()[ei])
+        .map(i->r.nextInt(Move.values().length))
+        .mapToObj(ei->Move.values()[ei%2])
         .toList();
     }
 
