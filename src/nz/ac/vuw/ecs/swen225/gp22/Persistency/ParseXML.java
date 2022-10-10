@@ -8,7 +8,12 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -67,7 +72,7 @@ public class ParseXML {
      * @param keys  the list of keys to parse
      * @param doors the list of doors to parse
      */
-    private void checkKeysandDoors(List<Node> keys,Node player, List<Node> doors) {
+    private void checkKeysandDoors(List<Node> keys, Node player, List<Node> doors) {
         if (keys.isEmpty() || doors.isEmpty()) return;
         List<String> keyColour = new ArrayList<>(keys.stream()
                 .map(node -> node.selectSingleNode("colour").getText()).toList());
@@ -89,7 +94,7 @@ public class ParseXML {
     /**
      * Parse all the keys
      *
-     * @param keys a list of keys to parse
+     * @param keys      a list of keys to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      * @return a list of objectbuilder instances containing info about keys
      */
@@ -113,12 +118,12 @@ public class ParseXML {
     /**
      * Parse all the doors
      *
-     * @param doors a list of doors to parse
+     * @param doors     a list of doors to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseDoors(List<Node> doors, List<List<Tile>> freeTiles) {
         List<LockedDoor> doorsList = doors.stream()
-                .map(node -> new LockedDoor(getCoords(node),getColour(node.selectSingleNode("colour").getText())))
+                .map(node -> new LockedDoor(getCoords(node), getColour(node.selectSingleNode("colour").getText())))
                 .toList();
         IntStream.range(0, doors.size())
                 .forEach(i ->
@@ -141,7 +146,7 @@ public class ParseXML {
     /**
      * Parse all the chips/treasures
      *
-     * @param chips a list of chips to parse
+     * @param chips     a list of chips to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      * @return a list of objectbuilder instances containing info about chips
      */
@@ -165,7 +170,7 @@ public class ParseXML {
     /**
      * Parse all the walls
      *
-     * @param walls a list of walls to parse
+     * @param walls     a list of walls to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
     private void parseWalls(List<Node> walls, List<List<Tile>> freeTiles) {
@@ -179,31 +184,31 @@ public class ParseXML {
             int y1 = Integer.parseInt(n.selectSingleNode("y1").getText());
             int x2 = Integer.parseInt(n.selectSingleNode("x2").getText());
             int y2 = Integer.parseInt(n.selectSingleNode("y2").getText());
-            freeTiles.get(x1).set(y1,new WallTile(new IntPoint(x1,y1)));
+            freeTiles.get(x1).set(y1, new WallTile(new IntPoint(x1, y1)));
             if (x1 != x2) {
                 for (int i = x1; i < x2; i++) {
-                    freeTiles.get(i).set(y1,new WallTile(new IntPoint(i,y1)));
+                    freeTiles.get(i).set(y1, new WallTile(new IntPoint(i, y1)));
                 }
             } else if (y1 != y2) {
                 for (int i = y1; i < y2; i++) {
-                    freeTiles.get(x1).set(i,new WallTile(new IntPoint(x1,i)));
+                    freeTiles.get(x1).set(i, new WallTile(new IntPoint(x1, i)));
                 }
             }
-            freeTiles.get(x2).set(y2,new WallTile(new IntPoint(x2,y2)));
+            freeTiles.get(x2).set(y2, new WallTile(new IntPoint(x2, y2)));
         });
     }
 
     /**
      * Parse info field node and add it to the list of tiles
      *
-     * @param info the node to parse
+     * @param info      the node to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
-    private void parseInfo(Node info,List<List<Tile>> freeTiles) {
+    private void parseInfo(Node info, List<List<Tile>> freeTiles) {
         if (info == null) throw new ParserException("Info not found");
         String helpText = info.selectSingleNode("helptext").getText();
         if (helpText == null) throw new ParserException("Missing help text");
-        InfoField infoField = new InfoField(getCoords(info),helpText);
+        InfoField infoField = new InfoField(getCoords(info), helpText);
         freeTiles.get(infoField.location().x())
                 .set(infoField.location().y(), infoField);
     }
@@ -211,10 +216,10 @@ public class ParseXML {
     /**
      * Parse the lock node are add it to the list of tiles
      *
-     * @param lock the node to parse
+     * @param lock      the node to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
-    private void parseLock(Node lock,List<List<Tile>> freeTiles) {
+    private void parseLock(Node lock, List<List<Tile>> freeTiles) {
         if (lock == null) throw new ParserException("Lock not found");
         ExitLock exitLock = new ExitLock(getCoords(lock));
         freeTiles.get(exitLock.location().x())
@@ -224,10 +229,10 @@ public class ParseXML {
     /**
      * Parse the exit node and add it to the list of tiles
      *
-     * @param exit the node to parse
+     * @param exit      the node to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
      */
-    private void parseExit(Node exit,List<List<Tile>> freeTiles) {
+    private void parseExit(Node exit, List<List<Tile>> freeTiles) {
         if (exit == null) throw new ParserException("Exit not found");
         Exit exitTile = new Exit(getCoords(exit));
         freeTiles.get(exitTile.location().x())
@@ -236,37 +241,43 @@ public class ParseXML {
 
     private List<Key> parseInventory(Node player) {
         List<Node> inventory = player.selectSingleNode("items").selectNodes("key");
-        if(inventory.isEmpty()) return List.of();
+        if (inventory.isEmpty()) return List.of();
         return inventory.stream().map(node -> new Key(getColour(node.selectSingleNode("colour").getText()))).collect(Collectors.toList());
     }
 
     /**
      * Create a list of bugs by laoding the logic and textures from the JAR file and making a new instance of a bug.
+     *
+     * Code to load class from jar file was taken from: <a href="https://stackoverflow.com/questions/26687140/urlclassloader-unable-to-load-classes-from-jar-dynamically">...</a>
      * @param bugs the list of nodes to parse
      * @return a list of bugs
      */
-    private List<Entity> parseBugs(List<Node> bugs) {
-        List<Entity> bugsList = new ArrayList<>();
-        if(bugs.isEmpty()) return List.of();
-//        try {
-//            JarFile jar = new JarFile("levels/level2.jar");
-//            JarEntry bugLogic = jar.getJarEntry("nz/ac/vuw/ecs/swen225/gp22/Domain/Bug.class");
-//            JarEntry texture = jar.getJarEntry("assets/textures/MissingTexture.png");
-      bugs.forEach(node ->{
-          bugsList.add(new Bug(getCoords(node)));
-      });
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        return bugsList;
+    private Map<Integer, Entity> parseBugs(List<Node> bugs) {
+        if (bugs.isEmpty()) return new HashMap<>();
+        Map<Integer, Entity> bugMap = new HashMap<>();
+        try {
+            File jarFile = new File("levels\\level2.jar");
+            URLClassLoader loader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
+            Class<?> bugLogic = Class.forName("nz.ac.vuw.ecs.swen225.gp22.Domain.Bug", true, loader);
+              bugs.forEach(node ->{
+                  try {
+                      bugMap.put(Integer.valueOf(node.valueOf("@id")), (Entity) bugLogic.getDeclaredConstructor(IntPoint.class).newInstance(getCoords(node)));
+                  } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                           NoSuchMethodException e) {
+                      throw new RuntimeException(e);
+                  }
+              });
+            return bugMap;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Parses the given file and return a map of game objects
      *
      * @param doc a dom4j document to parse
-     * @param cc a chapschallenge game object to set the runnables
+     * @param cc  a chapschallenge game object to set the runnables
      * @return a level object
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */
@@ -282,27 +293,27 @@ public class ParseXML {
                 .collect(Collectors.toList());
 
 
-        checkKeysandDoors(root.selectNodes("key"),root.selectSingleNode("player"), root.selectNodes("door"));
+        checkKeysandDoors(root.selectNodes("key"), root.selectSingleNode("player"), root.selectNodes("door"));
         List<Key> keys = parseKeys(root.selectNodes("key"), freeTiles);
         List<Treasure> chips = parseChips(root.selectNodes("chip"), freeTiles);
-        parseWalls(root.selectNodes("wall"),freeTiles);
-        parseDoors(root.selectNodes("door"),freeTiles);
-        parseInfo(root.selectSingleNode("info"),freeTiles);
-        parseLock(root.selectSingleNode("lock"),freeTiles);
-        parseExit(root.selectSingleNode("exit"),freeTiles);
+        parseWalls(root.selectNodes("wall"), freeTiles);
+        parseDoors(root.selectNodes("door"), freeTiles);
+        parseInfo(root.selectSingleNode("info"), freeTiles);
+        parseLock(root.selectSingleNode("lock"), freeTiles);
+        parseExit(root.selectSingleNode("exit"), freeTiles);
         Player player = parsePlayer(root.selectSingleNode("player"));
         player.keys().addAll(parseInventory(root.selectSingleNode("player")));
-        List<Entity> entities = new ArrayList<>();
-        entities.addAll(parseBugs(root.selectNodes("bug")));
-        entities.add(player);
+        Map<Integer, Entity> entities = new HashMap<>();
+        entities.put(0, player);
+        entities.putAll(parseBugs(root.selectNodes("bug")));
         return Level.makeLevel(
                 player,
                 entities,
                 keys,
                 chips,
-                new Tiles(freeTiles, width,height),
-                ()->cc.gameEnd(true),
-                ()->cc.gameEnd(false)
+                new Tiles(freeTiles, width, height),
+                () -> cc.gameEnd(true),
+                () -> cc.gameEnd(false)
         );
     }
 }
