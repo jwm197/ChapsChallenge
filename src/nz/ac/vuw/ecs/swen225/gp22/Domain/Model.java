@@ -1,12 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.util.List;
+import java.util.Map;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
 
 public interface Model {
     Player player();
-    List<Entity> entities();
+    Map<Integer, Entity> entities();
     List<Key> keys();
     List<Treasure> treasure();
     Tiles tiles();
@@ -18,6 +19,6 @@ public interface Model {
     AudioMixer mixer();
 
     default void tick() {
-        entities().forEach(e->e.tick(this));
+        entities().values().forEach(e->e.tick(this));
     }
 }
