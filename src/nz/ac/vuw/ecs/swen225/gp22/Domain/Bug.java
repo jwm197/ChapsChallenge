@@ -28,11 +28,9 @@ public class Bug implements Entity {
     private IntPoint location;
     private Direction direction = Direction.NONE;
     private Boolean locked = false;
-    private int id;
 
     public Bug(IntPoint location, int id) {
         this.location = location;
-        this.id = id;
         texture = bugTextures.get(direction);
     }
 
@@ -42,10 +40,6 @@ public class Bug implements Entity {
 
     public IntPoint location() {
         return location;
-    }
-
-    public int id() {
-        return id;
     }
 
     public Direction calculateDirection() {

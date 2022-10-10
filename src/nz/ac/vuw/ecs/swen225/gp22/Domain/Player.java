@@ -28,11 +28,9 @@ public class Player implements Entity {
     private Direction direction = Direction.NONE;
     private List<Key> keys = new ArrayList<>();
     private Boolean locked = false;
-    private int id;
 
-    public Player(IntPoint location, int id) {
+    public Player(IntPoint location) {
         this.location = location;
-        this.id = id;
         texture = playerTextures.get(direction);
     }
 
@@ -42,10 +40,6 @@ public class Player implements Entity {
 
     public IntPoint location() {
         return location;
-    }
-
-    public int id() {
-        return id;
     }
     
     public List<Key> keys() {
