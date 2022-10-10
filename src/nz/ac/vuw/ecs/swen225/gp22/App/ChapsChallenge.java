@@ -150,10 +150,13 @@ public class ChapsChallenge extends JFrame{
 		timer = new BetterTimer((int)(delay*1000),()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			// recorder
-			if (currentMove!=MoveDirection.NONE && animating() && !wait) {
+			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
-				recorder.setPreviousMove(new RecordedMove(currentMove, time));
-				wait = true;
+				if (animating() && !wait) {
+					recorder.setPreviousMove(new RecordedMove(currentMove, time));
+					wait = true;
+					System.out.println(currentMove + " " + time);
+				}
 			}
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
@@ -474,18 +477,14 @@ public class ChapsChallenge extends JFrame{
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { timer.stop(); loadGame(); }
-		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
-		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
-		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds();}
-		else if (input.equals("ESC")) { timer.start(); resumeTheSounds();}
-		if (timer.isRunning()) {
-			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
-			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
-			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
-			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
-		}
-		//System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
-		//		+ domainLevel.model().player().location().y());
+		else if (input.equals("CTRL-1")) { if (timer!=null) {timer.stop();} gameScreen("level1.xml"); }
+		else if (input.equals("CTRL-2")) { if (timer!=null) {timer.stop();} gameScreen("level2.xml"); }
+		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds(); }
+		else if (input.equals("ESC")) { timer.start(); resumeTheSounds(); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
