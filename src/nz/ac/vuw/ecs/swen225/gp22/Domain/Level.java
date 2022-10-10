@@ -1,17 +1,18 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
 import java.util.List;
+import java.util.Map;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
 
 public record Level(Model model) {
-    public static Level makeLevel(Player player, List<Entity> entities, List<Key> keys, List<Treasure> treasure, Tiles tiles, Runnable next, Runnable gameOver) {
+    public static Level makeLevel(Player player, Map<Integer, Entity> entities, List<Key> keys, List<Treasure> treasure, Tiles tiles, Runnable next, Runnable gameOver) {
         return new Level(new Model() {
             private Animator animator;
             private AudioMixer mixer;
 
             public Player player() { return player; }
-            public List<Entity> entities() { return entities; }
+            public Map<Integer, Entity> entities() { return entities; }
             public List<Key> keys() { return keys; }
             public List<Treasure> treasure() { return treasure; }
             public Tiles tiles() { return tiles; }

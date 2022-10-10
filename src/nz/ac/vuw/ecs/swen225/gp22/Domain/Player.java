@@ -28,9 +28,11 @@ public class Player implements Entity {
     private Direction direction = Direction.NONE;
     private List<Key> keys = new ArrayList<>();
     private Boolean locked = false;
+    private int id;
 
-    public Player(IntPoint location) {
+    public Player(IntPoint location, int id) {
         this.location = location;
+        this.id = id;
         texture = playerTextures.get(direction);
     }
 
@@ -41,12 +43,20 @@ public class Player implements Entity {
     public IntPoint location() {
         return location;
     }
+
+    public int id() {
+        return id;
+    }
     
     public List<Key> keys() {
         return keys;
     }
 
-    public void movePlayer(Direction d, Model m, Runnable r) {
+    public Boolean locked() {
+        return locked;
+    }
+
+    public void move(Direction d, Model m) {
         if (locked) return;
         if (d == Direction.NONE) return;
 
@@ -66,7 +76,6 @@ public class Player implements Entity {
             if (!(t instanceof WallTile)) t.playerMovedTo(m);
             location = newPos;
             locked = false;
-            r.run();
         });
     }
 
