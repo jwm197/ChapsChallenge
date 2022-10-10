@@ -150,10 +150,13 @@ public class ChapsChallenge extends JFrame{
 		timer = new BetterTimer((int)(delay*1000),()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			// recorder
-			if (currentMove!=MoveDirection.NONE && animating() && !wait) {
+			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
-				recorder.setPreviousMove(new RecordedMove(currentMove, time));
-				wait = true;
+				if (animating() && !wait) {
+					recorder.setPreviousMove(new RecordedMove(currentMove, time));
+					wait = true;
+					System.out.println(currentMove + " " + time);
+				}
 			}
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
@@ -484,8 +487,6 @@ public class ChapsChallenge extends JFrame{
 			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
 			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
 		}
-		//System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
-		//		+ domainLevel.model().player().location().y());
 	}
 	
 	/**
