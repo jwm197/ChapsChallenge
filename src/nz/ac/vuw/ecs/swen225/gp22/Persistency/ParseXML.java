@@ -11,6 +11,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -242,16 +245,21 @@ public class ParseXML {
      * @param bugs the list of nodes to parse
      * @return a list of bugs
      */
-    private List<Bug> parseBugs(List<Node> bugs) {
+    private List<Entity> parseBugs(List<Node> bugs) {
+        List<Entity> bugsList = new ArrayList<>();
         if(bugs.isEmpty()) return List.of();
-
-        JarTool jarTool = new JarTool();
-        try {
-            jarTool.openJar("levels/level2.jar");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return List.of();
+//        try {
+//            JarFile jar = new JarFile("levels/level2.jar");
+//            JarEntry bugLogic = jar.getJarEntry("nz/ac/vuw/ecs/swen225/gp22/Domain/Bug.class");
+//            JarEntry texture = jar.getJarEntry("assets/textures/MissingTexture.png");
+          bugs.forEach(node ->{
+              bugsList.add(new Bug(getCoords(node)));
+          });
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        return bugsList;
     }
 
     /**
@@ -282,12 +290,13 @@ public class ParseXML {
         parseInfo(root.selectSingleNode("info"),freeTiles);
         parseLock(root.selectSingleNode("lock"),freeTiles);
         parseExit(root.selectSingleNode("exit"),freeTiles);
-        parseBugs(root.selectNodes("bugs"));
         Player player = parsePlayer(root.selectSingleNode("player"));
         player.keys().addAll(parseInventory(root.selectSingleNode("player")));
+        List<Entity> entities = parseBugs(root.selectNodes("bug"));
+        entities.add(player);
         return Level.makeLevel(
                 player,
-                new ArrayList<>(List.of(player)),//including bugs
+                entities,
                 keys,
                 chips,
                 new Tiles(freeTiles, width,height),

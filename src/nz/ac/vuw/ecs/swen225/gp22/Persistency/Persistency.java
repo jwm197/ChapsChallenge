@@ -31,6 +31,8 @@ public record Persistency() {
             JarOutputStream target = tool.openJar("levels/level2.jar");
             tool.addFile(target, System.getProperty("user.dir") + "\\src\\production\\chaps-challenge",
                     System.getProperty("user.dir") + "\\out\\production\\chaps-challenge\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
+            tool.addFile(target, System.getProperty("user.dir") + "\\",
+                    System.getProperty("user.dir") + "\\assets\\textures\\MissingTexture.png");//missing texture for now
             target.close();
             System.out.println("JAR write complete");
         } catch (IOException e) {
