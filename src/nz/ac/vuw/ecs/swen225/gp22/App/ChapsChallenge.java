@@ -55,15 +55,13 @@ public class ChapsChallenge extends JFrame{
 	private float time = 60;
 	private BetterTimer timer;
 	private boolean autoReplay;
-	private Runnable afterMove;
-	private boolean finishedMove;
+	private boolean wait;
 	
 	// DOMAIN/RENDERER/RECORDER
 	private RenderPanel renderPanel;
 	private Level domainLevel;
 	private Recorder recorder;
-	
-	MoveDirection currentMove;
+	private MoveDirection currentMove;
 	
 	// Sound
 	private final AudioMixer soundMixer = new AudioMixer();
@@ -121,9 +119,7 @@ public class ChapsChallenge extends JFrame{
 	/**
 	 * Screen for the game.
 	 */
-	public void gameScreen(String name) {
-		afterMove = ()->{};
-		
+	public void gameScreen(String name) {		
 		// Creates level (sets up domain/renderer/recorder)
 		if (!newGame(name)) {return;}
 		prepareMusic();
@@ -153,11 +149,14 @@ public class ChapsChallenge extends JFrame{
 		
 		timer = new BetterTimer((int)(delay*1000),()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
-			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			// recorder
-			recorder.setPreviousMove(new RecordedMove(currentMove, time));
-			if (currentMove!=MoveDirection.NONE) performAction(currentMove.toString());
-			//currentMove = MoveDirection.NONE;
+			if (currentMove!=MoveDirection.NONE && animating() && !wait) {
+				performAction(currentMove.toString());
+				recorder.setPreviousMove(new RecordedMove(currentMove, time));
+				wait = true;
+			}
+			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+			if (wait && !animating()) wait = false;
 			domainLevel.model().tick(); 
 			
 			// updating timer
@@ -293,10 +292,12 @@ public class ChapsChallenge extends JFrame{
 					if (time<=recorder.peekNextMove().time()) {
 						stepMove();
 					}
-				} else if (finishedMove) {
+				} else if (!domainLevel.model().player().locked()) {
 					timer.stop();
 				}
-			}	
+			} else if (!domainLevel.model().player().locked()) {
+				timer.stop();
+			}
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -478,10 +479,10 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds();}
 		else if (input.equals("ESC")) { timer.start(); resumeTheSounds();}
 		if (timer.isRunning()) {
-			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model(), afterMove); }
-			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model(), afterMove); }
-			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model(), afterMove); }
-			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model(), afterMove); }
+			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
+			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
+			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
+			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
 		}
 		//System.out.println(input + ", Player pos: " + domainLevel.model().player().location().x() + " "
 		//		+ domainLevel.model().player().location().y());
@@ -547,6 +548,7 @@ public class ChapsChallenge extends JFrame{
 		time = 60;
 		recorder = new Recorder(this, name);
 		currentMove = MoveDirection.NONE;
+		wait = false;
 		
 		// DOMAIN/RENDERER/RECORDER
         try{ domainLevel = new Persistency().loadXML("levels/", name, this); } 
@@ -583,6 +585,7 @@ public class ChapsChallenge extends JFrame{
         catch(Exception e){ e.printStackTrace(); return false;}
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
+		domainLevel.model().bindMixer(soundMixer); //bind the global mixer object to the level so Domain can use audio
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
 		level = name;
 		return true;
@@ -664,11 +667,8 @@ public class ChapsChallenge extends JFrame{
 	 * Public if fuzz testing requires it.
 	 */
 	public void stepMove() {
-		finishedMove = false;
-		if (autoReplay) {afterMove = ()->{finishedMove = true;};}
-		else { 
+		if (!autoReplay) {
 			if (timer.isRunning()) return;
-			afterMove = ()->{timer.stop();};
 		}
 		if (!autoReplay && recorder.peekNextMove()!=null) {
 			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
@@ -682,16 +682,8 @@ public class ChapsChallenge extends JFrame{
 		}
 		timer.start();
 		time = recorder.peekNextMove().time();
+		System.out.println(recorder.peekNextMove().direction());
 		recorder.stepMove();
-	}
-	
-	/**
-	 * Sets aftermove
-	 * 
-	 * @param r aftermove to be set
-	 */
-	public void setAfterMove(Runnable r) {
-		afterMove = r;          
 	}
 	
 	/**
@@ -716,11 +708,42 @@ public class ChapsChallenge extends JFrame{
 		musicMixer.closeAll();
 	}
 	
+	/**
+	 * Prepares game music
+	 */
 	public void prepareMusic() {
 		closeTheSounds();
-//		Playable music = SoundLines.GAME.generate();
-//		music.setVolume(40);
-//		music.setLooping(true);
-//		musicMixer.add(music);
+		Playable music = SoundLines.GAME.generate();
+		music.setVolume(40);
+		music.setLooping(true);
+		musicMixer.add(music);
+	}
+	
+	/**
+	 * Returns if the player is moving.
+	 * For fuzz testing.
+	 * 
+	 * @return true if player is moving, false otherwise (e.g. if false then next move can be executed)
+	 */
+	public boolean animating() {
+		return domainLevel.model().player().locked();
+	}
+	
+	/**
+	 * Sets current move
+	 * 
+	 * @param m current move to be set
+	 */
+	public void setCurrentMove(MoveDirection m) {
+		currentMove = m;
+	}
+	
+	/**
+	 * Gets current move
+	 * 
+	 * @return current move
+	 */
+	public MoveDirection getCurrentMove() {
+		return currentMove;
 	}
 }

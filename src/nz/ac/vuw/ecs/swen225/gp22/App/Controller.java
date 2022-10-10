@@ -26,13 +26,13 @@ public class Controller extends Keys{
 		setAction(KeyEvent.VK_2,()->c.performAction("CTRL-2"),()->{},true);
 		setAction(KeyEvent.VK_SPACE,()->c.performAction("SPACE"),()->{},false);
 		setAction(KeyEvent.VK_ESCAPE,()->c.performAction("ESC"),()->{},false);
-		setAction(KeyEvent.VK_UP, ()->{c.performAction("UP");c.currentMove=MoveDirection.UP;},
-				()->{if(c.currentMove==MoveDirection.UP) {c.currentMove=MoveDirection.NONE;}}, false);
-		setAction(KeyEvent.VK_DOWN, ()->{c.performAction("DOWN");c.currentMove=MoveDirection.DOWN;},
-				()->{if(c.currentMove==MoveDirection.DOWN) {c.currentMove=MoveDirection.NONE;}}, false);
-		setAction(KeyEvent.VK_LEFT, ()->{c.performAction("LEFT");c.currentMove=MoveDirection.LEFT;},
-				()->{if(c.currentMove==MoveDirection.LEFT) {c.currentMove=MoveDirection.NONE;}}, false);
-		setAction(KeyEvent.VK_RIGHT, ()->{c.performAction("RIGHT");c.currentMove=MoveDirection.RIGHT;},
-				()->{if(c.currentMove==MoveDirection.RIGHT) {c.currentMove=MoveDirection.NONE;}}, false);
+		setAction(KeyEvent.VK_UP, ()->{c.performAction("UP"); c.setCurrentMove(MoveDirection.UP);},
+				()->{if(c.getCurrentMove().equals(MoveDirection.UP)) {c.setCurrentMove(MoveDirection.NONE);}}, false);
+		setAction(KeyEvent.VK_DOWN, ()->{c.performAction("DOWN");c.setCurrentMove(MoveDirection.DOWN);},
+				()->{if(c.getCurrentMove().equals(MoveDirection.DOWN)) {c.setCurrentMove(MoveDirection.NONE);}}, false);
+		setAction(KeyEvent.VK_LEFT, ()->{c.performAction("LEFT");c.setCurrentMove(MoveDirection.LEFT);},
+				()->{if(c.getCurrentMove().equals(MoveDirection.LEFT)) {c.setCurrentMove(MoveDirection.NONE);}}, false);
+		setAction(KeyEvent.VK_RIGHT, ()->{c.performAction("RIGHT");c.setCurrentMove(MoveDirection.RIGHT);},
+				()->{if(c.getCurrentMove().equals(MoveDirection.RIGHT)) {c.setCurrentMove(MoveDirection.NONE);}}, false);
 	}
 }
