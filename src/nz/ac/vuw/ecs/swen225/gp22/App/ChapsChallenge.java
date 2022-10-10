@@ -477,16 +477,14 @@ public class ChapsChallenge extends JFrame{
 		if (input.equals("CTRL-X")) { menuScreen(); }
 		else if (input.equals("CTRL-S")) { saveAndExit();  }
 		else if (input.equals("CTRL-R")) { timer.stop(); loadGame(); }
-		else if (input.equals("CTRL-1")) { timer.stop(); gameScreen("level1.xml"); }
-		else if (input.equals("CTRL-2")) { timer.stop(); gameScreen("level2.xml"); }
-		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds();}
-		else if (input.equals("ESC")) { timer.start(); resumeTheSounds();}
-		if (timer.isRunning()) {
-			if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
-			else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
-			else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
-			else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
-		}
+		else if (input.equals("CTRL-1")) { if (timer!=null) {timer.stop();} gameScreen("level1.xml"); }
+		else if (input.equals("CTRL-2")) { if (timer!=null) {timer.stop();} gameScreen("level2.xml"); }
+		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds(); }
+		else if (input.equals("ESC")) { timer.start(); resumeTheSounds(); }
+		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
+		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
+		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
+		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
