@@ -9,7 +9,7 @@ import java.util.jar.Manifest;
 
 /**
  * Create a jar file
- *
+ * <p>
  * All code below is from <a href="https://www.baeldung.com/jar-create-programatically">...</a>
  */
 public class JarTool {
@@ -24,7 +24,7 @@ public class JarTool {
     }
 
     public void addFile(JarOutputStream target, String rootPath, String source)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         String remaining = "";
         if (rootPath.endsWith(File.separator)) {
             remaining = source.substring(rootPath.length());
