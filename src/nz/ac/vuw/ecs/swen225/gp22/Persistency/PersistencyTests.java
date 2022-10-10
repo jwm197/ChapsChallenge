@@ -71,20 +71,15 @@ record PersistencyTests() {
             Level l = new Persistency().loadXML("levels/", "level1.xml", new ChapsChallenge());
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {
-            });
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {
-            });
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.UP, l.model(), () -> {
-            });
+            l.model().player().move(Direction.UP, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.DOWN, l.model(), () -> {
-            });
+            l.model().player().move(Direction.DOWN, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.DOWN, l.model(), () -> {
-            });
+            l.model().player().move(Direction.DOWN, l.model());
             assert l.model().player().keys().size() == 2;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 0;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
@@ -106,19 +101,19 @@ record PersistencyTests() {
             Level l = new Persistency().loadXML("levels/", "level1.xml", new ChapsChallenge());
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {});
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {});
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.UP, l.model(), () -> {});
+            l.model().player().move(Direction.UP, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.UP, l.model(), () -> {});
+            l.model().player().move(Direction.UP, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {});
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {});
+            l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
-            l.model().player().movePlayer(Direction.LEFT, l.model(), () -> {});
+            l.model().player().move(Direction.LEFT, l.model());
             assert l.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
