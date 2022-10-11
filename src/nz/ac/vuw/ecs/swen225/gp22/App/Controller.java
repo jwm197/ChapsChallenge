@@ -1,15 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp22.App;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.dom4j.DocumentException;
-
-import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
-import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
 
 /**
  * Manages user key input for controls
