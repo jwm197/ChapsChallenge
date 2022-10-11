@@ -50,8 +50,8 @@ public class Player implements Entity {
         return locked;
     }
 
-    public void setLocked() {
-        locked = true;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
     public void move(Direction d, Model m) {

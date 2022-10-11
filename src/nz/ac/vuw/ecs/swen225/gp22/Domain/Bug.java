@@ -65,7 +65,7 @@ public class Bug implements Entity {
         || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
         if (!m.entities().values().stream().filter(e->!(e instanceof Player || e==this) && newPos.equals(e.location()))
         .findFirst().isEmpty()) return;
-        if (newPos.equals(m.player().location())) m.player().setLocked();
+        if (newPos.equals(m.player().location())) m.player().setLocked(true);
 
         Tile t = m.tiles().getTile(newPos);
         if (t instanceof WallTile) return;
