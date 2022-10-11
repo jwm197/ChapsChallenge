@@ -63,8 +63,9 @@ public class Bug implements Entity {
         IntPoint newPos = location.add(direction.direction());
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
         || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
-        if (!m.entities().values().stream().filter(e->!(e instanceof Player || e==this) && location.equals(e.location()))
+        if (!m.entities().values().stream().filter(e->!(e instanceof Player || e==this) && newPos.equals(e.location()))
         .findFirst().isEmpty()) return;
+        if (newPos.equals(m.player().location())) m.player().setLocked();
 
         Tile t = m.tiles().getTile(newPos);
         if (t instanceof WallTile) return;
@@ -79,6 +80,5 @@ public class Bug implements Entity {
 
     public void tick(Model m) {
         move(calculateDirection(), m);
-        
     }
 }
