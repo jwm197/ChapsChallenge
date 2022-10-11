@@ -28,6 +28,7 @@ public class Bug implements Entity {
     private IntPoint location;
     private Direction direction = Direction.NONE;
     private Boolean locked = false;
+    private Random randomNum = new Random();
 
     public Bug(IntPoint location) {
         this.location = location;
@@ -50,7 +51,6 @@ public class Bug implements Entity {
         directions.put(cumulative += (direction.probDown()*100), Direction.DOWN);
         directions.put(cumulative += (direction.probLeft()*100), Direction.LEFT);
 
-        Random randomNum = new Random();
         return directions.higherEntry(randomNum.nextInt(cumulative)).getValue();
     }
 
