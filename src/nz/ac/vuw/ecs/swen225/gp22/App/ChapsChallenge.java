@@ -53,7 +53,7 @@ public class ChapsChallenge extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private Runnable closePhase = ()->{};
 	private String level = "level1.xml";
-	private float time = 60;
+	private float time;
 	private BetterTimer timer;
 	private boolean autoReplay;
 	private boolean wait;
@@ -548,7 +548,6 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public boolean newGame(String name) {
 		// resets timer
-		time = 60;
 		recorder = new Recorder(this, name);
 		currentMove = MoveDirection.NONE;
 		wait = false;
@@ -556,6 +555,8 @@ public class ChapsChallenge extends JFrame{
 		// DOMAIN/RENDERER/RECORDER
         try{ domainLevel = persistency.loadXML("levels/", name, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
+        
+		time = domainLevel.model().time();
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		domainLevel.model().bindMixer(soundMixer); //bind the global mixer object to the level so Domain can use audio
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
@@ -571,7 +572,6 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public boolean newRecordedGame(String name) {
 		// resets timer and recorder
-		time = 60;
 		recorder = new Recorder(this, name);
 		recorder.setTickSpeed(1);
 		autoReplay = false;
@@ -587,6 +587,7 @@ public class ChapsChallenge extends JFrame{
 		try{ domainLevel = persistency.loadXML("levels/", recorderName, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		
+		time = domainLevel.model().time();
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		domainLevel.model().bindMixer(soundMixer); //bind the global mixer object to the level so Domain can use audio
 		renderPanel.bind(domainLevel.model());  // this can be done at any time allowing dynamic level switching
@@ -607,6 +608,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// saves level state
+		domainLevel.model().setTime(time);
 		try { persistency.saveXML("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
