@@ -7,6 +7,8 @@ import nz.ac.vuw.ecs.swen225.gp22.Persistency.JarTool;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -23,12 +27,40 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Converts the level XML file into a level object
+ * Converts and parse the entire level XML file into a level object to be loaded into the game
  */
 public class ParseXML {
     private int width = 0;
     private int height = 0;
 
+    /**
+     * Create a new JAR file containing all the logic for the bug
+     * <p>
+     * Code to compile the Java file into a class file was taken from <a href="https://stackoverflow.com/questions/2946338/how-do-i-programmatically-compile-and-instantiate-a-java-class">here</a>
+     *
+     * @throws RuntimeException will throw a Runtime exception if there's an I/O issue with the JAR file
+     */
+    public void writeJAR() {
+        try {
+            File sourceFile = new File("src/nz/ac/vuw/ecs/swen225/gp22/Domain/Bug.java");
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            compiler.run(null, null, null, sourceFile.getPath());
+            JarTool tool = new JarTool();
+            tool.startManifest();
+            JarOutputStream target = tool.openJar("levels/level2.jar");
+            tool.addFile(target, System.getProperty("user.dir") + "",
+                    System.getProperty("user.dir") + "\\src\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
+            target.close();
+            System.out.println("JAR write complete");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets the dimensions of the current level
+     * @param n the root node containing information about the width and height of the level
+     */
     private void getLevelDim(Node n) {
         if (n.valueOf("@width").isEmpty() || n.valueOf("@height").isEmpty())
             throw new ParserException("X or Y coordinate not found");
@@ -90,6 +122,7 @@ public class ParseXML {
         System.out.println("Keys: " + keyCounts);
         System.out.println("Doors: " + doorCounts);
     }
+
 
     /**
      * Parse all the keys
@@ -247,26 +280,28 @@ public class ParseXML {
 
     /**
      * Create a list of bugs by laoding the logic and textures from the JAR file and making a new instance of a bug.
+     * <p>
+     * Code to load class from jar file was taken from <a href="https://stackoverflow.com/questions/2946338/how-do-i-programmatically-compile-and-instantiate-a-java-class">this question</a>
      *
-     * Code to load class from jar file was taken from: <a href="https://stackoverflow.com/questions/26687140/urlclassloader-unable-to-load-classes-from-jar-dynamically">...</a>
      * @param bugs the list of nodes to parse
      * @return a list of bugs
      */
     private Map<Integer, Entity> parseBugs(List<Node> bugs) {
-        if (bugs.isEmpty()) return new HashMap<>();
         Map<Integer, Entity> bugMap = new HashMap<>();
+        if (bugs.isEmpty()) return bugMap;
+        writeJAR();
         try {
             File jarFile = new File("levels\\level2.jar");
             URLClassLoader loader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
             Class<?> bugLogic = Class.forName("nz.ac.vuw.ecs.swen225.gp22.Domain.Bug", true, loader);
-              bugs.forEach(node ->{
-                  try {
-                      bugMap.put(Integer.valueOf(node.valueOf("@id")), (Entity) bugLogic.getDeclaredConstructor(IntPoint.class).newInstance(getCoords(node)));
-                  } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                           NoSuchMethodException e) {
-                      throw new RuntimeException(e);
-                  }
-              });
+            bugs.forEach(node -> {
+                try {
+                    bugMap.put(Integer.valueOf(node.valueOf("@id")), (Entity) bugLogic.getDeclaredConstructor(IntPoint.class).newInstance(getCoords(node)));
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return bugMap;
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
