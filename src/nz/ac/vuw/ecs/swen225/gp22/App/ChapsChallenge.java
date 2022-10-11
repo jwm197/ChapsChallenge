@@ -809,7 +809,7 @@ public class ChapsChallenge extends JFrame{
 	 * @return int[][] of keys, [keyNum][0] is x, [keyNum][1] is y, [keyNum][2] is rgb int
 	 */
 	public int[][] getKeys() {
-		// number of locked doors
+		// number of keys
 		int count = 0;
 		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
 			count += tiles.stream().filter(t->t instanceof FreeTile f && f.item() instanceof Key).count();
@@ -831,6 +831,35 @@ public class ChapsChallenge extends JFrame{
 			}
 		}
 		return keys;
+	}
+	
+	/**
+	 * Gets treasure for fuzz, x position, y position.
+	 * 
+	 * @return int[][] of treasure, [treasureNum][0] is x, [treasureNum][1] is y
+	 */
+	public int[][] getTreasure() {
+		// number of treasure
+		int count = 0;
+		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
+			count += tiles.stream().filter(t->t instanceof FreeTile f && f.item() instanceof Treasure).count();
+		}
+		
+		// store information
+		int[][] treasure = new int[count][3];
+		count = 0;
+		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
+			for (Tile tile : tilesOfTiles) {
+				if (tile instanceof FreeTile f) {
+					if (f.item() instanceof Treasure t) {
+						treasure[count][0] = f.location().x();
+						treasure[count][1] = f.location().y();
+						count++;
+					}
+				}
+			}
+		}
+		return treasure;
 	}
 	
 	/**
