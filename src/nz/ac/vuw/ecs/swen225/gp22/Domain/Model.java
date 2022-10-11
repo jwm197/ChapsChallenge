@@ -17,6 +17,8 @@ public interface Model {
     Animator animator();
     void bindMixer(AudioMixer m);
     AudioMixer mixer();
+    void setTime(float t);
+    float time();
 
     default void tick() {
         entities().values().forEach(e->e.tick(this));
