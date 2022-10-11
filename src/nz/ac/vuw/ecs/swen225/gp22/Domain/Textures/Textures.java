@@ -41,9 +41,24 @@ public enum Textures implements Texture {
     PlayerMoveDown1,
     PlayerMoveDown2,
     
+    /*bug*/
+    BugFaceLeft,
+    BugFaceRight,
+    BugFaceUp,
+    BugFaceDown,
+    
+    /*bug animation*/
+    BugMoveLeft1,
+    BugMoveLeft2,
+    BugMoveRight1,
+    BugMoveRight2,
+    BugMoveUp1,
+    BugMoveUp2,
+    BugMoveDown1,
+    BugMoveDown2,
+    
     /*null*/
-    MissingTexture,
-	Scrungle;
+    MissingTexture;
 	
 	public static final String IMAGE_PATH = "assets/textures/";
 	private final BufferedImage image;
@@ -56,6 +71,7 @@ public enum Textures implements Texture {
 		try {
 			image = ImageIO.read(new File(IMAGE_PATH+this.name()+".png"));
 		} catch (IOException e) {
+			System.out.println(this.name());
 			throw new Error(e);
 		}
 	}

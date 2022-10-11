@@ -12,24 +12,24 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 
 public class Bug implements Entity {
     private Map<Direction, TextureSequence> bugAnimations = Map.of(
-        Direction.UP, Textures.MissingTexture,
-        Direction.RIGHT, Textures.MissingTexture,
-        Direction.DOWN, Textures.MissingTexture,
-        Direction.LEFT, Textures.MissingTexture
+        Direction.UP, Animations.BugMoveUp,
+        Direction.RIGHT, Animations.BugMoveRight,
+        Direction.DOWN, Animations.BugMoveDown,
+        Direction.LEFT, Animations.BugMoveLeft
     );
     private Map<Direction, LayeredTexture> bugTextures = Map.of(
-        Direction.NONE, Textures.MissingTexture,
-        Direction.UP, Textures.MissingTexture,
-        Direction.RIGHT, Textures.MissingTexture,
-        Direction.DOWN, Textures.MissingTexture,
-        Direction.LEFT, Textures.MissingTexture
+        Direction.NONE, Textures.BugFaceDown,
+        Direction.UP, Textures.BugFaceUp,
+        Direction.RIGHT, Textures.BugFaceRight,
+        Direction.DOWN, Textures.BugFaceDown,
+        Direction.LEFT, Textures.BugFaceLeft
     );
     private LayeredTexture texture;
     private IntPoint location;
     private Direction direction = Direction.NONE;
     private Boolean locked = false;
 
-    public Bug(IntPoint location, int id) {
+    public Bug(IntPoint location) {
         this.location = location;
         texture = bugTextures.get(direction);
     }
@@ -63,7 +63,7 @@ public class Bug implements Entity {
         IntPoint newPos = location.add(direction.direction());
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
         || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
-        if (!m.entities().values().stream().filter(e->!(e instanceof Player) && location.equals(e.location()))
+        if (!m.entities().values().stream().filter(e->!(e instanceof Player || e==this) && location.equals(e.location()))
         .findFirst().isEmpty()) return;
 
         Tile t = m.tiles().getTile(newPos);
@@ -71,13 +71,14 @@ public class Bug implements Entity {
 
         locked = true;
         m.animator().Animate(this, bugAnimations.get(direction), newPos, 30, () -> {
-            location = newPos;
             locked = false;
+            if (location.equals(m.player().location())) m.onGameOver();
         });
+        location = newPos;
     }
 
     public void tick(Model m) {
         move(calculateDirection(), m);
-        if (location.equals(m.player().location())) m.onGameOver();
+        
     }
 }
