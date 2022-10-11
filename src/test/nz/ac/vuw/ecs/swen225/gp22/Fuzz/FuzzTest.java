@@ -18,7 +18,7 @@ public class FuzzTest{
     @Test
     public void test1(){
         try {
-            inputs1.forEach(i->i.check());
+            inputs1.forEach(i->((TestAuto) i).check());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -27,35 +27,42 @@ public class FuzzTest{
     @Test
     public void test2(){
         try {
-            inputs2.forEach(i->i.check());
+            inputs2.forEach(i->((TestAuto) i).check());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     //inputs to be tested
-    static List<TestInput> inputs1 = List.of(new TestInput(Move.Load1, randomMoves(5)));
-    static List<TestInput> inputs2 = List.of(new TestInput(Move.Load2, randomMoves(1000))); 
+    static List<Serializable> inputs1 = List.of(new TestAuto("leve1.xml"));
+    static List<Serializable> inputs2 = List.of(new TestInput("level1.xml", randomMoves(1000))); 
     
     /**
      * input to be tested
      */
-    record TestInput(Move level, List<Move> moves) implements Serializable{//a collection of inputs
+    record TestInput(String level, List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
             ChapsChallenge c = new ChapsChallenge();
             Stack<Move> stackOfMoves = new Stack<>();
             stackOfMoves.addAll(moves);
-            g.doMove(Move.Menu, c);
-            g.doMove(level, c);
+            c.gameScreen(level);
             while(!stackOfMoves.isEmpty()) {
             	if (!c.animating()) {
             		g.doMove(stackOfMoves.pop(), c);
             	}
             }
-           
         }
-           // g.doMove(Move.Exit, c);
-        };
+    };
+    
+    record TestAuto(String level) implements Serializable{//a collection of inputs
+        void check(){
+            Game g = new FuzzTest().new Game();
+            ChapsChallenge c = new ChapsChallenge();
+            c.gameScreen(level);
+            while(c.)
+        }
+    };
+    
     
     /**
      * Matches with performaction in ChapsChallenge.java
