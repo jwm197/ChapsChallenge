@@ -50,6 +50,10 @@ public class Player implements Entity {
         return locked;
     }
 
+    public void setLocked() {
+        locked = true;
+    }
+
     public void move(Direction d, Model m) {
         if (locked) return;
         if (d == Direction.NONE) return;
@@ -60,6 +64,8 @@ public class Player implements Entity {
         IntPoint newPos = location.add(d.direction());
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
         || newPos.y()<0 || newPos.y()>=m.tiles().height()) return;
+        if (!m.entities().values().stream().filter(e->!(e instanceof Player) && newPos.equals(e.location()))
+        .findFirst().isEmpty()) return;
 
         Tile t = m.tiles().getTile(newPos);
         if (!t.canPlayerMoveTo(m)) return;
