@@ -41,6 +41,7 @@ public class ThreadedLine implements Playable {
 	
 	//thread for concurrent audio execution
 	Thread current;
+	private boolean paused = false;
 	private boolean isActive = false;
 	private LineListener listener;
 	
@@ -59,7 +60,7 @@ public class ThreadedLine implements Playable {
 		
 		//generate the listener
 		listener = (event) -> {
-			
+			if (paused) return;
 			//if the audio is stopped
 			if (event.getType() == LineEvent.Type.STOP) {
 				close();
@@ -144,6 +145,7 @@ public class ThreadedLine implements Playable {
 
 	@Override
 	public void play() {
+		paused = false;
 		inner.start();
 		
 		//if the audio is inactive, generate a new thread to handle writing data to the audio buffer
@@ -159,12 +161,14 @@ public class ThreadedLine implements Playable {
 
 	@Override
 	public void pause() {
+		paused = true;
 		isActive = false;
 		inner.stop();
 	}
 	
 	@Override
 	public void close() {
+		paused = false;
 		isActive = false;
 		inner.close();
 	}
