@@ -52,7 +52,7 @@ public class RenderPanel extends JPanel implements Renderer {
 		
 		//constructs the entity handler
 		entityHandler = (g, r) ->
-		         level.entities().stream() //get the entity stream from the level
+		         level.entities().values().stream() //get the entity stream from the level
 				                    .filter(e -> !animationHandler.animating(e)) //if not animating
 				                    .forEach(e -> r.drawTexture(g, e.texture(), e.location().toDoublePoint())); //draw the entity at its current position
 		
