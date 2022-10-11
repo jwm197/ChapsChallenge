@@ -57,11 +57,12 @@ public class ChapsChallenge extends JFrame{
 	private boolean autoReplay;
 	private boolean wait;
 	
-	// DOMAIN/RENDERER/RECORDER
+	// DOMAIN/RENDERER/RECORDER/PERSISTENCY
 	private RenderPanel renderPanel;
 	private Level domainLevel;
 	private Recorder recorder;
 	private MoveDirection currentMove;
+	private Persistency persistency = new Persistency();
 	
 	// Sound
 	private final AudioMixer soundMixer = new AudioMixer();
@@ -83,6 +84,7 @@ public class ChapsChallenge extends JFrame{
 				closeTheSounds();
 			}
 		});
+		persistency.writeJAR();
 	}			
 	
 	/**
@@ -481,10 +483,10 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { if (timer!=null) {timer.stop();} gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds(); }
 		else if (input.equals("ESC")) { timer.start(); resumeTheSounds(); }
-		else if (input.equals("UP")) { domainLevel.model().player().movePlayer(Direction.UP, domainLevel.model());}
-		else if (input.equals("DOWN")) { domainLevel.model().player().movePlayer(Direction.DOWN, domainLevel.model());}
-		else if (input.equals("LEFT")) { domainLevel.model().player().movePlayer(Direction.LEFT, domainLevel.model());}
-		else if (input.equals("RIGHT")) { domainLevel.model().player().movePlayer(Direction.RIGHT, domainLevel.model()); }
+		else if (input.equals("UP")) { domainLevel.model().player().move(Direction.UP, domainLevel.model());}
+		else if (input.equals("DOWN")) { domainLevel.model().player().move(Direction.DOWN, domainLevel.model());}
+		else if (input.equals("LEFT")) { domainLevel.model().player().move(Direction.LEFT, domainLevel.model());}
+		else if (input.equals("RIGHT")) { domainLevel.model().player().move(Direction.RIGHT, domainLevel.model()); }
 	}
 	
 	/**
@@ -550,7 +552,7 @@ public class ChapsChallenge extends JFrame{
 		wait = false;
 		
 		// DOMAIN/RENDERER/RECORDER
-        try{ domainLevel = new Persistency().loadXML("levels/", name, this); } 
+        try{ domainLevel = persistency.loadXML("levels/", name, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
 		domainLevel.model().bindMixer(soundMixer); //bind the global mixer object to the level so Domain can use audio
@@ -580,7 +582,7 @@ public class ChapsChallenge extends JFrame{
 		String recorderName = recorder.getRecordingLevelName();
 		
 		// Load level from xml
-		try{ domainLevel = new Persistency().loadXML("levels/", recorderName, this); } 
+		try{ domainLevel = persistency.loadXML("levels/", recorderName, this); } 
         catch(Exception e){ e.printStackTrace(); return false;}
 		
 		renderPanel = new RenderPanel(); // RenderPanel extends JPanel
@@ -603,7 +605,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		
 		// saves level state
-		try { new Persistency().saveXML("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
+		try { persistency.saveXML("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
