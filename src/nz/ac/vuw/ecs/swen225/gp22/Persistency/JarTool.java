@@ -10,19 +10,35 @@ import java.util.jar.Manifest;
 /**
  * Create a jar file
  * <p>
- * All code below is from <a href="https://www.baeldung.com/jar-create-programatically">...</a>
+ * All code below was taken from <a href="https://www.baeldung.com/jar-create-programatically">this tutorial</a>.
  */
 public class JarTool {
     private Manifest manifest = new Manifest();
 
+    /**
+     * Create the manifest for the JAR file
+     */
     public void startManifest() {
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
     }
 
+    /**
+     * Opens the JAR file to write files to this file
+     * @param jarFile name and path of the JAR file
+     * @return a JarOutputStream containing the opened JAR file
+     * @throws IOException if something went wrong with the I/O of the file
+     */
     public JarOutputStream openJar(String jarFile) throws IOException {
         return new JarOutputStream(new FileOutputStream(jarFile), manifest);
     }
 
+    /**
+     * Adds a file to the JAR file
+     * @param target the JAR file to write to
+     * @param rootPath the path in the JAR to store the file
+     * @param source the path to the file
+     * @throws IOException if something went wrong with the I/O of the file
+     */
     public void addFile(JarOutputStream target, String rootPath, String source)
             throws IOException {
         String remaining = "";

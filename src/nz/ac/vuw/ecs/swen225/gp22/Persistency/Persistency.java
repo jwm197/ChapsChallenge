@@ -17,27 +17,9 @@ import java.util.jar.Manifest;
 
 
 /**
- * The main persistency module
+ * The main persistency module, handles the functionality to load and save game levels.
  */
 public record Persistency() {
-
-    /**
-     * Create a new JAR file containing all the textures and logic for the bug
-     */
-    public void writeJAR(){
-        try {
-            JarTool tool = new JarTool();
-            tool.startManifest();
-            JarOutputStream target = tool.openJar("levels/level2.jar");
-            tool.addFile(target, System.getProperty("user.dir") + "\\src\\production\\chaps-challenge",
-                    System.getProperty("user.dir") + "\\out\\production\\chaps-challenge\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
-            target.close();
-            System.out.println("JAR write complete");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     /**
      * Creates a DOM4j document with a give path and filename to the level file

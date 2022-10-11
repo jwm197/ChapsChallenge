@@ -25,6 +25,12 @@ record PersistencyTests() {
 
     }
 
+    /**
+     * Count the number of tiles with a specific colour by searching through the list of tiles
+     * @param tiles the list of tiles
+     * @param c the colour to search
+     * @return the number of tiles with that particular colour
+     */
     private int checkTile(List<List<Tile>> tiles, Color c){
         int count = 0;
         for(List<Tile> tiles1 : tiles){
@@ -63,7 +69,7 @@ record PersistencyTests() {
 
 
     /**
-     * Test that it can read a given level file and then write the level data to a new file
+     * Test that it can read a given level file, simulate some moves, check the player's inventory and then write the updated level data to a new file
      */
     @Test
     void TestReadWriteXML1() {
@@ -80,20 +86,20 @@ record PersistencyTests() {
             l.model().player().move(Direction.DOWN, l.model());
             tick(rp);
             l.model().player().move(Direction.DOWN, l.model());
+            tick(rp);
             assert l.model().player().keys().size() == 2;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 0;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
             assert l2.model().player().keys().size() == 2;
             assert checkTile(l2.model().tiles().tiles(), Color.BLUE) == 0;
-
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
     }
 
     /**
-     * Test that it can read a given level file and then write the level data to a new file
+     * Test that it can read a given level file, simulate some moves, check the player's inventory and then write the updated level data to a new file
      */
     @Test
     void TestReadWriteXML2() {
@@ -114,6 +120,7 @@ record PersistencyTests() {
             l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
             l.model().player().move(Direction.LEFT, l.model());
+            tick(rp);
             assert l.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
@@ -128,12 +135,13 @@ record PersistencyTests() {
     }
 
     /**
-     * Test that it can read a given level file and then write the level data to a new file
+     * Test that it can read a given level file, check the entities list (should be 4 entities, player + 3 bugs) and then write the updated level data to a new file
      */
     @Test
     void TestReadWriteXML3() {
         try {
             Level l = new Persistency().loadXML("levels/", "level2.xml", new ChapsChallenge());
+            assert l.model().entities().size()==4;
             new Persistency().saveXML("levels/", "level2.xml", "test_levels/", "l2.xml", l);
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
@@ -190,10 +198,5 @@ record PersistencyTests() {
         } catch (ParserException | IOException | DocumentException e) {
             return;
         }
-    }
-
-    @Test
-    void TestWriteJAR() {
-        new Persistency().writeJAR();
     }
 }

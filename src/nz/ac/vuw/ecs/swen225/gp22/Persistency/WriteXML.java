@@ -149,6 +149,11 @@ public class WriteXML {
     }
 
 
+    /**
+     * Write all items in the player's inventory to the XML file
+     * @param root the root element to add all the items to
+     * @param inventory a list of keys to parse
+     */
     private void parseInventory(Element root, List<Key> inventory) {
         root.element("player").element("items").elements("key").forEach(Node::detach);
         IntStream.range(0, inventory.size()).forEach(i -> {
