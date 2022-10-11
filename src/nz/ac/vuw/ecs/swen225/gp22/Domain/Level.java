@@ -10,6 +10,7 @@ public record Level(Model model) {
         return new Level(new Model() {
             private Animator animator;
             private AudioMixer mixer;
+            private float time;
 
             public Player player() { return player; }
             public Map<Integer, Entity> entities() { return entities; }
@@ -22,6 +23,8 @@ public record Level(Model model) {
             public Animator animator() { return animator; }
             public void bindMixer(AudioMixer m) { mixer = m; }
             public AudioMixer mixer() { return mixer; }
+            public void setTime(float t) { time = t; }
+            public float time() { return time; }
         });
     }
 }
