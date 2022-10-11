@@ -17,7 +17,12 @@ import java.awt.event.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -717,20 +722,10 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-		Playable music = SoundLines.GAME.generate();
-		music.setVolume(40);
-		music.setLooping(true);
-		musicMixer.add(music);
-	}
-	
-	/**
-	 * Returns if the player is moving.
-	 * For fuzz testing.
-	 * 
-	 * @return true if player is moving, false otherwise (e.g. if false then next move can be executed)
-	 */
-	public boolean animating() {
-		return domainLevel.model().player().locked();
+//		Playable music = SoundLines.GAME.generate();
+//		music.setVolume(40);
+//		music.setLooping(true);
+//		musicMixer.add(music);
 	}
 	
 	/**
@@ -749,5 +744,149 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public MoveDirection getCurrentMove() {
 		return currentMove;
+	}
+	
+	// FUZZ TESTING ---------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Returns if the player is moving.
+	 * For fuzz testing.
+	 * 
+	 * @return true if player is moving, false otherwise (e.g. if false then next move can be executed)
+	 */
+	public boolean animating() {
+		return domainLevel.model().player().locked();
+	}
+	
+	/**
+	 * Gets the keys as a list of colors for fuzz.
+	 * Fuzz cannot access key objects so needs to be colors as rgb ints.
+	 * 
+	 * @return the list of keys as colors
+	 */
+	public List<Integer> getPlayerKeys() {
+		return domainLevel.model().player().keys().stream().map(k->k.color().getRGB()).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Gets the player position as an int[][] for fuzz.
+	 * 
+	 * @return rows are x, cols are y position
+	 */
+	public int[][] getPlayerPosition() {
+		return new int[domainLevel.model().player().location().x()][domainLevel.model().player().location().y()];
+	}
+	
+	/**
+	 * Gets position of bugs for fuzz.
+	 * 
+	 * @return bug positions, [bugNum][0] is x, [bugNum][1] is y position
+	 */
+	public int[][] getBugPositions() {
+		Collection<Entity> entities = domainLevel.model().entities().values();
+		int[][] locations = new int[entities.size()][2];
+		int count = 0;
+		for (Entity e : entities) {
+			if (e instanceof Bug b) {
+				locations[count][0] = b.location().x();
+				locations[count][1] = b.location().y();
+				count++;
+			}
+		}
+		return locations;
+	}
+	
+	/**
+	 * Gets number of treasure left for fuzz.
+	 * 
+	 * @return treasure left as int
+	 */
+	public int treasureLeft() {
+		return domainLevel.model().treasure().size();
+	}
+	
+	/**
+	 * Gets keys for fuzz, x position, y position, and color as rgb int.
+	 * 
+	 * @return int[][] of keys, [keyNum][0] is x, [keyNum][1] is y, [keyNum][2] is rgb int
+	 */
+	public int[][] getKeys() {
+		// number of locked doors
+		int count = 0;
+		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
+			count += tiles.stream().filter(t->t instanceof FreeTile f && f.item() instanceof Key).count();
+		}
+		
+		// store information
+		int[][] keys = new int[count][3];
+		count = 0;
+		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
+			for (Tile tile : tilesOfTiles) {
+				if (tile instanceof FreeTile f) {
+					if (f.item() instanceof Key k) {
+						keys[count][0] = f.location().x();
+						keys[count][1] = f.location().y();
+						keys[count][2] = k.color().getRGB();
+						count++;
+					}
+				}
+			}
+		}
+		return keys;
+	}
+	
+	/**
+	 * Gets lockedDoors for fuzz, x position, y position, and color as rgb int.
+	 * 
+	 * @return int[][] of lockedDoors, [doorNum][0] is x, [doorNum][1] is y, [doorNum][2] is rgb int
+	 */
+	public int[][] getLockedDoors() {
+		// number of locked doors
+		int count = 0;
+		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
+			count += tiles.stream().filter(t->t instanceof LockedDoor).count();
+		}
+		
+		// store information
+		int[][] lockedDoors = new int[count][3];
+		count = 0;
+		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
+			for (Tile tile : tilesOfTiles) {
+				if (tile instanceof LockedDoor l) {
+					lockedDoors[count][0] = l.location().x();
+					lockedDoors[count][1] = l.location().y();
+					lockedDoors[count][2] = l.color().getRGB();
+					count++;
+				}
+			}
+		}
+		return lockedDoors;
+	}
+	
+	/**
+	 * Returns exit lock position as an int[][] for fuzz.
+	 * 
+	 * @return rows is x, cols is y position
+	 */
+	public int[][] getExitLockPosition(){
+		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
+			for (Tile tile : tilesOfTiles) {
+				if (tile instanceof ExitLock l) {
+					return new int[l.location().x()][l.location().y()];
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Checks if player can move to tile position for fuzz.
+	 * 
+	 * @param x x coordinate to move to
+	 * @param y y coordinate to move to
+	 * @return if player can move to that tile
+	 */
+	public boolean canMoveTo(int x, int y) {
+		return domainLevel.model().tiles().getTile(new IntPoint(x,y)).canPlayerMoveTo(domainLevel.model());
 	}
 }
