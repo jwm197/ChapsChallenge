@@ -483,10 +483,12 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { if (timer!=null) {timer.stop();} gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds(); }
 		else if (input.equals("ESC")) { timer.start(); resumeTheSounds(); }
-		else if (input.equals("UP")) { domainLevel.model().player().move(Direction.UP, domainLevel.model());}
-		else if (input.equals("DOWN")) { domainLevel.model().player().move(Direction.DOWN, domainLevel.model());}
-		else if (input.equals("LEFT")) { domainLevel.model().player().move(Direction.LEFT, domainLevel.model());}
-		else if (input.equals("RIGHT")) { domainLevel.model().player().move(Direction.RIGHT, domainLevel.model()); }
+		if (timer.isRunning()) {
+			if (input.equals("UP")) { domainLevel.model().player().move(Direction.UP, domainLevel.model());}
+			else if (input.equals("DOWN")) { domainLevel.model().player().move(Direction.DOWN, domainLevel.model());}
+			else if (input.equals("LEFT")) { domainLevel.model().player().move(Direction.LEFT, domainLevel.model());}
+			else if (input.equals("RIGHT")) { domainLevel.model().player().move(Direction.RIGHT, domainLevel.model()); }
+		}
 	}
 	
 	/**
@@ -692,6 +694,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void pauseTheSounds() {
 	    soundMixer.pauseAll();
+	    musicMixer.pauseAll();
 	}
 	
 	/**
@@ -699,6 +702,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void resumeTheSounds() {
 		soundMixer.playAll();
+		musicMixer.playAll();
 	}
 	
 	/**
