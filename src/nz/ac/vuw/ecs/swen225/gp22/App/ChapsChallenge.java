@@ -84,7 +84,6 @@ public class ChapsChallenge extends JFrame{
 				closeTheSounds();
 			}
 		});
-		persistency.writeJAR();
 	}			
 	
 	/**
