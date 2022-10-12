@@ -1,40 +1,16 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
-import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
-import org.dom4j.*;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.dom4j.*;
+import java.util.Map;
 
 
 public record SaveRecordedGame(RecordedLevel level) {
-    /**Saves a recorded game
-     * @param path the directory save in
-     * @param fileName the name of the file to save*/
-    public void saveXML(String path, String fileName) throws ParserException, IOException, DocumentException {
-        try {
-            OutputFormat format = OutputFormat.createPrettyPrint();
-            Document doc = saveLevel();
-            FileOutputStream fos = new FileOutputStream(path+fileName);
-            XMLWriter writer = new XMLWriter(fos, format);
-            writer.write(doc);
-            System.out.println("Save complete");
-
-
-        } catch (ParserException | NullPointerException e) {
-            throw new ParserException(e.getMessage());
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
     /**Saves the level to the document
      *
      *
      * @return document being saved
      */
-    private Document saveLevel(){
+    public Document saveLevel(){
 
         Document doc = DocumentHelper.createDocument();
 
@@ -57,10 +33,15 @@ public record SaveRecordedGame(RecordedLevel level) {
      * @param level the level element of the document being saved
      */
     private void saveMove(Element level, RecordedMove move) {
-        Element node= level.addElement("move");
-        node.setText(move.direction().toString());
-        node.addAttribute("time",move.time()+"");
+        Element moveNode= level.addElement("move");
+        moveNode.setText(move.playerMoveDirection().toString());
+        moveNode.addAttribute("time",move.time()+"");
+        for (Map.Entry bugMove:move.bugDirections().entrySet()){
+            Node bugNode=moveNode.addElement("bug");
+            bugNode.addAttribute("id",bugMove.getKey().toString());
+            bugNode.setText(bugMove.getValue()+"");
 
+        }
 
     }
 }

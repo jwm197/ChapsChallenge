@@ -1,10 +1,12 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
 import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
+import nz.ac.vuw.ecs.swen225.gp22.Persistency.Persistency;
 import org.dom4j.DocumentException;
 
 import java.io.IOException;
 import java.lang.Thread;
 import java.util.ArrayDeque;
+import java.util.HashMap;
 
 
 public class Recorder{
@@ -29,7 +31,8 @@ public class Recorder{
      * @param fileName the name of the file being saved
      * @param path the path of the file being saved*/
     public void saveRecording(String path,String fileName)throws DocumentException, IOException{
-        new SaveRecordedGame(recording).saveXML(path, fileName);
+
+        new Persistency().saveXML(path,fileName,new SaveRecordedGame(recording).saveLevel());
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
      *
@@ -42,7 +45,7 @@ public class Recorder{
         tickSpeed=speed;
     }
     public float getTickSpeed(){
-       return tickSpeed;
+        return tickSpeed;
     }
     /**Get the next move to do from the moves arraydeque
      * @return The next recorded move*/
@@ -60,19 +63,8 @@ public class Recorder{
         recording.moves().add(move);
     }
 
-    /**
-     * Auto replay the saved game
-     *
-     * @throws InterruptedException if unable to complete
-     */
-    public void autoReplayGame() throws InterruptedException {
-        while(peekNextMove()!=null){
-            doMove();
-            //Thread.sleep(1000/tickSpeed);
-        }
-    }
-/**Getter for the chaps challenge game
- * */
+    /**Getter for the chaps challenge game
+     * */
     public ChapsChallenge getGame() {
         return game;
     }
@@ -80,13 +72,10 @@ public class Recorder{
     /**Advance the recorded game 1 move*/
     public void stepMove(){
         if(peekNextMove()!=null){
-            doMove();
+            game.performAction(peekNextMove().playerMoveDirection().toString());
+            game.moveBugs(getNextMove().bugDirections());
         }
 
-    }
-    /**do a single move**/
-    public void doMove(){
-        getNextMove().direction().move(game);
     }
 }
 
