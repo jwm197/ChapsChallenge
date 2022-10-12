@@ -68,12 +68,12 @@ public class FuzzTest{
             c.gameScreen(level);
             while(true) {
             	if(!c.animating()) {
-            		List<Queue> paths = new ArrayList<>();
-            		Queue<Move> q = new ArrayDeque<>();
+            		List<Queue<Move>> paths = new ArrayList<>();
             		int[][] position = c.getPlayerPosition();
-            		boolean[][] visited = new boolean[30][30];
-            		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30], Move.Left);
-            		q = paths.get(0);
+
+            		dfs(c, position[0][0], position[0][1], new ArrayDeque<>(), paths, new boolean[30][30], Move.Left);
+
+            		Queue<Move> q = paths.get(0);
             		int min = q.size();
             		for(Queue<Move> qs : paths) {
             			qs.poll();
@@ -94,49 +94,52 @@ public class FuzzTest{
             		try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						
 					}
             	}
             }
         }
     };
     
-    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited, Move m) {
+    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue<Move>> paths, boolean[][] visited, Move m) {
     	if(visited[x][y]) {return;}
     	visited[x][y] = true;
-    	q.offer(m);
+        Queue<Move> qc = new ArrayDeque<>(q);
+    	qc.offer(m);
     	int[][] keys = c.getKeys();
     	int[][] treasures = c.getTreasure();
     	int[][] exit = c.getExitLockPosition();
+        boolean[][] visitedC = new boolean[30][30];
     	
     	for(int i = 0; i < keys.length; i++) {
     		if(keys[i][0]==x&&keys[i][1]==y){
-    			paths.add(q);
+    			paths.add(qc);
     			return;
     		}
     	}
     	for(int i = 0; i < treasures.length; i++) {
     		if(treasures[i][0]==x&&treasures[i][1]==y){
-    			paths.add(q);
+    			paths.add(qc);
     			return;
     		}
     	}
     	if(c.treasureLeft()==0&&exit[0][0]==x&&exit[0][1]==y) {
-    		paths.add(q);
+    		paths.add(qc);
     		return;
     	}
+
     	
 	    	if(x-1!=-1&&c.canMoveTo(x-1, y)) {
-				dfs(c, x-1, y, new ArrayDeque<Move>(q), paths, visited, Move.Left);
+				dfs(c, x-1, y, qc, paths, visitedC, Move.Left);
 			}
 	    	if(y-1!=-1&&c.canMoveTo(x, y-1)) {
-				dfs(c, x, y-1, new ArrayDeque<Move>(q), paths, visited, Move.Up);
+				dfs(c, x, y-1, qc, paths, visitedC, Move.Up);
 			}
 	    	if(c.canMoveTo(x+1, y)) {
-				dfs(c, x+1, y, new ArrayDeque<Move>(q), paths, visited, Move.Right);
+				dfs(c, x+1, y, qc, paths, visitedC, Move.Right);
 			}
 	    	if(c.canMoveTo(x, y+1)) {
-				dfs(c, x, y+1, new ArrayDeque<Move>(q), paths, visited, Move.Down);
+				dfs(c, x, y+1, qc, paths, visitedC, Move.Down);
 			}
 	   }
     
