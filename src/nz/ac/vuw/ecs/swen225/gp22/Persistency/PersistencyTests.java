@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * A bunch of tests to test the persistency module
+ * @author Jia Wei Leong (300560651)
  */
 record PersistencyTests() {
 

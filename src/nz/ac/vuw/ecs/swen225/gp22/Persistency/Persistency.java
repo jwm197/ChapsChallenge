@@ -14,7 +14,8 @@ import java.io.IOException;
 
 
 /**
- * The main persistency module, handles the functionality to load and save game levels.
+ * The main persistency module, handles the core functionality of loading and saving the levels as a level or as a file respectively.
+ * @author Jia Wei Leong (300560651)
  */
 public record Persistency() {
 
