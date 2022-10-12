@@ -13,10 +13,6 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
  */
 public record Level(Model model) {
     public static Level makeLevel(Player player, Map<Integer, Entity> entities, List<Key> keys, List<Treasure> treasure, Tiles tiles, Runnable next, Runnable gameOver) {
-        if (player==null || entities==null || keys==null || treasure==null || tiles==null 
-        || next==null || gameOver==null) throw new IllegalArgumentException("None of the arguments can be null");
-        if (entities.get(0)!=player) throw new IllegalArgumentException("Player must be stored in the map of entities with an id of 0");
-
         return new Level(new Model() {
             private Animator animator; // Animator to perform animations
             private AudioMixer mixer; // Mixer to play sounds
