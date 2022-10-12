@@ -44,7 +44,7 @@ public class ParseXML {
             tool.startManifest();
             JarOutputStream target = tool.openJar("levels/level2.jar");
             tool.addFile(target, System.getProperty("user.dir") + "",
-                    System.getProperty("user.dir") + "\\src\\nz\\ac\\vuw\\ecs\\swen225\\gp22\\Domain\\Bug.class");
+                    System.getProperty("user.dir") + "/src/nz/ac/vuw/ecs/swen225/gp22/Domain/Bug.class");
             target.close();
             System.out.println("JAR write complete");
         } catch (IOException e) {
@@ -290,7 +290,6 @@ public class ParseXML {
         try {
             File jarFile = new File("levels\\level2.jar");
             URLClassLoader loader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
-            System.out.println(loader.getURLs().toString());
             Class<?> bugLogic = Class.forName("nz.ac.vuw.ecs.swen225.gp22.Domain.Bug", true, loader);
             bugs.forEach(node -> {
                 try {

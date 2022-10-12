@@ -187,7 +187,7 @@ public class WriteXML {
         List<IntPoint> treasurePositions = new ArrayList<>();
         IntStream.range(0, tiles.size())
                 .forEach(i -> tiles.get(i).forEach(tile -> {
-                    if (tile instanceof FreeTile t) {
+                    if (tile instanceof FreeTile t) {//spotbugs error here
                         if (t.item() instanceof Key) {
                             keyPositions.put((Key) t.item(), tile.location());
                         } else if (t.item() instanceof Treasure) {
