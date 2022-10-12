@@ -96,7 +96,7 @@ public class ParseXML {
     }
 
     /**
-     * Check to make sure there is enough keys for each door and will throw a parserexeception if this condition isn't met.
+     * Check to make sure there is enough keys for each door.
      *
      * @param keys  the list of keys to parse
      * @param doors the list of doors to parse
@@ -109,15 +109,8 @@ public class ParseXML {
                 .map(node -> node.selectSingleNode("colour").getText()).toList();
 
         player.selectNodes("key").forEach(node -> keyColour.add(node.getText()));
-        Map<String, Long> keyCounts = keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-        Map<String, Long> doorCounts = doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-//        keyCounts.forEach((key, value) -> {
-//            if (!keyCounts.get(key).equals(doorCounts.get(key))) {
-//                throw new ParserException("Number of keys don't match with num of doors"); //Check to make sure that for each door there is a key.
-//            }
-//        });
-        System.out.println("Keys: " + keyCounts);
-        System.out.println("Doors: " + doorCounts);
+        System.out.println("Keys: " + keyColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting())));
+        System.out.println("Doors: " + doorColour.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting())));
     }
 
 
@@ -126,7 +119,7 @@ public class ParseXML {
      *
      * @param keys      a list of keys to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
-     * @return a list of objectbuilder instances containing info about keys
+     * @return a list of keys
      */
     private List<Key> parseKeys(List<Node> keys, List<List<Tile>> freeTiles) {
         List<Key> keyList = keys.stream()
@@ -163,10 +156,10 @@ public class ParseXML {
     }
 
     /**
-     * Parse the player
+     * Parse the player by converting the node to a player object
      *
      * @param player the node to parse
-     * @return a new objectbuilder instance containing info about player
+     * @return the player object
      */
     private Player parsePlayer(Node player) {
         if (player == null) throw new ParserException("Player not found");
@@ -176,9 +169,9 @@ public class ParseXML {
     /**
      * Parse all the chips/treasures
      *
-     * @param chips     a list of chips to parse
+     * @param chips     a list of treasure nodes to parse
      * @param freeTiles the list of tiles to add the new tile(s) to the game.
-     * @return a list of objectbuilder instances containing info about chips
+     * @return a list of treasure objects
      */
     private List<Treasure> parseChips(List<Node> chips, List<List<Tile>> freeTiles) {
         if (chips.isEmpty()) throw new ParserException("List of chips not found");
@@ -276,10 +269,11 @@ public class ParseXML {
     }
 
     /**
-     * Create a list of bugs by laoding the logic and textures from the JAR file and making a new instance of a bug.
+     * Create a list of bugs by loading the logic and textures from the JAR file and making a new instance of a bug.
      * <p>
-     * Code to load class from jar file was taken from <a href="https://stackoverflow.com/questions/2946338/how-do-i-programmatically-compile-and-instantiate-a-java-class">this question</a>
-     *
+     * Code to load class from jar file was taken from <a href="https://stackoverflow.com/questions/2946338/how-do-i-programmatically-compile-and-instantiate-a-java-class">this question</a> on Stackoverflow
+     * <p>
+     * Note: The JAR file will be created if it doesn't exist, otherwise it will automatically create the JAR. This is to save time and memory on creating a new JAR file when it already exists.
      * @param bugs the list of nodes to parse
      * @return a list of bugs
      */
@@ -309,7 +303,7 @@ public class ParseXML {
      * Parses the given file and return a map of game objects
      *
      * @param doc a dom4j document to parse
-     * @param cc  a chapschallenge game object to set the runnables
+     * @param cc  a ChapsChallenge game object to set the runnables
      * @return a level object
      * @throws ParserException if there is something wrong with parsing the file e.g. missing coordinates, items etc
      */
@@ -324,7 +318,6 @@ public class ParseXML {
                 )
                 .collect(Collectors.toList());
 
-
         checkKeysandDoors(root.selectNodes("key"), root.selectSingleNode("player"), root.selectNodes("door"));
         List<Key> keys = parseKeys(root.selectNodes("key"), freeTiles);
         List<Treasure> chips = parseChips(root.selectNodes("chip"), freeTiles);
@@ -335,9 +328,10 @@ public class ParseXML {
         parseExit(root.selectSingleNode("exit"), freeTiles);
         Player player = parsePlayer(root.selectSingleNode("player"));
         player.keys().addAll(parseInventory(root.selectSingleNode("player")));
-        Map<Integer, Entity> entities = new HashMap<>();
-        entities.put(0, player);
-        entities.putAll(parseBugs(root.selectNodes("bug")));
+        Map<Integer, Entity> entities = new HashMap<>(){{
+            put(0, player);
+            putAll(parseBugs(root.selectNodes("bug")));
+        }};
         Level level = Level.makeLevel(
                 player,
                 entities,
