@@ -163,6 +163,7 @@ public class ChapsChallenge extends JFrame{
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
 			domainLevel.model().tick(); 
+			domainLevel.model().setTime(time);
 			
 			// updating timer
 			time-=delay;
