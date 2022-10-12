@@ -196,7 +196,6 @@ public class WriteXML {
                     }
                 }));
         checkKeysandDoors(levelData.model(), doors);
-        System.out.println("After: " + levelData.model().time());
         writeTime(root,levelData.model().time());
         parseInventory(root, levelData.model().player().keys());
         parsePlayer(root, levelData.model().player());

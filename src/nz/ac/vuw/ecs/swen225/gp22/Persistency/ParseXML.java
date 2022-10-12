@@ -286,9 +286,9 @@ public class ParseXML {
     private Map<Integer, Entity> parseBugs(List<Node> bugs) {
         Map<Integer, Entity> bugMap = new HashMap<>();
         if (bugs.isEmpty()) return bugMap;
-        writeJAR();
         try {
-            File jarFile = new File("levels\\level2.jar");
+            File jarFile = new File("levels/level2.jar");
+            if(!jarFile.exists()) writeJAR();
             URLClassLoader loader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
             Class<?> bugLogic = Class.forName("nz.ac.vuw.ecs.swen225.gp22.Domain.Bug", true, loader);
             bugs.forEach(node -> {
@@ -347,7 +347,6 @@ public class ParseXML {
                 () -> cc.gameEnd(true),
                 () -> cc.gameEnd(false)
         );
-        System.out.println("Before: " + time);
         level.model().setTime(time);
         return level;
     }
