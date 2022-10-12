@@ -1,17 +1,12 @@
 package nz.ac.vuw.ecs.swen225.gp22.Recorder;
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Node;
-import org.dom4j.Element;
+import org.dom4j.*;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 public record SaveRecordedGame(RecordedLevel level) {
     /**Saves a recorded game
@@ -20,7 +15,7 @@ public record SaveRecordedGame(RecordedLevel level) {
     public void saveXML(String path, String fileName) throws ParserException, IOException, DocumentException {
         try {
             OutputFormat format = OutputFormat.createPrettyPrint();
-            Document doc = saveLevel(new Persistency().createDoc(path, fileName));
+            Document doc = saveLevel();
             FileOutputStream fos = new FileOutputStream(path+fileName);
             XMLWriter writer = new XMLWriter(fos, format);
             writer.write(doc);
@@ -34,22 +29,20 @@ public record SaveRecordedGame(RecordedLevel level) {
         }
     }
 
-    /**Saves the level to the file
+    /**Saves the level to the document
      *
-     * @param doc the document being saved to
+     *
      * @return document being saved
      */
-    private Document saveLevel(Document doc){
-        if (doc==null){
-            throw new ParserException("document not found");
-        }
-        Element level= doc.getRootElement().element("level");
+    private Document saveLevel(){
+
+        Document doc = DocumentHelper.createDocument();
+
+        Element level=doc.addElement("level");
         level.addAttribute("name", level().levelName());
         level.setText(String.valueOf(level().levelName()));
         saveMoves(level);
         return doc;
-
-
     }
     /**saves the moves to the document
      *
@@ -64,8 +57,8 @@ public record SaveRecordedGame(RecordedLevel level) {
      * @param level the level element of the document being saved
      */
     private void saveMove(Element level, RecordedMove move) {
-        Element node= level.element("move");
-        node.setText(String.valueOf(move.direction()));
+        Element node= level.addElement("move");
+        node.setText(move.direction().toString());
         node.addAttribute("time",move.time()+"");
 
 
