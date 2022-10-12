@@ -347,7 +347,6 @@ public class ParseXML {
                 () -> cc.gameEnd(true),
                 () -> cc.gameEnd(false)
         );
-        System.out.println("Before: " + time);
         level.model().setTime(time);
         return level;
     }
