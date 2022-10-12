@@ -157,7 +157,7 @@ public class ChapsChallenge extends JFrame{
 			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
 				if (animating() && !wait) {
-					recorder.setPreviousMove(new RecordedMove(currentMove, time, new HashMap<>()));
+					recorder.setPreviousPlayerMove(new RecordedMove(currentMove, time));
 					wait = true;
 					System.out.println("<move time=\"" + time + "\">" + currentMove + "</move>");
 				}
@@ -306,8 +306,8 @@ public class ChapsChallenge extends JFrame{
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
 			speedText.setText("Speed x" + recorder.getTickSpeed());
 			if (autoReplay) {
-				if (recorder.peekNextMove()!=null) {
-					if (time<=recorder.peekNextMove().time() && !domainLevel.model().player().locked()) {
+				if (recorder.peekNextPlayerMove()!=null) {
+					if (time<=recorder.peekNextPlayerMove().time() && !domainLevel.model().player().locked()) {
 						stepMove();
 					}
 				} else if (!domainLevel.model().player().locked()) {
@@ -699,22 +699,23 @@ public class ChapsChallenge extends JFrame{
 		if (!autoReplay) {
 			if (timer.isRunning() || domainLevel.model().player().locked()) return;
 		}
-		if (!autoReplay && recorder.peekNextMove()!=null) {
-			while (recorder.peekNextMove().playerMoveDirection()==MoveDirection.NONE) {
+		if (!autoReplay && recorder.peekNextPlayerMove()!=null) {
+			while (recorder.peekNextPlayerMove().direction()==MoveDirection.NONE) {
 				System.out.println("SKIPPED NONE");
-				recorder.stepMove();
+				recorder.stepMovePlayer();
 			}
 		}
-		if (recorder.peekNextMove()==null) {
+		if (recorder.peekNextPlayerMove()==null) {
 			System.out.println("NO MORE MOVES TO STEP");
 			return;
 		}
 		timer.start();
-		time = recorder.peekNextMove().time();
-		System.out.println(recorder.peekNextMove().playerMoveDirection());
-		recorder.stepMove();
+		time = recorder.peekNextPlayerMove().time();
+
+		System.out.println(recorder.peekNextPlayerMove().direction());
+		recorder.stepMovePlayer();
 	}
-	
+
 	/**
 	 * Pauses the sounds
 	 */
