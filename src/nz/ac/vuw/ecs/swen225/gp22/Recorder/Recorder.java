@@ -10,8 +10,6 @@ import java.util.HashMap;
 record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,ArrayDeque<BugsMove>bugsMoves) {
 
 }
-record BugsMove(float time, HashMap<Integer,MoveDirection>moves) {
-}
 public class Recorder{
     private final ChapsChallenge game;
     private float tickSpeed=1;
@@ -87,7 +85,7 @@ public class Recorder{
     /**Advance the recorded game 1 for the player move*/
     public void stepMovePlayer(){
         if(peekNextPlayerMove()!=null){
-            game.performAction(peekNextPlayerMove().toString());
+            game.performAction(getNextPlayerMove().toString());
         }
 
     }
