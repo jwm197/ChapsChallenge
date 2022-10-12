@@ -93,7 +93,7 @@ record PersistencyTests() {
             tick(rp);
             assert l.model().player().keys().size() == 2;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 0;
-            new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
+            new Persistency().saveLevel("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
             assert l2.model().player().keys().size() == 2;
             assert checkTile(l2.model().tiles().tiles(), Color.BLUE) == 0;
@@ -129,7 +129,7 @@ record PersistencyTests() {
             assert l.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
-            new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
+            new Persistency().saveLevel("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
             assert l2.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
@@ -148,7 +148,7 @@ record PersistencyTests() {
             Level l = new Persistency().loadXML("levels/", "level2.xml", new ChapsChallenge());
             assert l.model().time() == 60;
             assert l.model().entities().size()==4;
-            new Persistency().saveXML("levels/", "level2.xml", "test_levels/", "l2.xml", l);
+            new Persistency().saveLevel("levels/", "level2.xml", "test_levels/", "l2.xml", l);
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
