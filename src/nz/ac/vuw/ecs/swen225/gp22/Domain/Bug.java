@@ -104,7 +104,7 @@ public class Bug implements Entity {
         locked = true; // Prevent the bug from making a new move whilst it's in the process of moving
 
         // Animate the bug movement
-        m.animator().Animate(this, bugAnimations.get(direction), newPos, 30, () -> {
+        m.animator().Animate(this, bugAnimations.get(direction), newPos, 20, () -> {
             locked = false;
             if (location.equals(m.player().location())) {
                 Playable bugBiteSound = SoundClips.BugBite.generate(); // Sound of the bug eating the player

@@ -1,5 +1,10 @@
+.vscode/
+assets/
 bin/
+docs/
 levels/
+libs/
+out/
 test_levels/
 src/nz/ac/vuw/ecs/swen225/gp22/App
 src/nz/ac/vuw/ecs/swen225/gp22/Persistency

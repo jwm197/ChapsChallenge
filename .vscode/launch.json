@@ -9,6 +9,13 @@
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "nz.ac.vuw.ecs.swen225.gp22.App.Main",
+            "projectName": "chaps-challenge_6bb89e2f"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "nz.ac.vuw.ecs.swen225.gp22.App.Main",
             "projectName": "chaps-challenge_643cd7f7"
         },
         {
