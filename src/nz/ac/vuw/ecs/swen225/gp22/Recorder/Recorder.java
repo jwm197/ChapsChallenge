@@ -4,15 +4,13 @@ import nz.ac.vuw.ecs.swen225.gp22.Persistency.Persistency;
 import org.dom4j.DocumentException;
 
 import java.io.IOException;
+import java.lang.Thread;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
-record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,ArrayDeque<BugsMove>bugsMoves) {
-
-}
 
 public class Recorder{
-    private final ChapsChallenge game;
+    private ChapsChallenge game;
     private float tickSpeed=1;
     private RecordedLevel recording;
     public Recorder(ChapsChallenge game,String levelName){
@@ -81,7 +79,11 @@ public class Recorder{
     public void setPreviousBugMove(BugsMove move){
         recording.bugsMoves().add(move);
     }
-
+    /**Getter for the chaps challenge game
+     * */
+    public ChapsChallenge getGame() {
+        return game;
+    }
 
     /**Advance the recorded game 1 for the player move*/
     public void stepMovePlayer(){

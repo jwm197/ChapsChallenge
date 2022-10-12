@@ -34,7 +34,7 @@ public record SaveRecordedGame(RecordedLevel level) {
      */
     private void saveMove(Element level, RecordedMove move) {
         Element moveNode= level.addElement("move");
-        moveNode.setText(move.direction().toString());
+        moveNode.setText(move.toString());
         moveNode.addAttribute("time",move.time()+"");
 
     }
