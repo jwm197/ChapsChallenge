@@ -969,6 +969,7 @@ public class ChapsChallenge extends JFrame{
 		catch (ParserException e) {e.printStackTrace(); }
 		catch (IOException e) {e.printStackTrace(); }
 		catch (DocumentException e) {e.printStackTrace();}
+		if (l == null) return new boolean[0][0];
 		Tiles t = l.model().tiles();
 		return new boolean[t.height()][t.width()];
 	}
