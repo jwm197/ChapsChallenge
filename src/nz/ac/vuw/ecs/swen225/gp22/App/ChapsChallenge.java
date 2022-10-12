@@ -157,7 +157,7 @@ public class ChapsChallenge extends JFrame{
 			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
 				if (animating() && !wait) {
-					recorder.setPreviousMove(new RecordedMove(currentMove, time));
+					recorder.setPreviousMove(new RecordedMove(currentMove, time, new HashMap<>()));
 					wait = true;
 					System.out.println("<move time=\"" + time + "\">" + currentMove + "</move>");
 				}
@@ -276,7 +276,6 @@ public class ChapsChallenge extends JFrame{
 				while (domainLevel.model().player().locked()){
 					for (int i=0; i<recorder.getTickSpeed(); i++) {
 						renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-						domainLevel.model().tick(); 
 						time-=delay;
 					}
 				} 
@@ -297,7 +296,6 @@ public class ChapsChallenge extends JFrame{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			for (int i=0; i<recorder.getTickSpeed(); i++) {
 				renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-				domainLevel.model().tick(); 
 				time-=delay;
 			}
 			// updating timer
@@ -449,6 +447,8 @@ public class ChapsChallenge extends JFrame{
 	public void gameEnd(boolean completed) {
 		if (replay) return;
 		closeTheSounds();
+		if (completed) { soundMixer.add(SoundClips.PlayerWin.generate()); } 
+		else { soundMixer.add(SoundClips.PlayerLose.generate()); }
 		// Goes to level 2 once level 1 completed
 		if (level.equals("level1.xml") && completed) {
 			int result = JOptionPane.showConfirmDialog(this,
@@ -626,7 +626,7 @@ public class ChapsChallenge extends JFrame{
 		
 		// saves level state
 		domainLevel.model().setTime(time);
-		try { persistency.saveXML("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
+		try { persistency.saveLevel("levels/", level, "levels/", levelName + ".xml", domainLevel); } 
 		catch (ParserException e1) { e1.printStackTrace(); } 
 		catch (IOException e1) { e1.printStackTrace(); } 
 		catch (DocumentException e1) { e1.printStackTrace(); }
@@ -700,7 +700,7 @@ public class ChapsChallenge extends JFrame{
 			if (timer.isRunning() || domainLevel.model().player().locked()) return;
 		}
 		if (!autoReplay && recorder.peekNextMove()!=null) {
-			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
+			while (recorder.peekNextMove().playerMoveDirection()==MoveDirection.NONE) {
 				System.out.println("SKIPPED NONE");
 				recorder.stepMove();
 			}
@@ -711,7 +711,7 @@ public class ChapsChallenge extends JFrame{
 		}
 		timer.start();
 		time = recorder.peekNextMove().time();
-		System.out.println(recorder.peekNextMove().direction());
+		System.out.println(recorder.peekNextMove().playerMoveDirection());
 		recorder.stepMove();
 	}
 	
@@ -744,10 +744,8 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-//		Playable music = SoundLines.GAME.generate();
-//		music.setVolume(40);
-//		music.setLooping(true);
-//		musicMixer.add(music);
+		Playable music = SoundLines.Music.generate().setVolume(40).setLooping(true);
+		musicMixer.add(music);
 	}
 	
 	/**
@@ -957,5 +955,21 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public boolean canMoveTo(int x, int y) {
 		return domainLevel.model().tiles().getTile(new IntPoint(x, y)).canPlayerMoveTo(domainLevel.model());
+	}
+	
+	/**
+	 * Returns tiles as a boolean array
+	 * 
+	 * @param level level to return tiles array
+	 * @return boolean array
+	 */
+	public boolean[][] tilesArray(int level){
+		Level l = null;
+		try { l = persistency.loadXML("levels/", "level" + level + ".xml", this); }
+		catch (ParserException e) {e.printStackTrace(); }
+		catch (IOException e) {e.printStackTrace(); }
+		catch (DocumentException e) {e.printStackTrace();}
+		Tiles t = l.model().tiles();
+		return new boolean[t.height()][t.width()];
 	}
 }
