@@ -57,6 +57,7 @@ public class ChapsChallenge extends JFrame{
 	private BetterTimer timer;
 	private boolean autoReplay;
 	private boolean wait;
+	private boolean replay;
 	
 	// DOMAIN/RENDERER/RECORDER/PERSISTENCY
 	private RenderPanel renderPanel;
@@ -122,6 +123,7 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for the game.
 	 */
 	public void gameScreen(String name) {		
+		replay = false;
 		// Creates level (sets up domain/renderer/recorder)
 		if (!newGame(name)) {return;}
 		prepareMusic();
@@ -236,6 +238,7 @@ public class ChapsChallenge extends JFrame{
 	 * @param name
 	 */
 	public void recordedGame(String name) {
+		replay = true;
 		// Creates new recorded game
 		if (!newRecordedGame(name)) return;
 		prepareMusic();
@@ -265,7 +268,18 @@ public class ChapsChallenge extends JFrame{
 		var autoReplayToggle = createButton("Auto Replay: " + (autoReplay?"ON":"OFF"), WIDTH/4, HEIGHT*3/4, WIDTH/5, HEIGHT/10, 
 				SMALL_FONT, e->{});
 		autoReplayToggle.addActionListener(e->{ 
-			autoReplay=!autoReplay; if (autoReplay) {timer.start();} else {timer.stop();}
+			autoReplay=!autoReplay; 
+			if (autoReplay) {timer.start();} 
+			else {
+				while (domainLevel.model().player().locked()){
+					for (int i=0; i<recorder.getTickSpeed(); i++) {
+						renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+						domainLevel.model().tick(); 
+						time-=delay;
+					}
+				} 
+				timer.stop();
+			}
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
 		var setSpeed = new JSlider(1, 10, 1);
@@ -273,16 +287,17 @@ public class ChapsChallenge extends JFrame{
 		var speedText = createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
 		var stepMove = createButton("Step Move", WIDTH*3/4, HEIGHT*3/4, WIDTH/5, HEIGHT/10, SMALL_FONT, 
-				e->{if (!autoReplay) stepMove();});
+				e->{if (!autoReplay) {stepMove();} else {System.out.println("CANNOT STEP WHILE AUTO REPLAY IS ON");}});
 				
 		renderPanel.setBackground(Color.DARK_GRAY);
 		
 		timer = new BetterTimer((int)(delay*1000), ()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			for (int i=0; i<recorder.getTickSpeed(); i++) {
-			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
-			domainLevel.model().tick(); 
-			time-=delay;}
+				renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
+				domainLevel.model().tick(); 
+				time-=delay;
+			}
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
 			levelText.setText(levelNameFormat());
@@ -292,7 +307,7 @@ public class ChapsChallenge extends JFrame{
 			speedText.setText("Speed x" + recorder.getTickSpeed());
 			if (autoReplay) {
 				if (recorder.peekNextMove()!=null) {
-					if (time<=recorder.peekNextMove().time()) {
+					if (time<=recorder.peekNextMove().time() && !domainLevel.model().player().locked()) {
 						stepMove();
 					}
 				} else if (!domainLevel.model().player().locked()) {
@@ -430,6 +445,7 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for when player has completed/failed the level
 	 */
 	public void gameEnd(boolean completed) {
+		if (replay) return;
 		closeTheSounds();
 		// Goes to level 2 once level 1 completed
 		if (level.equals("level1.xml") && completed) {
@@ -682,7 +698,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void stepMove() {
 		if (!autoReplay) {
-			if (timer.isRunning()) return;
+			if (timer.isRunning() || domainLevel.model().player().locked()) return;
 		}
 		if (!autoReplay && recorder.peekNextMove()!=null) {
 			while (recorder.peekNextMove().direction()==MoveDirection.NONE) {
@@ -729,10 +745,10 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-//		Playable music = SoundLines.GAME.generate();
-//		music.setVolume(40);
-//		music.setLooping(true);
-//		musicMixer.add(music);
+		Playable music = SoundLines.GAME.generate();
+		music.setVolume(40);
+		music.setLooping(true);
+		musicMixer.add(music);
 	}
 	
 	/**
