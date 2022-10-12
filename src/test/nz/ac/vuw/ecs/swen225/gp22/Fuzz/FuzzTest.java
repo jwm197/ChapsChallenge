@@ -44,7 +44,7 @@ public class FuzzTest{
     /**
      * input to be tested
      */
-    private record TestRandom(String level, List<Move> moves) implements Serializable{//a collection of inputs
+    private record TestInput(String level, List<Move> moves) implements Serializable{//a collection of inputs
         void check(){
             Game g = new FuzzTest().new Game();
             ChapsChallenge c = new ChapsChallenge();
@@ -71,12 +71,14 @@ public class FuzzTest{
             		int[][] position = c.getPlayerPosition();
             		dfs(c, position.length, position[0].length, q, paths);
             		int min = q.size();
-            		for(Queue qs : paths) {
+            		for(Queue<Move> qs : paths) {
             			if(qs.size()<=min) {
             				q = qs;
             			}
             		}
-            		g.doMove(q.poll(), c);
+            		if (q.peek()!=null) {
+            			g.doMove(q.poll(), c);
+            		};
             	}
             }
         }
@@ -87,6 +89,7 @@ public class FuzzTest{
     	int[][] treasures = c.getTreasures();
     	int[][] ps = c.getPlayerPosition();
     	int[][] exit = c.getExitLockPosition();
+    	
     	for(int i = 0; i < keys.length; i++) {
     		if(keys[i][0]==x&&keys[i][1]==y){
     			paths.add(q);
@@ -103,22 +106,37 @@ public class FuzzTest{
     		paths.add(q);
     		return;
     	}
-	    	if(c.canMoveTo(x-1, y)) {
-	    		q.offer(Move.Left);
-				dfs(c, x-1, y, q, paths);
+    	
+    	Random r = new Random();
+    	List<Move> moves = new ArrayList<>();
+    	
+	    	if(x-1!=-1&&c.canMoveTo(x-1, y)) {
+	    		moves.add(Move.Left);
 			}
-	    	if(c.canMoveTo(x, y-1)) {
-	    		q.offer(Move.Down);
-				dfs(c, x, y-1, q, paths);
+	    	if(y-1!=-1&&c.canMoveTo(x, y-1)) {
+	    		moves.add(Move.Down);
 			}
 	    	if(c.canMoveTo(x+1, y)) {
-	    		q.offer(Move.Right);
-				dfs(c, x+1, y, q, paths);
+	    		moves.add(Move.Right);
 			}
 	    	if(c.canMoveTo(x, y+1)) {
-	    		q.offer(Move.Up);
-				dfs(c, x, y+1, q, paths);
+	    		moves.add(Move.Up);
 			}
+	    Move m = moves.get(r.nextInt(moves.size()-1));
+	    switch(m) {
+	    case Left:
+	    	q.offer(Move.Left);
+			dfs(c, x-1, y, q, paths);
+	    case Down:
+			q.offer(Move.Down);
+			dfs(c, x, y-1, q, paths);
+	    case Right:
+			q.offer(Move.Right);
+			dfs(c, x+1, y, q, paths);
+	    case Up:
+			q.offer(Move.Up);
+			dfs(c, x, y+1, q, paths);
+	    }
     }
     
     
