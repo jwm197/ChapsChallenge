@@ -74,12 +74,17 @@ public class FuzzTest{
             		int[][] position = c.getPlayerPosition();
             		boolean[][] visited = new boolean[30][30];
             		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30], Move.Left);
-            		int min = q.size();
+            		int min = 10;
             		for(Queue<Move> qs : paths) {
             			qs.poll();
             			if(qs.size()<=min&&qs.size()>0) {
             				q = qs;
             			}
+            			System.out.println("Q");
+            			for(Move m : qs) {
+            				System.out.print(m+", ");
+            			}
+            			System.out.println("E");
             		}
             		if (q.peek()!=null) {
             			System.out.println(q.peek());			
@@ -89,7 +94,6 @@ public class FuzzTest{
             		try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
             	}
@@ -100,7 +104,8 @@ public class FuzzTest{
     private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited, Move m) {
     	if(visited[x][y]) {return;}
     	visited[x][y] = true;
-    	Queue<Move> qc = new ArrayDeque<>(q);
+    	Queue<Move> qc = new ArrayDeque<>();
+    	qc.addAll(q);
     	qc.offer(m);
     	int[][] keys = c.getKeys();
     	int[][] treasures = c.getTreasure();
