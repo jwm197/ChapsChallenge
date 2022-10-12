@@ -1,8 +1,6 @@
 
 .idea
 levels/
-libs/
-out/
 test_levels/
 bin/
 ## a complete java git ignore taken from https://gist.github.com/dedunumax/54e82214715e35439227
