@@ -54,14 +54,16 @@ public class ThreadedClip implements Playable {
 	}
 
 	@Override
-	public void play() {
+	public Playable play() {
 		inner.loop(looping ? -1 : 0);
 		inner.start();
+		return this;
 	}
 
 	@Override
-	public void pause() {
+	public Playable pause() {
 		inner.stop();
+		return this;
 	}
 
 	@Override
@@ -70,20 +72,23 @@ public class ThreadedClip implements Playable {
 	}
 	
 	@Override
-	public void setVolume(float volume) {
+	public Playable setVolume(float volume) {
 		FloatControl control = (FloatControl) inner.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue(Playable.normalizeVolume(volume));
+        return this;
 	}
 	
 	@Override
-	public void setLooping(boolean looping) {
+	public Playable setLooping(boolean looping) {
 		this.looping = looping;
 		inner.loop(looping ? -1 : 0);
+		return this;
 	}
 	
 	@Override
-	public void setLoopCount(int loopCount) {
+	public Playable setLoopCount(int loopCount) {
 		inner.loop(loopCount);
+		return this;
 	}
 
 	@Override

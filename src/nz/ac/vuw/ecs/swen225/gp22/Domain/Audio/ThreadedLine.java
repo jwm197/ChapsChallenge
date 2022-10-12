@@ -144,7 +144,7 @@ public class ThreadedLine implements Playable {
 	}
 
 	@Override
-	public void play() {
+	public Playable play() {
 		paused = false;
 		inner.start();
 		
@@ -157,13 +157,15 @@ public class ThreadedLine implements Playable {
 			current.start();
 		}
 		isActive = true;
+		return this;
 	}
 
 	@Override
-	public void pause() {
+	public Playable pause() {
 		paused = true;
 		isActive = false;
 		inner.stop();
+		return this;
 	}
 	
 	@Override
@@ -174,20 +176,23 @@ public class ThreadedLine implements Playable {
 	}
 
 	@Override
-	public void setVolume(float volume) {
+	public Playable setVolume(float volume) {
 		this.volume = volume;
 		FloatControl control = (FloatControl) inner.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue(Playable.normalizeVolume(volume));
+        return this;
 	}
 
 	@Override
-	public void setLooping(boolean looping) {
+	public Playable setLooping(boolean looping) {
 		this.loopCount = looping ? -1 : 0;
+		return this;
 	}
 
 	@Override
-	public void setLoopCount(int loopCount) {
+	public Playable setLoopCount(int loopCount) {
 		this.loopCount = loopCount;
+		return this;
 	}
 
 	@Override

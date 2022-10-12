@@ -8,15 +8,19 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain.Audio;
 public interface Playable {
 	/**
 	 * Play the audio
+	 * 
+	 * @return the playing Playable
 	 */
-	void play();
+	Playable play();
 	
 	/**
 	 * Pause the audio
 	 * 
 	 * <p>If terminating audio permanently, {@link #close() close} should be used.<p>
+	 * 
+	 * @return the paused Playable
 	 */
-	void pause();
+	Playable pause();
 	
 	/**
 	 * Kills the internal audio object
@@ -30,20 +34,23 @@ public interface Playable {
 	 * Set the looping status of the audio
 	 * 
 	 * @param looping whether to loop
+	 * @return the Playable with updated looping state
 	 */
-	void setLooping(boolean looping);
+	Playable setLooping(boolean looping);
 	
 	/**
 	 * Sets the number of loops that should be performed before this audio terminates
 	 * @param loopCount
+	 * @return the Playable with set loop count
 	 */
-	void setLoopCount(int loopCount);
+	Playable setLoopCount(int loopCount);
 	
 	/**
 	 * Set the volume of the audio (0-100 normalized). Valies over 100 are allowed, however may result in distortion.
 	 * @param volume
+	 * @return the Playable with volume set
 	 */
-	void setVolume(float volume);
+	Playable setVolume(float volume);
 	
 	/**
 	 * Runnable to detect closure utilised by AudioMixer
