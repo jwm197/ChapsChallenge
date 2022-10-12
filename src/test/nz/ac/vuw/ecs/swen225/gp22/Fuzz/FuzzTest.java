@@ -71,7 +71,7 @@ public class FuzzTest{
             		Queue<Move> q = new ArrayDeque<>();
             		int[][] position = c.getPlayerPosition();
             		boolean[][] visited = new boolean[30][30];
-            		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30]);
+            		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30], Move.Left);
             		int min = q.size();
             		for(Queue<Move> qs : paths) {
             			if(qs.size()<=min) {
@@ -79,17 +79,27 @@ public class FuzzTest{
             			}
             		}
             		if (q.peek()!=null) {
-            			System.out.println(q.peek());
+            			q.poll();
+            			System.out.println(q.peek());			
             			g.doMove(q.poll(), c);
             		};
+            	} else {
+            		try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             	}
             }
         }
     };
     
-    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited) {
+    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited, Move m) {
     	if(visited[x][y]) {return;}
     	visited[x][y] = true;
+    	
+    	q.offer(m);
     	int[][] keys = c.getKeys();
     	int[][] treasures = c.getTreasure();
     	//int[][] ps = c.getPlayerPosition();
@@ -113,20 +123,16 @@ public class FuzzTest{
     	}
     	
 	    	if(x-1!=-1&&c.canMoveTo(x-1, y)) {
-	    		q.offer(Move.Left);
-				dfs(c, x-1, y, q, paths, visited);
+				dfs(c, x-1, y, q, paths, visited, Move.Left);
 			}
 	    	if(y-1!=-1&&c.canMoveTo(x, y-1)) {
-	    		q.offer(Move.Down);
-				dfs(c, x, y-1, q, paths, visited);
+				dfs(c, x, y-1, q, paths, visited, Move.Up);
 			}
 	    	if(c.canMoveTo(x+1, y)) {
-	    		q.offer(Move.Right);
-				dfs(c, x+1, y, q, paths, visited);
+				dfs(c, x+1, y, q, paths, visited, Move.Right);
 			}
 	    	if(c.canMoveTo(x, y+1)) {
-	    		q.offer(Move.Up);
-				dfs(c, x, y+1, q, paths, visited);
+				dfs(c, x, y+1, q, paths, visited, Move.Down);
 			}
 	   }
     
