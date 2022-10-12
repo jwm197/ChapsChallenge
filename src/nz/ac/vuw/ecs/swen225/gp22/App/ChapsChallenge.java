@@ -157,7 +157,7 @@ public class ChapsChallenge extends JFrame{
 				if (animating() && !wait) {
 					recorder.setPreviousMove(new RecordedMove(currentMove, time));
 					wait = true;
-					System.out.println(currentMove + " " + time);
+					System.out.println("<move time=\"" + time + "\">" + currentMove + "</move>");
 				}
 			}
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
@@ -360,6 +360,7 @@ public class ChapsChallenge extends JFrame{
 				+ "Info tile will display help text<br/>"
 				+ "Main objective is to collect all treasures<br/>"
 				+ "Exit lock will be open when all treasures are collected<br/>"
+				+ "Avoid bugs as they will eat you<br/>"
 				+ "Enter exit tile once unlocked to pass level<br/>"
 				+ "View controls from the menu screen button</html>", 
 				SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT/20, WIDTH, HEIGHT);
@@ -655,7 +656,7 @@ public class ChapsChallenge extends JFrame{
 	 * @return timer string to display
 	 */
 	private String timerFormat() {
-		return "<html>TIMER:<br/>" + (float)Math.round(time*10)/10 + "s</html>";
+		return "<html>TIME LEFT:<br/>" + (float)Math.round(time*10)/10 + "s</html>";
 	}
 	
 	/**
@@ -664,8 +665,13 @@ public class ChapsChallenge extends JFrame{
 	 * @return inventory string to display
 	 */
 	private String inventoryFormat() {
-		return "<html>INVENTORY:<br/><br/>Keys <br/>" + domainLevel.model().player().keys().size() 
-				+ "<br/><br/>Treasure<br/>remaining <br/>" + domainLevel.model().treasure().size();
+		return "<html>INVENTORY:<br/><br/>Keys<br/>collected<br/>" 
+				+ "Red: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.RED)).count() + "<br/>" 
+				+ "Yellow: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.YELLOW)).count() + "<br/>"
+				+ "Green: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.GREEN)).count() + "<br/>"
+				+ "Blue: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.BLUE)).count()
+				+ "<br/><br/>Treasure<br/>remaining <br/>" 
+				+ domainLevel.model().treasure().size();
 	}
 	
 	/**
