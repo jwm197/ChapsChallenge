@@ -66,10 +66,12 @@ public class FuzzTest{
             c.gameScreen(level);
             while(true) {
             	if(!c.animating()) {
+            		System.out.println("pathfinding...");
             		List<Queue> paths = new ArrayList<>();
             		Queue<Move> q = new ArrayDeque<>();
             		int[][] position = c.getPlayerPosition();
-            		dfs(c, position.length, position[0].length, q, paths);
+            		boolean[][] visited = new boolean[30][30];
+            		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30]);
             		int min = q.size();
             		for(Queue<Move> qs : paths) {
             			if(qs.size()<=min) {
@@ -77,6 +79,7 @@ public class FuzzTest{
             			}
             		}
             		if (q.peek()!=null) {
+            			System.out.println(q.peek());
             			g.doMove(q.poll(), c);
             		};
             	}
@@ -84,10 +87,12 @@ public class FuzzTest{
         }
     };
     
-    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths) {
+    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited) {
+    	if(visited[x][y]) {return;}
+    	visited[x][y] = true;
     	int[][] keys = c.getKeys();
-    	int[][] treasures = c.getTreasures();
-    	int[][] ps = c.getPlayerPosition();
+    	int[][] treasures = c.getTreasure();
+    	//int[][] ps = c.getPlayerPosition();
     	int[][] exit = c.getExitLockPosition();
     	
     	for(int i = 0; i < keys.length; i++) {
@@ -102,42 +107,29 @@ public class FuzzTest{
     			return;
     		}
     	}
-    	if(c.treasureLeft()==0&&exit.length==x&&exit[0].length==y) {
+    	if(c.treasureLeft()==0&&exit[0][0]==x&&exit[0][1]==y) {
     		paths.add(q);
     		return;
     	}
     	
-    	Random r = new Random();
-    	List<Move> moves = new ArrayList<>();
-    	
 	    	if(x-1!=-1&&c.canMoveTo(x-1, y)) {
-	    		moves.add(Move.Left);
+	    		q.offer(Move.Left);
+				dfs(c, x-1, y, q, paths, visited);
 			}
 	    	if(y-1!=-1&&c.canMoveTo(x, y-1)) {
-	    		moves.add(Move.Down);
+	    		q.offer(Move.Down);
+				dfs(c, x, y-1, q, paths, visited);
 			}
 	    	if(c.canMoveTo(x+1, y)) {
-	    		moves.add(Move.Right);
+	    		q.offer(Move.Right);
+				dfs(c, x+1, y, q, paths, visited);
 			}
 	    	if(c.canMoveTo(x, y+1)) {
-	    		moves.add(Move.Up);
+	    		q.offer(Move.Up);
+				dfs(c, x, y+1, q, paths, visited);
 			}
-	    Move m = moves.get(r.nextInt(moves.size()-1));
-	    switch(m) {
-	    case Left:
-	    	q.offer(Move.Left);
-			dfs(c, x-1, y, q, paths);
-	    case Down:
-			q.offer(Move.Down);
-			dfs(c, x, y-1, q, paths);
-	    case Right:
-			q.offer(Move.Right);
-			dfs(c, x+1, y, q, paths);
-	    case Up:
-			q.offer(Move.Up);
-			dfs(c, x, y+1, q, paths);
-	    }
-    }
+	   }
+    
     
     
     
@@ -155,25 +147,10 @@ public class FuzzTest{
                 g.performAction("UP");
                 case 3:
                 g.performAction("DOWN");
-                case 4:
-                g.performAction("ESC");
-                case 5:
-                g.performAction("SPACE");
-                case 6:
-                g.performAction("CTRL-1");
-                case 7:
-                g.performAction("CTRL-2");
-                case 8:
-                g.performAction("CTRL-R");
-                case 9:
-                g.performAction("CTRl-S");
-                case 10:
-                g.performAction("CTRL-X");
-
             }
         }
     }
-    private enum Move {Left, Right, Up, Down, Pause, Continue, Load1, Load2, Load, Exit, Menu, None}// player moves possible
+    private enum Move {Left, Right, Up, Down}// player moves possible
     /**
      * Generates a list of random moves.
      * @param size size of move list
@@ -183,7 +160,7 @@ public class FuzzTest{
     	Random r = new Random();
         return IntStream.range(0, size)
         .map(i->r.nextInt(Move.values().length))
-        .mapToObj(ei->Move.values()[ei%4])
+        .mapToObj(ei->Move.values()[ei])
         .toList();
     }
 
