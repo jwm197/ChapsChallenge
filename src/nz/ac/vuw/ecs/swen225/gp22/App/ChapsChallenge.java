@@ -140,12 +140,10 @@ public class ChapsChallenge extends JFrame{
 
 		// JLabel to show level player is on
 		var levelText = createLabel(levelNameFormat(), SwingConstants.CENTER, LARGE_FONT, 0, -HEIGHT*2/5, WIDTH, HEIGHT);
-		// Timer text
-		var timerText = createLabel(timerFormat(), SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT*13/40, WIDTH, HEIGHT);
-		// Inventory text
-		var inventoryText = createLabel(inventoryFormat(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
-		// JButton to go back to menu
-		var back = createButton("Back", WIDTH*3/40, HEIGHT*3/4, WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
+		// Left text
+		var leftText = createLabel(leftTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT*13/40, WIDTH, HEIGHT);
+		// Right text
+		var rightText = createLabel(rightTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Controller for keys
 		panel.addKeyListener(new Controller(this));
 		
@@ -168,8 +166,8 @@ public class ChapsChallenge extends JFrame{
 			// updating timer
 			time-=delay;
 			levelText.setText(levelNameFormat());
-			timerText.setText(timerFormat());
-			inventoryText.setText(inventoryFormat());
+			leftText.setText(leftTextFormat());
+			rightText.setText(rightTextFormat());
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -189,11 +187,10 @@ public class ChapsChallenge extends JFrame{
 		panel.add(renderPanel, BorderLayout.CENTER);
 		topPanel.add(levelText);
 		panel.add(topPanel, BorderLayout.NORTH);
-		leftPanel.add(timerText);
+		leftPanel.add(leftText);
 		panel.add(leftPanel, BorderLayout.WEST);
-		rightPanel.add(inventoryText);
+		rightPanel.add(rightText);
 		panel.add(rightPanel, BorderLayout.EAST);
-		bottomPanel.add(back);
 		panel.add(bottomPanel, BorderLayout.SOUTH);
 		add(panel);
 		setPreferredSize(getSize());
@@ -258,10 +255,10 @@ public class ChapsChallenge extends JFrame{
 		
 		// JLabel to show level player is on
 		var levelText = createLabel(levelNameFormat(), SwingConstants.CENTER, LARGE_FONT, 0, -HEIGHT*2/5, WIDTH, HEIGHT);
-		// Timer text
-		var timerText = createLabel(timerFormat(), SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT*13/40, WIDTH, HEIGHT);
-		// Inventory text
-		var inventoryText = createLabel(inventoryFormat(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
+		// Left text
+		var leftText = createLabel(leftTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT*13/40, WIDTH, HEIGHT);
+		// Right text
+		var rightText = createLabel(rightTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// JButton to go back to menu
 		var back = createButton("Back", WIDTH*3/40, HEIGHT*3/4, WIDTH/5, HEIGHT/10, SMALL_FONT, e->menuScreen());
 		// Auto replay
@@ -289,8 +286,8 @@ public class ChapsChallenge extends JFrame{
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
 			levelText.setText(levelNameFormat());
-			timerText.setText(timerFormat());
-			inventoryText.setText(inventoryFormat());
+			leftText.setText(leftTextFormat());
+			rightText.setText(rightTextFormat());
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
 			speedText.setText("Speed x" + recorder.getTickSpeed());
 			if (autoReplay) {
@@ -311,7 +308,10 @@ public class ChapsChallenge extends JFrame{
 			// checks if ran out of time
 			if (time <=0) {
 				time = 0;
-				timerText.setText("<html>TIMER:<br/>NO TIME LEFT</html>");
+				leftText.setText("<html>TIMER:<br/>"
+						+ "NO TIME LEFT</html>"
+						+ "<br/><br/>TREASURE<br/>REMAINING:<br/>" 
+						+ domainLevel.model().treasure().size() + "</html>");
 				repaint();
 				int result = JOptionPane.showConfirmDialog(this,
 						"<html>Player ran out of time!<br/>Would you like to replay <html>"+level.substring(0, level.length()-4)+"?", 
@@ -329,9 +329,9 @@ public class ChapsChallenge extends JFrame{
 		panel.add(renderPanel, BorderLayout.CENTER);
 		topPanel.add(levelText);
 		panel.add(topPanel, BorderLayout.NORTH);
-		leftPanel.add(timerText);
+		leftPanel.add(leftText);
 		panel.add(leftPanel, BorderLayout.WEST);
-		rightPanel.add(inventoryText);
+		rightPanel.add(rightText);
 		panel.add(rightPanel, BorderLayout.EAST);
 		addComponents(bottomPanel, back, autoReplayToggle, speedText, setSpeed, stepMove);
 		panel.add(bottomPanel, BorderLayout.SOUTH);
@@ -651,27 +651,29 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	/**
-	 * Formats timer to display
+	 * Formats timer to display and treasure remaining
 	 * 
-	 * @return timer string to display
+	 * @return string to display on left panel
 	 */
-	private String timerFormat() {
-		return "<html>TIME LEFT:<br/>" + (float)Math.round(time*10)/10 + "s</html>";
+	private String leftTextFormat() {
+		return "<html>TIME LEFT:<br/>" 
+				+ (float)Math.round(time*10)/10 + "s"
+				+ "<br/><br/>TREASURE<br/>REMAINING:<br/>" 
+				+ domainLevel.model().treasure().size() + "</html>";
 	}
 	
 	/**
-	 * Formats inventory information
+	 * Formats inventory information with keys
 	 * 
-	 * @return inventory string to display
+	 * @return string to display on right panel
 	 */
-	private String inventoryFormat() {
-		return "<html>INVENTORY:<br/><br/>Keys<br/>collected<br/>" 
-				+ "Red: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.RED)).count() + "<br/>" 
-				+ "Yellow: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.YELLOW)).count() + "<br/>"
-				+ "Green: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.GREEN)).count() + "<br/>"
-				+ "Blue: " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.BLUE)).count()
-				+ "<br/><br/>Treasure<br/>remaining <br/>" 
-				+ domainLevel.model().treasure().size();
+	private String rightTextFormat() {
+		return "<html>KEYS<br/>COLLECTED:<br/><br/>" 
+				+ "Red - " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.RED)).count() + "<br/>" 
+				+ "Yellow - " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.YELLOW)).count() + "<br/>"
+				+ "Green - " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.GREEN)).count() + "<br/>"
+				+ "Blue - " + domainLevel.model().player().keys().stream().filter(k->k.color().equals(Color.BLUE)).count()
+				+ "</html>";
 	}
 	
 	/**
