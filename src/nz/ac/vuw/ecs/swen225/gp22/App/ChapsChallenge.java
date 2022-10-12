@@ -744,10 +744,10 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-		Playable music = SoundLines.GAME.generate();
-		music.setVolume(40);
-		music.setLooping(true);
-		musicMixer.add(music);
+//		Playable music = SoundLines.GAME.generate();
+//		music.setVolume(40);
+//		music.setLooping(true);
+//		musicMixer.add(music);
 	}
 	
 	/**
