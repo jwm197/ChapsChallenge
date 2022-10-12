@@ -1,5 +1,5 @@
 <!--Level 2-->
-<level width="19" height="12">
+<level width="19" height="12" time="">
     <player>
         <location>
             <x>14</x>

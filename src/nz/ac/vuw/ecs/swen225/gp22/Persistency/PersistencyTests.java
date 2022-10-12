@@ -49,6 +49,7 @@ record PersistencyTests() {
             Level l = new Persistency().loadXML("levels/", "level1.xml", new ChapsChallenge());
             assert l.model().treasure().size() == 11;
             assert l.model().player().location().equals(new IntPoint(7, 6));
+            assert l.model().time() == 60;
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
@@ -60,7 +61,9 @@ record PersistencyTests() {
     @Test
     void TestLoadXML2() {
         try {
-            new Persistency().loadXML("levels/", "level2.xml", new ChapsChallenge());
+            Level l = new Persistency().loadXML("levels/", "level2.xml", new ChapsChallenge());
+            assert l.model().entities().size()==4;
+            assert l.model().time() == 60;
         } catch (ParserException | IOException | DocumentException e) {
             assert false : e.toString();
         }
@@ -75,6 +78,7 @@ record PersistencyTests() {
     void TestReadWriteXML1() {
         try {
             Level l = new Persistency().loadXML("levels/", "level1.xml", new ChapsChallenge());
+            assert l.model().time() == 60;
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
             l.model().player().move(Direction.LEFT, l.model());
@@ -91,6 +95,7 @@ record PersistencyTests() {
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 0;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
+            assert l.model().time() < 60 : "Time didn't decrease";
             assert l2.model().player().keys().size() == 2;
             assert checkTile(l2.model().tiles().tiles(), Color.BLUE) == 0;
         } catch (ParserException | IOException | DocumentException e) {
@@ -105,6 +110,7 @@ record PersistencyTests() {
     void TestReadWriteXML2() {
         try {
             Level l = new Persistency().loadXML("levels/", "level1.xml", new ChapsChallenge());
+            assert l.model().time() == 60;
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
             l.model().player().move(Direction.LEFT, l.model());
@@ -126,6 +132,7 @@ record PersistencyTests() {
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
+            assert l.model().time() < 60 : "Time didn't decrease";
             assert l2.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
@@ -141,6 +148,7 @@ record PersistencyTests() {
     void TestReadWriteXML3() {
         try {
             Level l = new Persistency().loadXML("levels/", "level2.xml", new ChapsChallenge());
+            assert l.model().time() == 60;
             assert l.model().entities().size()==4;
             new Persistency().saveXML("levels/", "level2.xml", "test_levels/", "l2.xml", l);
         } catch (ParserException | IOException | DocumentException e) {
