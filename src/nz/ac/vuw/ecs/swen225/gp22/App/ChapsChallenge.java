@@ -114,7 +114,7 @@ public class ChapsChallenge extends JFrame{
 		closePhase.run();
 		closePhase = ()->{remove(panel);};
 		add(panel);
-		setPreferredSize(new Dimension(WIDTH,HEIGHT));
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		pack();
 	}
 	
@@ -149,7 +149,7 @@ public class ChapsChallenge extends JFrame{
 		// Controller for keys
 		panel.addKeyListener(new Controller(this));
 		
-		timer = new BetterTimer((int)(delay*1000),()->{
+		timer = new BetterTimer((int)(delay*1000), ()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			// recorder
 			if (currentMove!=MoveDirection.NONE) {
@@ -208,7 +208,7 @@ public class ChapsChallenge extends JFrame{
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"),"levels/"));
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"), "levels/"));
 		int result = fileChooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
@@ -224,7 +224,7 @@ public class ChapsChallenge extends JFrame{
 		// Code borrowed from 
 		// https://www.codejava.net/java-se/swing/show-simple-open-file-dialog-using-jfilechooser
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"),"levels/"));
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"), "levels/"));
 		int result = fileChooser.showOpenDialog(this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 		    File selectedFile = fileChooser.getSelectedFile();
@@ -271,7 +271,7 @@ public class ChapsChallenge extends JFrame{
 			autoReplay=!autoReplay; if (autoReplay) {timer.start();} else {timer.stop();}
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
-		var setSpeed = new JSlider(1,10,1);
+		var setSpeed = new JSlider(1, 10, 1);
 		// Speed label
 		var speedText = createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
@@ -280,7 +280,7 @@ public class ChapsChallenge extends JFrame{
 				
 		renderPanel.setBackground(Color.DARK_GRAY);
 		
-		timer = new BetterTimer((int)(delay*1000),()->{
+		timer = new BetterTimer((int)(delay*1000), ()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
 			for (int i=0; i<recorder.getTickSpeed(); i++) {
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
@@ -314,7 +314,7 @@ public class ChapsChallenge extends JFrame{
 				timerText.setText("<html>TIMER:<br/>NO TIME LEFT</html>");
 				repaint();
 				int result = JOptionPane.showConfirmDialog(this,
-						"<html>Player ran out of time!<br/>Would you like to replay <html>"+level.substring(0,level.length()-4)+"?", 
+						"<html>Player ran out of time!<br/>Would you like to replay <html>"+level.substring(0, level.length()-4)+"?", 
 						"Replay Ended",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
@@ -506,7 +506,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
 		JButton b = new JButton(name);
-		b.setBounds(x,y,w,h);
+		b.setBounds(x, y, w, h);
 		b.setFont(f);
 		b.addActionListener(l);
 		return b;
@@ -526,7 +526,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	private JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
 		JLabel l = new JLabel(name, i);
-		l.setBounds(x,y,w,h);
+		l.setBounds(x, y, w, h);
 		l.setFont(f);
 		return l;
 	}
@@ -601,7 +601,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void saveAndExit() {
 		timer.stop();
-		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0,level.length()-4) + "_save");
+		String levelName = (String)JOptionPane.showInputDialog("Set Level Name: ", level.substring(0, level.length()-4) + "_save");
 		if(levelName == null || (levelName != null && (levelName.equals("")))) {
 		    System.out.println("Cancelled save");
 		    menuScreen();
@@ -625,7 +625,7 @@ public class ChapsChallenge extends JFrame{
 	 * Saves recorded game to xml and exits
 	 */
 	public void saveRecording() {
-		String levelName = (String)JOptionPane.showInputDialog("Set Recording Name: ", level.substring(0,level.length()-4) + "_recording");
+		String levelName = (String)JOptionPane.showInputDialog("Set Recording Name: ", level.substring(0, level.length()-4) + "_recording");
 		if(levelName == null || (levelName != null && (levelName.equals("")))) {
 		    System.out.println("Cancelled save");
 		    menuScreen();
@@ -646,7 +646,7 @@ public class ChapsChallenge extends JFrame{
 	private String levelNameFormat() {
 		if (level.equals("level1.xml")) { return "Level: 1"; } 
 		else if (level.equals("level2.xml")) { return "Level: 2"; }
-		else { return"Level: " + level.substring(0,level.length()-4); }
+		else { return"Level: " + level.substring(0, level.length()-4); }
 	}
 	
 	/**
@@ -770,10 +770,14 @@ public class ChapsChallenge extends JFrame{
 	/**
 	 * Gets the player position as an int[][] for fuzz.
 	 * 
-	 * @return rows are x, cols are y position
+	 * @return [0][0] is x, [0][1] is y position
 	 */
 	public int[][] getPlayerPosition() {
-		return new int[domainLevel.model().player().location().x()][domainLevel.model().player().location().y()];
+		IntPoint playerLoc = domainLevel.model().player().location();
+		int[][] pos = new int[1][2];
+		pos[0][0] = playerLoc.x();
+		pos[0][1] = playerLoc.y();
+		return pos;
 	}
 	
 	/**
@@ -894,13 +898,16 @@ public class ChapsChallenge extends JFrame{
 	/**
 	 * Returns exit lock position as an int[][] for fuzz.
 	 * 
-	 * @return rows is x, cols is y position
+	 * @return [0][0] is x, [0][1] is y position
 	 */
 	public int[][] getExitLockPosition(){
 		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
 			for (Tile tile : tilesOfTiles) {
 				if (tile instanceof ExitLock l) {
-					return new int[l.location().x()][l.location().y()];
+					int[][] pos = new int[1][2];
+					pos[0][0] = l.location().x();
+					pos[0][1] = l.location().y();
+					return pos;
 				}
 			}
 		}
@@ -915,6 +922,6 @@ public class ChapsChallenge extends JFrame{
 	 * @return if player can move to that tile
 	 */
 	public boolean canMoveTo(int x, int y) {
-		return domainLevel.model().tiles().getTile(new IntPoint(x,y)).canPlayerMoveTo(domainLevel.model());
+		return domainLevel.model().tiles().getTile(new IntPoint(x, y)).canPlayerMoveTo(domainLevel.model());
 	}
 }
