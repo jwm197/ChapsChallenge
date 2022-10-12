@@ -95,7 +95,6 @@ record PersistencyTests() {
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 0;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
-            assert l.model().time() < 60 : "Time didn't decrease";
             assert l2.model().player().keys().size() == 2;
             assert checkTile(l2.model().tiles().tiles(), Color.BLUE) == 0;
         } catch (ParserException | IOException | DocumentException e) {
@@ -132,7 +131,6 @@ record PersistencyTests() {
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
             new Persistency().saveXML("levels/", "level1.xml", "test_levels/", "l1.xml", l);
             Level l2 = new Persistency().loadXML("test_levels/","l1.xml",new ChapsChallenge());
-            assert l.model().time() < 60 : "Time didn't decrease";
             assert l2.model().player().keys().size() == 1;
             assert checkTile(l.model().tiles().tiles(), Color.BLUE) == 1;
             assert checkTile(l.model().tiles().tiles(), Color.YELLOW) == 1;
