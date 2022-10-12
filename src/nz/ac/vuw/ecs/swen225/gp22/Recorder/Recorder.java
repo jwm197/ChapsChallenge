@@ -15,7 +15,7 @@ public class Recorder{
     private RecordedLevel recording;
     public Recorder(ChapsChallenge game,String levelName){
         this.game=game;
-        recording=new RecordedLevel(levelName,new ArrayDeque<>());
+        recording=new RecordedLevel(levelName,new ArrayDeque<>(),new ArrayDeque<>());
     }
     /**Getter which level the recording is of*/
     public String getRecordingLevelName(){
@@ -49,33 +49,54 @@ public class Recorder{
     }
     /**Get the next move to do from the moves arraydeque
      * @return The next recorded move*/
-    public RecordedMove getNextMove(){
-        return recording.moves().pollFirst();
+    public RecordedMove getNextPlayerMove(){
+        return recording.playerMoves().pollFirst();
     }
     /**Get the next move to do from the moves arraydeque without removing it from it
      * @return The next recorded move*/
-    public RecordedMove peekNextMove(){
-        return recording.moves().peekFirst();
+    public RecordedMove peekNextPlayerMove(){
+        return recording.playerMoves().peekFirst();
     }
     /**Add last done move to the arraydeque of  moves
      * @param move the last done move*/
-    public void setPreviousMove(RecordedMove move){
-        recording.moves().add(move);
+    public void setPreviousPlayerMove(RecordedMove move){
+        recording.playerMoves().add(move);
     }
 
+    /**Get the next move to do from the moves arraydeque for the bugs
+     * @return The next recorded move*/
+    public BugsMove getNextBugMove(){
+        return recording.bugsMoves().pollFirst();
+    }
+    /**Get the next move to do from the moves arraydeque of bugs moves without removing it from it
+     * @return The next recorded move*/
+    public BugsMove peekNextBugMove(){
+        return recording.bugsMoves().peekFirst();
+    }
+
+    /**Add last done move of the bugs to the arraydeque of  moves
+     * @param move the last done move*/
+    public void setPreviousBugMove(BugsMove move){
+        recording.bugsMoves().add(move);
+    }
     /**Getter for the chaps challenge game
      * */
     public ChapsChallenge getGame() {
         return game;
     }
 
-    /**Advance the recorded game 1 move*/
-    public void stepMove(){
-        if(peekNextMove()!=null){
-            game.performAction(peekNextMove().playerMoveDirection().toString());
-            game.moveBugs(getNextMove().bugDirections());
+    /**Advance the recorded game 1 for the player move*/
+    public void stepMovePlayer(){
+        if(peekNextPlayerMove()!=null){
+            game.performAction(peekNextPlayerMove().toString());
         }
 
+    }
+    /**Advance the recorded game 1 for the bugs*/
+    public void stepMoveBugs(){
+        if(peekNextBugMove()!=null){
+            game.moveBugs(getNextBugMove().moves());
+        }
     }
 }
 

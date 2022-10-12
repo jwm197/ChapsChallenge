@@ -34,10 +34,10 @@ public record ParseRecordedGame() {
         }
         Node level = doc.selectSingleNode("level");
 
-        return new RecordedLevel(level.valueOf("@name"),parseMoves(level.selectNodes("move")));
+        return new RecordedLevel(level.valueOf("@name"),parseMoves(level.selectNodes("move")),parseBugsMoves(level.selectNodes("bugmove")));
 
     }
-    /**Parse a move and add it to the
+    /**Parse all player move and add it to the moves queue
      *
      * @param moves the list of recorded moves being passed
      */
@@ -51,7 +51,7 @@ public record ParseRecordedGame() {
     private static RecordedMove parseMove(Node move) {
 
         try{
-            return new RecordedMove(MoveDirection.valueOf(move.getText()),Float.parseFloat(move.valueOf("@time")),parseBugs(move));
+            return new RecordedMove(MoveDirection.valueOf(move.getText()),Float.parseFloat(move.valueOf("@time")));
         }catch(IllegalArgumentException e){
             throw new ParserException("Move direction not found");
         }
@@ -59,20 +59,28 @@ public record ParseRecordedGame() {
 
 
     }
+    /**Parse all player move and add it to the moves queue
+     *
+     * @param moves the list of recorded moves being passed
+     */
+    private static ArrayDeque<BugsMove> parseBugsMoves(List<Node>moves) {
+        return moves.stream().map(m->parseBugsMove(m)).collect(Collectors.toCollection(ArrayDeque::new));
+    }
     /**Parse all the bugs moves on that move
      *
-     * @param move the being passed
+     * @param move of on which the bugs are being passed
      * @return A hashmap containing the bug id and the direction they are moving in
      */
-    private static HashMap<Integer,MoveDirection> parseBugs(Node move) {
+    private static BugsMove parseBugsMove(Node move) {
         HashMap<Integer, MoveDirection> bugMoves = new HashMap<>();
         try {
             for (Node bug : move.selectNodes("bug")) {
                 bugMoves.put(Integer.parseInt(bug.valueOf("@id")), MoveDirection.valueOf(move.getText()));
             }
+            return new BugsMove(Float.parseFloat(move.valueOf("@time")), bugMoves);
         } catch (IllegalArgumentException e) {
             throw new ParserException("Move direction  or bug id not found");
         }
-        return bugMoves;
+
     }
 }
