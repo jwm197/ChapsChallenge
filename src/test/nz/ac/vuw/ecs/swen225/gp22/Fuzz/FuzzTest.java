@@ -74,10 +74,12 @@ public class FuzzTest{
             		int[][] position = c.getPlayerPosition();
             		boolean[][] visited = new boolean[30][30];
             		dfs(c, position[0][0], position[0][1], q, paths, new boolean[30][30], Move.Left);
-            		int min = 10;
+            		
+            		q = paths.get(0);
+            		int min = q.size();
             		for(Queue<Move> qs : paths) {
             			qs.poll();
-            			if(qs.size()<=min&&qs.size()>0) {
+            			if(qs.size()<min&&qs.size()>0) {
             				q = qs;
             			}
             			System.out.println("Q");
