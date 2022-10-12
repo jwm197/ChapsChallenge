@@ -69,7 +69,8 @@ public class FuzzTest{
             		List<Queue> paths = new ArrayList<>();
             		Queue<Move> q = new ArrayDeque<>();
             		int[][] position = c.getPlayerPosition();
-            		dfs(c, position.length, position[0].length, q, paths);
+            		boolean[][] visited = new boolean[15][15];
+            		dfs(c, position.length, position[0].length, new ArrayDeque<Move>(), paths, visited);
             		int min = q.size();
             		for(Queue<Move> qs : paths) {
             			if(qs.size()<=min) {
@@ -84,9 +85,11 @@ public class FuzzTest{
         }
     };
     
-    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths) {
+    private static void dfs(ChapsChallenge c, int x, int y, Queue<Move> q, List<Queue> paths, boolean[][] visited) {
+    	if(visited[x][y]) {return;}
+    	visited[x][y] = true;
     	int[][] keys = c.getKeys();
-    	int[][] treasures = c.getTreasures();
+    	int[][] treasures = c.getTreasure();
     	int[][] ps = c.getPlayerPosition();
     	int[][] exit = c.getExitLockPosition();
     	
@@ -107,41 +110,24 @@ public class FuzzTest{
     		return;
     	}
     	
-    	Random r = new Random();
-    	List<Move> moves = new ArrayList<>();
-    	
 	    	if(x-1!=-1&&c.canMoveTo(x-1, y)) {
-	    		moves.add(Move.Left);
+	    		q.offer(Move.Left);
+				dfs(c, x-1, y, q, paths, visited);
 			}
 	    	if(y-1!=-1&&c.canMoveTo(x, y-1)) {
-	    		moves.add(Move.Down);
+	    		q.offer(Move.Down);
+				dfs(c, x, y-1, q, paths, visited);
 			}
 	    	if(c.canMoveTo(x+1, y)) {
-	    		moves.add(Move.Right);
+	    		q.offer(Move.Right);
+				dfs(c, x+1, y, q, paths, visited);
 			}
 	    	if(c.canMoveTo(x, y+1)) {
-	    		moves.add(Move.Up);
+	    		q.offer(Move.Up);
+				dfs(c, x, y+1, q, paths, visited);
 			}
-	    Move m = moves.get(r.nextInt(moves.size()-1));
-	    switch(m) {
-	    case Left:
-	    	System.out.println("left");
-	    	q.offer(Move.Left);
-			dfs(c, x-1, y, q, paths);
-	    case Down:
-	    	System.out.println("down");
-			q.offer(Move.Down);
-			dfs(c, x, y-1, q, paths);
-	    case Right:
-	    	System.out.println("right");
-			q.offer(Move.Right);
-			dfs(c, x+1, y, q, paths);
-	    case Up:
-	    	System.out.println("up");
-			q.offer(Move.Up);
-			dfs(c, x, y+1, q, paths);
-	    }
-    }
+	   }
+    
     
     
     
