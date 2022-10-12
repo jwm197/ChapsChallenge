@@ -1,1 +1,405 @@
-<!--Empty file (for now)-->
+<!--Level 1-->
+<level width="15" height="14" time="">
+    <player>
+        <location>
+            <x>7</x>
+            <y>6</y>
+        </location>
+        <items>
+
+        </items>
+    </player>
+
+    <!-- doors -->
+    <door name="door1">
+        <location>
+            <x>5</x>
+            <y>3</y>
+        </location>
+        <colour>Green</colour>
+    </door>
+
+    <door name="door2">
+        <location>
+            <x>9</x>
+            <y>3</y>
+        </location>
+        <colour>Green</colour>
+    </door>
+
+    <door name="door3">
+        <location>
+            <x>4</x>
+            <y>4</y>
+        </location>
+        <colour>Blue</colour>
+    </door>
+
+    <door name="door4">
+        <location>
+            <x>4</x>
+            <y>8</y>
+        </location>
+        <colour>Red</colour>
+    </door>
+
+    <door name="door5">
+        <location>
+            <x>6</x>
+            <y>9</y>
+        </location>
+        <colour>Yellow</colour>
+    </door>
+
+    <door name="door6">
+        <location>
+            <x>8</x>
+            <y>9</y>
+        </location>
+        <colour>Yellow</colour>
+    </door>
+
+    <door name="door7">
+        <location>
+            <x>10</x>
+            <y>4</y>
+        </location>
+        <colour>Red</colour>
+    </door>
+
+    <door name="door8">
+        <location>
+            <x>10</x>
+            <y>8</y>
+        </location>
+        <colour>Blue</colour>
+    </door>
+
+    <!-- keys -->
+    <key name="key1">
+        <location>
+            <x>5</x>
+            <y>5</y>
+        </location>
+        <colour>Blue</colour>
+    </key>
+
+    <key name="key2">
+        <location>
+            <x>5</x>
+            <y>7</y>
+        </location>
+        <colour>Blue</colour>
+    </key>
+
+    <key name="key3">
+        <location>
+            <x>9</x>
+            <y>5</y>
+        </location>
+        <colour>Red</colour>
+    </key>
+
+    <key name="key4">
+        <location>
+            <x>9</x>
+            <y>7</y>
+        </location>
+        <colour>Red</colour>
+    </key>
+
+    <key name="key5">
+        <location>
+            <x>2</x>
+            <y>4</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
+
+    <key name="key6">
+        <location>
+            <x>12</x>
+            <y>4</y>
+        </location>
+        <colour>Yellow</colour>
+    </key>
+
+    <key name="key7">
+        <location>
+            <x>8</x>
+            <y>12</y>
+        </location>
+        <colour>Green</colour>
+    </key>
+
+    <key name="key8">
+        <location>
+            <x>6</x>
+            <y>12</y>
+        </location>
+        <colour>Green</colour>
+    </key>
+
+    <!-- chips -->
+    <chip name="chip1">
+        <location>
+            <x>5</x>
+            <y>6</y>
+        </location>
+    </chip>
+
+    <chip name="chip2">
+        <location>
+            <x>7</x>
+            <y>8</y>
+        </location>
+    </chip>
+
+    <chip name="chip3">
+        <location>
+            <x>9</x>
+            <y>6</y>
+        </location>
+    </chip>
+
+    <chip name="chip4">
+        <location>
+            <x>4</x>
+            <y>2</y>
+        </location>
+    </chip>
+
+    <chip name="chip5">
+        <location>
+            <x>10</x>
+            <y>2</y>
+        </location>
+    </chip>
+
+    <chip name="chip6">
+        <location>
+            <x>2</x>
+            <y>5</y>
+        </location>
+    </chip>
+
+    <chip name="chip7">
+        <location>
+            <x>12</x>
+            <y>5</y>
+        </location>
+    </chip>
+
+    <chip name="chip8">
+        <location>
+            <x>2</x>
+            <y>7</y>
+        </location>
+    </chip>
+
+    <chip name="chip9">
+        <location>
+            <x>12</x>
+            <y>7</y>
+        </location>
+    </chip>
+
+
+    <chip name="chip10">
+        <location>
+            <x>6</x>
+            <y>11</y>
+        </location>
+    </chip>
+
+    <chip name="chip11">
+        <location>
+            <x>9</x>
+            <y>11</y>
+        </location>
+    </chip>
+
+    <lock>
+        <location>
+            <x>7</x>
+            <y>3</y>
+        </location>
+    </lock>
+
+    <info>
+        <location>
+            <x>7</x>
+            <y>5</y>
+        </location>
+        <helptext>Lorem ipsum dolor blah blah blah</helptext>
+    </info>
+
+    <exit>
+        <location>
+            <x>7</x>
+            <y>2</y>
+        </location>
+    </exit>
+
+    <!-- walls -->
+    <wall>
+        <x1>2</x1>
+        <y1>0</y1>
+        <x2>6</x2>
+        <y2>0</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>0</y1>
+        <x2>12</x2>
+        <y2>0</y2>
+    </wall>
+
+    <wall>
+        <x1>2</x1>
+        <y1>1</y1>
+        <x2>2</x2>
+        <y2>2</y2>
+    </wall>
+
+    <wall>
+        <x1>6</x1>
+        <y1>1</y1>
+        <x2>6</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>1</y1>
+        <x2>8</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>12</x1>
+        <y1>1</y1>
+        <x2>12</x2>
+        <y2>2</y2>
+    </wall>
+
+    <wall>
+        <x1>7</x1>
+        <y1>1</y1>
+        <x2>7</x2>
+        <y2>1</y2>
+    </wall>
+
+    <wall>
+        <x1>0</x1>
+        <y1>3</y1>
+        <x2>4</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>10</x1>
+        <y1>3</y1>
+        <x2>14</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>0</x1>
+        <y1>4</y1>
+        <x2>0</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>14</x1>
+        <y1>4</y1>
+        <x2>14</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>6</y1>
+        <x2>3</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>9</y1>
+        <x2>3</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>4</x1>
+        <y1>5</y1>
+        <x2>4</x2>
+        <y2>7</y2>
+    </wall>
+
+    <wall>
+        <x1>10</x1>
+        <y1>5</y1>
+        <x2>10</x2>
+        <y2>7</y2>
+    </wall>
+
+    <wall>
+        <x1>11</x1>
+        <y1>6</y1>
+        <x2>13</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>11</x1>
+        <y1>9</y1>
+        <x2>13</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>1</x1>
+        <y1>9</y1>
+        <x2>5</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>9</x1>
+        <y1>9</y1>
+        <x2>13</x2>
+        <y2>9</y2>
+    </wall>
+
+    <wall>
+        <x1>4</x1>
+        <y1>10</y1>
+        <x2>4</x2>
+        <y2>13</y2>
+    </wall>
+
+    <wall>
+        <x1>7</x1>
+        <y1>9</y1>
+        <x2>7</x2>
+        <y2>13</y2>
+    </wall>
+
+    <wall>
+        <x1>10</x1>
+        <y1>9</y1>
+        <x2>10</x2>
+        <y2>13</y2>
+    </wall>
+
+    <wall>
+        <x1>4</x1>
+        <y1>13</y1>
+        <x2>10</x2>
+        <y2>13</y2>
+    </wall>
+</level>
