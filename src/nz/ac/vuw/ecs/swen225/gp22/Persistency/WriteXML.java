@@ -43,6 +43,11 @@ public class WriteXML {
         throw new ParserException("Invalid colour");
     }
 
+    private void writeTime(Element root,float time){
+        root.addAttribute("time",String.valueOf(time));
+
+    }
+
     /**
      * Check to make sure there is enough keys for each door and will throw a parserexeception if this condition isn't met.
      *
@@ -190,8 +195,9 @@ public class WriteXML {
                         }
                     }
                 }));
-
         checkKeysandDoors(levelData.model(), doors);
+        System.out.println("After: " + levelData.model().time());
+        writeTime(root,levelData.model().time());
         parseInventory(root, levelData.model().player().keys());
         parsePlayer(root, levelData.model().player());
         parseChips(root, treasurePositions);

@@ -3,7 +3,6 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
-import nz.ac.vuw.ecs.swen225.gp22.Persistency.JarTool;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -13,15 +12,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -32,6 +26,7 @@ import java.util.stream.IntStream;
 public class ParseXML {
     private int width = 0;
     private int height = 0;
+    private float time = 0;
 
     /**
      * Create a new JAR file containing all the logic for the bug
@@ -61,11 +56,13 @@ public class ParseXML {
      * Gets the dimensions of the current level
      * @param n the root node containing information about the width and height of the level
      */
-    private void getLevelDim(Node n) {
+    private void getLevelInfo(Node n) {
         if (n.valueOf("@width").isEmpty() || n.valueOf("@height").isEmpty())
             throw new ParserException("X or Y coordinate not found");
         width = Integer.parseInt(n.valueOf("@width"));
         height = Integer.parseInt(n.valueOf("@height"));
+        if(n.valueOf("@time").isEmpty()) time = 60;
+        else time = Float.parseFloat(n.valueOf("@time"));
     }
 
     /**
@@ -293,6 +290,7 @@ public class ParseXML {
         try {
             File jarFile = new File("levels\\level2.jar");
             URLClassLoader loader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
+            System.out.println(loader.getURLs().toString());
             Class<?> bugLogic = Class.forName("nz.ac.vuw.ecs.swen225.gp22.Domain.Bug", true, loader);
             bugs.forEach(node -> {
                 try {
@@ -318,7 +316,7 @@ public class ParseXML {
      */
     protected Level parse(Document doc, ChapsChallenge cc) throws ParserException {
         Node root = doc.selectSingleNode("level");
-        getLevelDim(root);
+        getLevelInfo(root);
         List<List<Tile>> freeTiles = IntStream.range(0, width)
                 .mapToObj(
                         x -> IntStream.range(0, height)
@@ -341,7 +339,7 @@ public class ParseXML {
         Map<Integer, Entity> entities = new HashMap<>();
         entities.put(0, player);
         entities.putAll(parseBugs(root.selectNodes("bug")));
-        return Level.makeLevel(
+        Level level = Level.makeLevel(
                 player,
                 entities,
                 keys,
@@ -350,5 +348,8 @@ public class ParseXML {
                 () -> cc.gameEnd(true),
                 () -> cc.gameEnd(false)
         );
+        System.out.println("Before: " + time);
+        level.model().setTime(time);
+        return level;
     }
 }
