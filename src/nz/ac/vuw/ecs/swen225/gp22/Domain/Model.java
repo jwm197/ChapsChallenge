@@ -22,6 +22,5 @@ public interface Model {
 
     default void tick() {
         entities().values().forEach(e->e.tick(this));
-        setTime(time()-1);
     }
 }
