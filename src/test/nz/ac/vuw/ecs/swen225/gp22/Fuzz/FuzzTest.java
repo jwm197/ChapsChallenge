@@ -125,15 +125,19 @@ public class FuzzTest{
 	    Move m = moves.get(r.nextInt(moves.size()-1));
 	    switch(m) {
 	    case Left:
+	    	System.out.println("left");
 	    	q.offer(Move.Left);
 			dfs(c, x-1, y, q, paths);
 	    case Down:
+	    	System.out.println("down");
 			q.offer(Move.Down);
 			dfs(c, x, y-1, q, paths);
 	    case Right:
+	    	System.out.println("right");
 			q.offer(Move.Right);
 			dfs(c, x+1, y, q, paths);
 	    case Up:
+	    	System.out.println("up");
 			q.offer(Move.Up);
 			dfs(c, x, y+1, q, paths);
 	    }
