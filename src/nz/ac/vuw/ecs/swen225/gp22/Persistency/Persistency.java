@@ -8,10 +8,9 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import java.io.*;
-import java.util.jar.Attributes;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -20,7 +19,7 @@ import java.util.jar.Manifest;
 public record Persistency() {
 
     /**
-     * Creates a DOM4j document with a give path and filename to the level file
+     * Creates a DOM4j document with a given path and filename to the level file
      * @param path the path to the level
      * @param fileName the filename to the levelfile ending with .xml
      * @return A DOM4j document
@@ -29,11 +28,8 @@ public record Persistency() {
      */
     public Document createDoc(String path, String fileName) throws IOException, DocumentException {
         File xmlFile = new File(path + fileName);
-        if (!xmlFile.exists()) {
-            throw new IOException("Level file doesn't exist: " + fileName);
-        }
-        SAXReader reader = new SAXReader();
-        return reader.read(xmlFile);
+        if (!xmlFile.exists()) throw new IOException("Level file doesn't exist: " + fileName);
+        return new SAXReader().read(xmlFile);
     }
 
     /**
@@ -41,7 +37,7 @@ public record Persistency() {
      *
      * @param path     the path to the file
      * @param fileName the name of the file to parse
-     * @return A HashMap containing all the game objects built using ObjectBuilder with the key being the object name
+     * @return a level object to be used in the game
      * @throws ParserException   if parsing goes wrong
      * @throws IOException       if file cannot be read
      * @throws DocumentException if something is wrong with the document
@@ -80,8 +76,7 @@ public record Persistency() {
      */
     public void saveXML(String savedPath,String savedFile,Document document) throws IOException {
         OutputFormat format = OutputFormat.createPrettyPrint();
-        FileOutputStream fos = new FileOutputStream(savedPath+savedFile);
-        XMLWriter writer = new XMLWriter(fos, format);
+        XMLWriter writer = new XMLWriter(new FileOutputStream(savedPath+savedFile), format);
         writer.write(document);
         System.out.println("Save complete");
     }
