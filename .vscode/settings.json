@@ -2,6 +2,8 @@
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "C:\\Users\\MassiveImpact72\\Downloads\\junit-platform-console-standalone-1.9.1.jar",
+        "C:\\Users\\MassiveImpact72\\Downloads\\dom4j-1.6.jar\\dom4j-1.6.jar"
     ]
 }
