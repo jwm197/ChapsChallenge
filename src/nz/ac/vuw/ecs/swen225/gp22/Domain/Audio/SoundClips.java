@@ -15,7 +15,20 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author anfri
  */
 public enum SoundClips {
-	;
+	/*player*/
+	PlayerMove,
+	PlayerLose,
+	PlayerWin,
+	
+	/*pickups*/
+	KeyPickup,
+	TreasurePickup,
+	
+	/*door*/
+	DoorUnlock,
+	
+	/*bug*/
+	BugBite;
 	
 	public static final String CLIP_PATH = "assets/audio/";
 	
