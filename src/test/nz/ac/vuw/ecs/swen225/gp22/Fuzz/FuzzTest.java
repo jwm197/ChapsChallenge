@@ -67,37 +67,39 @@ public class FuzzTest {
             ChapsChallenge c = new ChapsChallenge();
             c.gameScreen(level);
             while (!c.animating()) {
-                //if (!c.animating()) {
-                    List<Queue<Move>> paths = new ArrayList<>();
-                    int[][] position = c.getPlayerPosition();
+                // if (!c.animating()) {
+                List<Queue<Move>> paths = new ArrayList<>();
+                int[][] position = c.getPlayerPosition();
 
-                    dfs(c, position[0][0], position[0][1], new ArrayDeque<>(), paths, new boolean[30][30], Move.Left);
+                dfs(c, position[0][0], position[0][1], new ArrayDeque<>(), paths, new boolean[30][30], Move.Left);
 
-                    Queue<Move> q = paths.get(0);
-                    int min = q.size();
-                    for (Queue<Move> qs : paths) {
-                        qs.poll();
-                        if (qs.size() < min && qs.size() > 0) {
-                            q = qs;
-                        }
-                        System.out.println("Q");
-                        for (Move m : qs) {
-                            System.out.print(m + ", ");
-                        }
-                        System.out.println("E");
+                Queue<Move> q = paths.get(0);
+                int min = q.size();
+                for (Queue<Move> qs : paths) {
+                    qs.poll();
+                    if (qs.size() < min && qs.size() > 0) {
+                        q = qs;
                     }
-                    if (q.peek() != null) {
-                        System.out.println(q.peek());
-                        g.doMove(q.poll(), c);
+                    System.out.println("Q");
+                    for (Move m : qs) {
+                        System.out.print(m + ", ");
                     }
-                    ;
-                /*} else {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-
-                    }*/
-                //}
+                    System.out.println("E");
+                }
+                if (q.peek() != null) {
+                    System.out.println(q.peek());
+                    g.doMove(q.poll(), c);
+                }
+                ;
+                /*
+                 * } else {
+                 * try {
+                 * Thread.sleep(100);
+                 * } catch (InterruptedException e) {
+                 * 
+                 * }
+                 */
+                // }
             }
         }
     };
@@ -113,7 +115,13 @@ public class FuzzTest {
         int[][] keys = c.getKeys();
         int[][] treasures = c.getTreasure();
         int[][] exit = c.getExitLockPosition();
-        boolean[][] visitedC = new boolean[30][30];
+        boolean[][] visitedC = new boolean[visited.length][visited[0].length];
+
+        for (int i = 0; i < visited.length; i++) {
+            for (int l = 0; l < visited[i].length; l++) {
+                visitedC[i][l] = visited[i][l];
+            }
+        }
 
         for (int i = 0; i < keys.length; i++) {
             if (keys[i][0] == x && keys[i][1] == y) {
