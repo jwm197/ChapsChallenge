@@ -18,7 +18,9 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.JButton;
@@ -501,11 +503,8 @@ public class ChapsChallenge extends JFrame{
 		else if (input.equals("CTRL-2")) { if (timer!=null) {timer.stop();} gameScreen("level2.xml"); }
 		else if (input.equals("SPACE")) { timer.stop(); pauseTheSounds(); }
 		else if (input.equals("ESC")) { timer.start(); resumeTheSounds(); }
-		if (timer.isRunning()) {
-			if (input.equals("UP")) { domainLevel.model().player().move(Direction.UP, domainLevel.model());}
-			else if (input.equals("DOWN")) { domainLevel.model().player().move(Direction.DOWN, domainLevel.model());}
-			else if (input.equals("LEFT")) { domainLevel.model().player().move(Direction.LEFT, domainLevel.model());}
-			else if (input.equals("RIGHT")) { domainLevel.model().player().move(Direction.RIGHT, domainLevel.model()); }
+		if (timer.isRunning() && (input.equals("UP") || input.equals("DOWN") || input.equals("LEFT") || input.equals("RIGHT"))) {
+			domainLevel.model().player().move(Direction.valueOf(input), domainLevel.model());
 		}
 	}
 	
@@ -745,10 +744,10 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-//		Playable music = SoundLines.GAME.generate();
-//		music.setVolume(40);
-//		music.setLooping(true);
-//		musicMixer.add(music);
+		Playable music = SoundLines.GAME.generate();
+		music.setVolume(40);
+		music.setLooping(true);
+		musicMixer.add(music);
 	}
 	
 	/**
@@ -767,6 +766,17 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public MoveDirection getCurrentMove() {
 		return currentMove;
+	}
+	
+	/**
+	 * Moves bugs for recorder
+	 * 
+	 * @param bugMoves bugs with move mapped to them
+	 */
+	public void moveBugs(HashMap<Integer, MoveDirection> bugMoves) {
+		for (Map.Entry<Integer, MoveDirection> b : bugMoves.entrySet()) {
+			domainLevel.model().entities().get(b.getKey()).move(Direction.valueOf(b.getValue().toString()), domainLevel.model());
+		}
 	}
 	
 	// FUZZ TESTING ---------------------------------------------------------------------------------------------------
