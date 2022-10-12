@@ -10,7 +10,9 @@ import java.util.jar.Manifest;
 /**
  * Create a jar file
  * <p>
- * All code below was taken from <a href="https://www.baeldung.com/jar-create-programatically">this tutorial</a>.
+ * <b>NOTE:</b> All code below was taken from <a href="https://www.baeldung.com/jar-create-programatically">this tutorial</a>. All comments are my own explanations. This is so I understand the code and its purpose rather than copy and pasting code without reading its purpose.
+ *
+ * @author Jia Wei Leong (300560651)
  */
 public class JarTool {
     private Manifest manifest = new Manifest();
@@ -34,6 +36,8 @@ public class JarTool {
 
     /**
      * Adds a file to the JAR file
+     * <p>
+     * This method was taken from <a href="https://www.baeldung.com/jar-create-programatically">here</a>
      * @param target the JAR file to write to
      * @param rootPath the path in the JAR to store the file
      * @param source the path to the file

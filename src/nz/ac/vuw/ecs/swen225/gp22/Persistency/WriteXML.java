@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 
 /**
  * Write the necessary objects from the level object back to a level XML file
+ * @author Jia Wei Leong (300560651)
  */
 public class WriteXML {
 

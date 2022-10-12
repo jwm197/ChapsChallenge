@@ -22,6 +22,8 @@ import java.util.stream.IntStream;
 
 /**
  * Converts and parse the entire level XML file into a level object to be loaded into the game
+ *
+ * @author Jia Wei Leong (300560651)
  */
 public class ParseXML {
     private int width = 0;
