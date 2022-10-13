@@ -131,7 +131,7 @@ public class Bug implements Entity {
         if (locked == false) {
             move(calculateDirection(), m);
         } else {
-            move(Direction.NONE, m);
+            direction = Direction.NONE;
         }
     }
 }
