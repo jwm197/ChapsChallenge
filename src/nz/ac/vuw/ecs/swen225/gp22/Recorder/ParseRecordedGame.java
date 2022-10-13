@@ -8,8 +8,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import nz.ac.vuw.ecs.swen225.gp22.Persistency.*;
 import org.dom4j.*;
-
+/**parses a recorded game from a xml file
+ * @author Jacob McBride ID: 300537323 */
 public record ParseRecordedGame() {
+    /**load a recording from a xml file
+     * @param path the file path the file is located at
+     * @param fileName the name of the file being loaded from*/
     public static RecordedLevel loadXML(String path, String fileName) throws IOException {
 
         try{
