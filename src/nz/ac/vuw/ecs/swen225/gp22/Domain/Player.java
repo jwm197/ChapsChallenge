@@ -14,7 +14,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 /**
  * Represents a player entity in the game.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class Player implements Entity {
@@ -131,7 +131,6 @@ public class Player implements Entity {
 
         locked = true; // Prevent the player from making a new move whilst it's in the process of moving
         if (t instanceof WallTile) t.playerMovedTo(m); // Unlockable wall tiles get unlocked before the player moves to them
-
         m.mixer().add(playerMoveSound); // Plays the moving player sound and adds it to the model's mixer
 
         // Animate the player movement

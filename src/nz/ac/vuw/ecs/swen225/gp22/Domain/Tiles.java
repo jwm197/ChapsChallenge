@@ -1,6 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp22.Domain;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -8,7 +7,7 @@ import java.util.stream.IntStream;
 /**
  * Represents all of the tiles in a level.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class Tiles {
@@ -35,7 +34,7 @@ public class Tiles {
      * @return The 2d array of tiles.
      */
     public List<List<Tile>> tiles() {
-        return Collections.unmodifiableList(tiles);
+        return tiles;
     }
 
     /**

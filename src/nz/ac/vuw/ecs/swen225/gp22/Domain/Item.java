@@ -5,7 +5,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTexture;
 /**
  * An empty interface capturing the main aspects of an item.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public interface Item {

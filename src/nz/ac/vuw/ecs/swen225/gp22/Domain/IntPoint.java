@@ -3,7 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 /**
  * Represents the position of an object with integer x and y coordinates.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public record IntPoint(int x, int y){

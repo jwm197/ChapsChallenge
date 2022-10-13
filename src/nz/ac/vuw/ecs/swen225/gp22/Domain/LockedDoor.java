@@ -10,7 +10,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTextures;
 /**
  * Represents a locked door tile in the game.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class LockedDoor extends WallTile {

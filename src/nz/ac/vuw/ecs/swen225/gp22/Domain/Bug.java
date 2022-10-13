@@ -15,7 +15,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 /**
  * Represents a bug entity in the game.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class Bug implements Entity {
@@ -121,10 +121,7 @@ public class Bug implements Entity {
             if (location.equals(m.player().location())) {
                 Playable bugBiteSound = SoundClips.BugBite.generate(); // Sound of the bug eating the player
                 bugBiteSound.play();
-
-                // Kill the player if the bug moves to the player's position
-                
-                m.onGameOver();
+                m.onGameOver(); // Kill the player if the bug moves to the player's position
             }
         });
         location = newPos;

@@ -20,7 +20,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 /**
  * Tests for the domain package.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class DomainTests {
@@ -139,24 +139,6 @@ public class DomainTests {
      * Valid level.
      */
     public void successfulLevelCreation1() {
-        /**Player player = new Player(new IntPoint(0,0));
-        Map<Integer, Entity> entities = new HashMap<>();
-        entities.put(0,player);
-        List<Key> keys = new ArrayList<>();
-        List<Treasure> treasure = new ArrayList<>();
-        Tile tile = new FreeTile(new IntPoint(0,0),null);
-        List<Tile> col = new ArrayList<>();
-        col.add(tile);
-        List<List<Tile>> rows = new ArrayList<>();
-        rows.add(col);
-        Tiles tiles = new Tiles(rows,1,1);
-        Runnable next = ()->{};
-        Runnable gameOver = ()->{};
-        try {
-            Level level = Level.makeLevel(player,entities,keys,treasure,tiles,next,gameOver);
-        } catch (Exception e) {
-            fail("Level creation failed");
-        }*/
         try {
             makeTestLevel1(Color.BLUE);
         } catch (Exception e) {
@@ -418,6 +400,9 @@ public class DomainTests {
         bug.move(Direction.DOWN,model);
         bug.move(Direction.DOWN,model);
         bug.move(Direction.LEFT,model);
+        // Have to do another move since there's no animation time, 
+        // meaning the runnable gets executed before the position gets updated
+        bug.move(Direction.LEFT,model);
         assertEquals(bug.location(), new IntPoint(0,2));
         assert test;
     }
@@ -543,36 +528,18 @@ public class DomainTests {
 
     @Test
     /**
-     * Check locked door tile texture.
-     */
-    public void checkTextures8() {
-        LockedDoor lockedDoorTile = new LockedDoor(new IntPoint(0,0), Color.BLUE);
-        assertEquals(lockedDoorTile.texture(), LayeredTextures.Lock);
-    }
-
-    @Test
-    /**
      * Check exit lock tile texture.
      */
-    public void checkTextures9() {
+    public void checkTextures8() {
         ExitLock exitLockTile = new ExitLock(new IntPoint(0,0));
         assertEquals(exitLockTile.texture(), LayeredTextures.TreasureLock);
     }
 
     @Test
     /**
-     * Check key texture.
-     */
-    public void checkTextures10() {
-        Key key = new Key(Color.BLUE);
-        assertEquals(key.texture(), Textures.Key);
-    }
-
-    @Test
-    /**
      * Check treasure texture.
      */
-    public void checkTextures11() {
+    public void checkTextures9() {
         Treasure treasure = new Treasure();
         assertEquals(treasure.texture(), Textures.Treasure);
     }
