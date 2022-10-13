@@ -18,3 +18,7 @@ DOM4J and Jaxen dependencies are required to run this game. Optionally, JUnit 5 
 9. Avoid bugs as they will eat you
 10. Enter exit tile once unlocked to pass level
 11. View control from the menu screen button
+
+
+### Gource
+Link to a video showcasing this project's Git timeline in Gource: https://drive.google.com/file/d/162FeS9WhmTXlP2ioTELxGKT2VTTofMnP/view?usp=sharing
