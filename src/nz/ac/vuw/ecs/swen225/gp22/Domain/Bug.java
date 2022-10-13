@@ -128,6 +128,10 @@ public class Bug implements Entity {
 
     @Override
     public void tick(Model m) {
-        move(calculateDirection(), m);
+        if (locked == false) {
+            move(calculateDirection(), m);
+        } else {
+            move(Direction.NONE, m);
+        }
     }
 }
