@@ -5,7 +5,7 @@ import org.dom4j.DocumentException;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.HashMap;
+
 
 record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,ArrayDeque<BugsMove>bugsMoves) {
 
@@ -93,7 +93,7 @@ public class Recorder{
      * @param game the chaps challenge game the recording is being played on*/
     public void stepMoveBugs(ChapsChallenge game){
         if(peekNextBugMove()!=null){
-            game.moveBugs(getNextBugMove().moves());
+            game.moveBugs(getNextBugMove().getMoves());
         }
     }
 }

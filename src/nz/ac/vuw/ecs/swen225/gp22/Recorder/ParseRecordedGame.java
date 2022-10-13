@@ -71,11 +71,12 @@ public record ParseRecordedGame() {
      * @param move of on which the bugs are being passed
      * @return A hashmap containing the bug id and the direction they are moving in
      */
+
     private static BugsMove parseBugsMove(Node move) {
         HashMap<Integer, MoveDirection> bugMoves = new HashMap<>();
         try {
             for (Node bug : move.selectNodes("bug")) {
-                bugMoves.put(Integer.parseInt(bug.valueOf("@id")), MoveDirection.valueOf(move.getText()));
+                bugMoves.put(Integer.parseInt(bug.valueOf("@id")), MoveDirection.valueOf(bug.getText()));
             }
             return new BugsMove(Float.parseFloat(move.valueOf("@time")), bugMoves);
         } catch (IllegalArgumentException e) {
