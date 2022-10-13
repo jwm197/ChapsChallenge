@@ -26,6 +26,7 @@ public class ThreadedClip implements Playable {
 	private Clip inner;
 	private boolean looping;
 	private boolean paused = true;
+
 	//runnable for closure
 	private Runnable onClose = () -> {};
 	
