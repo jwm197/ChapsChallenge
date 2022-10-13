@@ -576,4 +576,115 @@ public class DomainTests {
         Treasure treasure = new Treasure();
         assertEquals(treasure.texture(), Textures.Treasure);
     }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (left this time).
+     */
+    public void bugOutOfBounds1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.LEFT,model);
+        bug.move(Direction.LEFT,model);
+        bug.move(Direction.LEFT,model);
+        assertEquals(bug.location(), new IntPoint(0,1));
+    }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (right this time).
+     */
+    public void bugOutOfBounds2() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.RIGHT,model);
+        bug.move(Direction.RIGHT,model);
+        assertEquals(bug.location(), new IntPoint(3,1));
+    }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (down this time).
+     */
+    public void bugOutOfBounds3() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        assertEquals(bug.location(), new IntPoint(2,3));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (left this time).
+     */
+    public void playerOutOfBounds1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.LEFT,model);
+        assertEquals(player.location(), new IntPoint(0,2));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (up this time).
+     */
+    public void playerOutOfBounds2() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.UP,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.UP,model);
+        player.move(Direction.UP,model);
+        assertEquals(player.location(), new IntPoint(1,0));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (right this time).
+     */
+    public void playerOutOfBounds3() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.UP,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.RIGHT,model);
+        assertEquals(player.location(), new IntPoint(3,1));
+    }
+
+    @Test
+    /**
+     * Bug can move in no direction.
+     */
+    public void bugNoDirection1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.NONE,model);
+        assertEquals(bug.location(), new IntPoint(2,0));
+    }
+
+    @Test
+    /**
+     * Player can move in no direction.
+     */
+    public void playerNoDirection1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.NONE,model);
+        assertEquals(player.location(), new IntPoint(0,2));
+    }
 }
