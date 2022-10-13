@@ -273,13 +273,12 @@ public class ChapsChallenge extends JFrame{
 			autoReplay=!autoReplay; 
 			if (autoReplay) {timer.start();} 
 			else {
-				while (domainLevel.model().player().locked()){
+				while (domainLevel.model().player().locked() && !domainLevel.model().player().isDead()){
 					for (int i=0; i<recorder.getTickSpeed(); i++) {
 						renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 						time-=delay;
 					}
 				} 
-				timer.stop();
 			}
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
@@ -299,7 +298,7 @@ public class ChapsChallenge extends JFrame{
 				time-=delay;
 				for (Map.Entry<Integer, Entity> e : domainLevel.model().entities().entrySet()) {
 					if (e.getValue() instanceof Bug b) {
-						if (time<=recorder.peekNextBugMove().time()) {
+						if (time<=recorder.peekNextBugMove().getTime()) {
 							recorder.stepMoveBugs(this);
 						}
 					}
@@ -316,6 +315,8 @@ public class ChapsChallenge extends JFrame{
 			// Player moves
 			if (autoReplay) {
 				if (recorder.peekNextPlayerMove()!=null) {
+					if (domainLevel.model().player().isDead()) replayRecording();
+					System.out.println(domainLevel.model().player().isDead());
 					if (time<=recorder.peekNextPlayerMove().time() && !domainLevel.model().player().locked()) {
 						stepMove();
 					}
@@ -337,13 +338,7 @@ public class ChapsChallenge extends JFrame{
 						+ "<br/><br/>TREASURE<br/>REMAINING:<br/>" 
 						+ domainLevel.model().treasure().size() + "</html>");
 				repaint();
-				int result = JOptionPane.showConfirmDialog(this,
-						"<html>Player ran out of time!<br/>Would you like to replay <html>"+level.substring(0, level.length()-4)+"?", 
-						"Replay Ended",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				if(result == JOptionPane.YES_OPTION){ timer.stop(); recordedGame(level); }
-				else { closePhase.run(); menuScreen(); }
+				replayRecording();
 			}
 		});
 		closePhase.run();
@@ -365,7 +360,11 @@ public class ChapsChallenge extends JFrame{
 		panel.requestFocus();
 	}
 
-	 
+	/**
+	 * Listener for when autoreplay is toggled
+	 *  
+	 * @param l auto replay button
+	 */
 	public void autoReplayListener(JButton l) {
 		autoReplay=!autoReplay; 
 		if (autoReplay) {timer.start();} 
@@ -381,8 +380,25 @@ public class ChapsChallenge extends JFrame{
 		l.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();
 	}
 	
+	/**
+	 * Listener for when step move is clicked
+	 */
 	public void stepMoveListener() {
-		if (!autoReplay) {stepMove();} else {System.out.println("CANNOT STEP WHILE AUTO REPLAY IS ON");}
+		if (!autoReplay) {stepMove();}
+		else {System.out.println("CANNOT STEP WHILE AUTO REPLAY IS ON");}
+	}
+	
+	/**
+	 * Gives the player option of replaying a recording
+	 */
+	public void replayRecording() {
+		int result = JOptionPane.showConfirmDialog(this,
+				"<html>Recording ended!<br/>Would you like to replay <html>"+level.substring(0, level.length()-4)+"?", 
+				"Replay Ended",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
+		if(result == JOptionPane.YES_OPTION){ timer.stop(); recordedGame(level); }
+		else { closePhase.run(); menuScreen(); }
 	}
 	
 	/**
@@ -679,7 +695,7 @@ public class ChapsChallenge extends JFrame{
 	 * 
 	 * @param bugMoves bugs with move mapped to them
 	 */
-	public void moveBugs(HashMap<Integer, MoveDirection> bugMoves) {
+	public void moveBugs(Map<Integer, MoveDirection> bugMoves) {
 		for (Map.Entry<Integer, MoveDirection> b : bugMoves.entrySet()) {
 			domainLevel.model().entities().get(b.getKey()).move(Direction.valueOf(b.getValue().toString()), domainLevel.model());
 		}
