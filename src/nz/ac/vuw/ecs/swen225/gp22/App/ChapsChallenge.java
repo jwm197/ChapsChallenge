@@ -27,8 +27,11 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -99,8 +102,17 @@ public class ChapsChallenge extends JFrame{
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
 		var title = createLabel("CHAPS CHALLENGE", SwingConstants.CENTER, LARGE_FONT, 0, (int)(-HEIGHT*0.425), WIDTH, HEIGHT);
+		final JPopupMenu menu = new JPopupMenu("Menu");
+		JMenuItem lvl1 = new JMenuItem("Level 1");
+		JMenuItem lvl2 = new JMenuItem("Level 2");
+		lvl1.addActionListener(e->gameScreen("level1.xml"));
+		lvl2.addActionListener(e->gameScreen("level2.xml"));
+		menu.add(lvl1);
+		menu.add(lvl2);
 		// JButton to start game
-		var start = createButton("Start", WIDTH/4, (int)(HEIGHT*0.15), WIDTH/2, HEIGHT/10, SMALL_FONT, e->gameScreen("level1.xml"));
+		var startButton = createButton("Start", WIDTH/4, (int)(HEIGHT*0.15), WIDTH/2, HEIGHT/10, SMALL_FONT, e->{});
+		startButton.addActionListener(e->menu.show(startButton, WIDTH/2, (int)(HEIGHT*0.02)));
+
 		// JButton to resume saved game from file selector
 		var load = createButton("Load Level", WIDTH/4, (int)(HEIGHT*0.275), WIDTH/2, HEIGHT/10, SMALL_FONT, e->loadGame());
 		// JButton to resume saved game from file selector
@@ -113,7 +125,7 @@ public class ChapsChallenge extends JFrame{
 		var quit = createButton("Quit", WIDTH/4, (int)(HEIGHT*0.775), WIDTH/2, HEIGHT/10, SMALL_FONT, e->System.exit(0));
 		// adds components to panel
 		panel.setLayout(null);
-		addComponents(panel, title, start, load, loadRecorder, help, controls, quit);
+		addComponents(panel, title, startButton, load, loadRecorder, help, controls, quit);
 		closePhase.run();
 		closePhase = ()->{remove(panel);};
 		add(panel);
@@ -157,7 +169,7 @@ public class ChapsChallenge extends JFrame{
 			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
 				if (animating() && !wait) {
-					recorder.setPreviousMove(new RecordedMove(currentMove, time, new HashMap<>()));
+					recorder.setPreviousPlayerMove(new RecordedMove(currentMove, time));
 					wait = true;
 					System.out.println("<move time=\"" + time + "\">" + currentMove + "</move>");
 				}
@@ -305,9 +317,10 @@ public class ChapsChallenge extends JFrame{
 			rightText.setText(rightTextFormat());
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF"));
 			speedText.setText("Speed x" + recorder.getTickSpeed());
+			// Player moves
 			if (autoReplay) {
-				if (recorder.peekNextMove()!=null) {
-					if (time<=recorder.peekNextMove().time() && !domainLevel.model().player().locked()) {
+				if (recorder.peekNextPlayerMove()!=null) {
+					if (time<=recorder.peekNextPlayerMove().time() && !domainLevel.model().player().locked()) {
 						stepMove();
 					}
 				} else if (!domainLevel.model().player().locked()) {
@@ -699,20 +712,20 @@ public class ChapsChallenge extends JFrame{
 		if (!autoReplay) {
 			if (timer.isRunning() || domainLevel.model().player().locked()) return;
 		}
-		if (!autoReplay && recorder.peekNextMove()!=null) {
-			while (recorder.peekNextMove().playerMoveDirection()==MoveDirection.NONE) {
+		if (!autoReplay && recorder.peekNextPlayerMove()!=null) {
+			while (recorder.peekNextPlayerMove().direction()==MoveDirection.NONE) {
 				System.out.println("SKIPPED NONE");
-				recorder.stepMove();
+				recorder.stepMovePlayer();
 			}
 		}
-		if (recorder.peekNextMove()==null) {
+		if (recorder.peekNextPlayerMove()==null) {
 			System.out.println("NO MORE MOVES TO STEP");
 			return;
 		}
 		timer.start();
-		time = recorder.peekNextMove().time();
-		System.out.println(recorder.peekNextMove().playerMoveDirection());
-		recorder.stepMove();
+		time = recorder.peekNextPlayerMove().time();
+		System.out.println(recorder.peekNextPlayerMove().direction());
+		recorder.stepMovePlayer();
 	}
 	
 	/**
@@ -744,7 +757,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void prepareMusic() {
 		closeTheSounds();
-		Playable music = SoundLines.Music.generate().setVolume(40).setLooping(true);
+		Playable music = SoundLines.Music.generate().setVolume(100).setLooping(true);
 		musicMixer.add(music);
 	}
 	
