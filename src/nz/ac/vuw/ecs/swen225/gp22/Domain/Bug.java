@@ -105,8 +105,10 @@ public class Bug implements Entity {
         if (!m.entities().values().stream().filter(e->!(e instanceof Player || e==this) && newPos.equals(e.location()))
         .findFirst().isEmpty()) return;
 
-        // Prevent the player from moving if the bug is moving to the player's position
-        if (newPos.equals(m.player().location())) m.player().setLocked(true);
+        if (newPos.equals(m.player().location())) {
+            m.player().setLocked(true); // Prevent the player from moving if the bug is moving to the player's position
+            m.player().setIsDead(true); // and set the player's state to dead
+        }
 
         Tile t = m.tiles().getTile(newPos);
         if (t instanceof WallTile) return; // Don't move if the tile the bug's moving to is a wall tile
@@ -121,7 +123,7 @@ public class Bug implements Entity {
                 bugBiteSound.play();
 
                 // Kill the player if the bug moves to the player's position
-                m.player().setIsDead(true);
+                
                 m.onGameOver();
             }
         });
