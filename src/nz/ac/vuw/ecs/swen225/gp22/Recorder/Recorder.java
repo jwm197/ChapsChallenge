@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 
 
-record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,ArrayDeque<BugsMove>bugsMoves) {
+/**The main recorder class which handles replaying a game, recording one in progress and delegates saving and loading to a xml file
 
-}
+ *  * @author Jacob McBride ID: 300537323  */
 public class Recorder{
     private float tickSpeed=1;
     private RecordedLevel recording;
+    /**Creates a recorder object sets the level the recording is recording and creates a new recording object
+     * @param levelName the level name of the level the recording is recording */
     public Recorder(String levelName){
-
         recording=new RecordedLevel(levelName,new ArrayDeque<>(),new ArrayDeque<>());
     }
     /**Getter which level the recording is of*/
@@ -31,7 +32,6 @@ public class Recorder{
      * @param fileName the name of the file being saved
      * @param path the path of the file being saved*/
     public void saveRecording(String path,String fileName)throws DocumentException, IOException{
-
         new Persistency().saveXML(path,fileName,new SaveRecordedGame(recording).saveLevel());
     }
     /**Set the tick speed if speed>0 otherwise throws an exception
@@ -44,6 +44,7 @@ public class Recorder{
         }
         tickSpeed=speed;
     }
+    /**getter for the tick speed*/
     public float getTickSpeed(){
         return tickSpeed;
     }
@@ -97,9 +98,10 @@ public class Recorder{
         }
     }
 }
+/**A data holder for all the level including all player and bug moves and the level name*/
+record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,ArrayDeque<BugsMove>bugsMoves) {
 
-
-
+}
 
 
 
