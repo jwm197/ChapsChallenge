@@ -1,0 +1,187 @@
+<!--Level 2-->
+<level width="19" height="12" time="">
+    <player>
+        <location>
+            <x>14</x>
+            <y>5</y>
+        </location>
+        <items>
+            <!-- Item ids -->
+        </items>
+    </player>
+
+    <!-- chips -->
+    <chip>
+        <location>
+            <x>16</x>
+            <y>4</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>16</x>
+            <y>6</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>5</x>
+            <y>1</y>
+        </location>
+    </chip>
+
+    <chip>
+        <location>
+            <x>5</x>
+            <y>9</y>
+        </location>
+    </chip>
+
+    <!-- bugs -->
+    <bug id="1">
+        <location>
+            <x>6</x>
+            <y>4</y>
+        </location>
+    </bug>
+
+    <bug id="2">
+        <location>
+            <x>7</x>
+            <y>5</y>
+        </location>
+    </bug>
+
+    <bug id="3">
+        <location>
+            <x>6</x>
+            <y>6</y>
+        </location>
+    </bug>
+
+
+
+    <lock>
+        <location>
+            <x>2</x>
+            <y>5</y>
+        </location>
+
+    </lock>
+
+    <info>
+        <location>
+            <x>15</x>
+            <y>6</y>
+        </location>
+        <helptext>Watch out for the bugs, they will eat you alive!</helptext>
+    </info>
+
+    <exit>
+        <location>
+            <x>1</x>
+            <y>5</y>
+        </location>
+    </exit>
+
+    <!-- walls -->
+    <wall>
+        <x1>2</x1>
+        <y1>0</y1>
+        <x2>8</x2>
+        <y2>0</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>0</y1>
+        <x2>8</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>3</y1>
+        <x2>17</x2>
+        <y2>3</y2>
+    </wall>
+
+    <wall>
+        <x1>17</x1>
+        <y1>3</y1>
+        <x2>17</x2>
+        <y2>7</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>7</y1>
+        <x2>17</x2>
+        <y2>7</y2>
+    </wall>
+
+    <wall>
+        <x1>8</x1>
+        <y1>7</y1>
+        <x2>8</x2>
+        <y2>10</y2>
+    </wall>
+
+    <wall>
+        <x1>2</x1>
+        <y1>10</y1>
+        <x2>8</x2>
+        <y2>10</y2>
+    </wall>
+
+    <wall>
+        <x1>2</x1>
+        <y1>6</y1>
+        <x2>2</x2>
+        <y2>10</y2>
+    </wall>
+
+    <wall>
+        <x1>0</x1>
+        <y1>6</y1>
+        <x2>2</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>0</x1>
+        <y1>4</y1>
+        <x2>0</x2>
+        <y2>6</y2>
+    </wall>
+
+    <wall>
+        <x1>0</x1>
+        <y1>4</y1>
+        <x2>2</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>2</x1>
+        <y1>0</y1>
+        <x2>2</x2>
+        <y2>4</y2>
+    </wall>
+
+    <wall>
+        <x1>5</x1>
+        <y1>3</y1>
+        <x2>5</x2>
+        <y2>7</y2>
+    </wall>
+
+    <wall>
+        <x1>6</x1>
+        <y1>5</y1>
+        <x2>6</x2>
+        <y2>5</y2>
+    </wall>
+</level>
