@@ -48,19 +48,18 @@ public class LockedDoor extends WallTile {
         int sizeBefore = p.keys().size();
         m.tiles().setTile(location(), new FreeTile(location(), null)); // Replace the locked door tile with an empty free tile
         Key key = p.keys().stream().filter(k -> k.color().equals(color)).findFirst().get(); // Get a key that's the same colour as the lock from the player
-        assert key.color().equals(color);
+        assert (key.color().equals(color)):"Color of the key doesn't match the color of the lock";
         Playable doorUnlockSound = SoundClips.DoorUnlock.generate(); // Sound of unlocking the door
         doorUnlockSound.play();
         p.keys().remove(key); // Remove the key from the player's inventory
         int sizeAfter = p.keys().size();
-        assert sizeBefore == sizeAfter+1;
+        assert (sizeBefore == sizeAfter+1):"Player should have one less key in his inventory after unlocking a door";
     }
 
     @Override
     public Boolean canPlayerMoveTo(Model m) {
         Player p = m.player();
         if (p.keys().stream().filter(k -> k.color().equals(color)).toList().isEmpty()) {
-            // throw new Error("Player must have key of the right color to move");
             return false; // Player can't unlock the locked door if he doesn't have a key that's the same color as the lock
         }
         return true;

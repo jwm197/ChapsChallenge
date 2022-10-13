@@ -39,7 +39,6 @@ public class WallTile implements Tile {
 
     @Override
     public Boolean canPlayerMoveTo(Model m) {
-        // throw new Error("Player can't move to wall");
         return false;
     }
 }

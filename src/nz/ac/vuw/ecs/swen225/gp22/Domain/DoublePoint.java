@@ -73,6 +73,14 @@ public record DoublePoint(double x, double y){
     return Math.sqrt(x*x+y*y);
   }
   
+  /**
+   * Tweens the two given points based on the given tween value.
+   * 
+   * @param a The first point.
+   * @param b The second point.
+   * @param tween The tween value.
+   * @return A new point in between the two given points based on the tween value.
+   */
   public static DoublePoint tween(DoublePoint a, DoublePoint b, double tween) {
     return new DoublePoint(
       a.x()*(1-tween) + b.x()*tween,

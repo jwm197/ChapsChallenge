@@ -51,7 +51,7 @@ public class Key implements Item {
         m.keys().remove(this); // Remove the key from the model
         int playerKeyCountAfter = p.keys().size();
         int modelKeyCountAfter = m.keys().size();
-        assert playerKeyCountBefore == playerKeyCountAfter-1;
-        assert modelKeyCountBefore == modelKeyCountAfter+1;
+        assert (playerKeyCountBefore == playerKeyCountAfter-1):"Player should have an additional key in his inventory after picking one up";
+        assert (modelKeyCountBefore == modelKeyCountAfter+1):"Model should have one less key due to the player picking one up";
     }
 }
