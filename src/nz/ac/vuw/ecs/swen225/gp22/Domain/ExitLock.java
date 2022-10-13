@@ -38,7 +38,6 @@ public class ExitLock extends WallTile {
     @Override
     public Boolean canPlayerMoveTo(Model m) {
         if (m.treasure().size() > 0) {
-            // throw new Error("Player can only move once all of the treasure has been picked up");
             return false; // Player can't unlock the exit lock if all of the treasure hasn't been picked up
         }
         return true; 

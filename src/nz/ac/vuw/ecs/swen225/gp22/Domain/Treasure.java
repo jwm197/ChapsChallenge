@@ -26,6 +26,6 @@ public class Treasure implements Item {
         treasurePickupSound.play();
         m.treasure().remove(this); // Remove the treasure from the model
         int treasureCountAfter = m.treasure().size();
-        assert treasureCountBefore == treasureCountAfter+1;
+        assert (treasureCountBefore == treasureCountAfter+1):"Model should have one less treasure due to the player picking one up";
     }
 }

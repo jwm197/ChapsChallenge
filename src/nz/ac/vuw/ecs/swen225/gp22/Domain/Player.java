@@ -91,12 +91,13 @@ public class Player implements Entity {
     @Override
     public void move(Direction d, Model m) {
         if (locked) return; // Don't move if the player is not allowed to move
-        if (d == Direction.NONE) return; // Don't move if a NONE direction is given
+        if (d == Direction.NONE) throw new IllegalArgumentException("Player has to attempt to move from his current position");
 
         direction = d;
         texture = playerTextures.get(direction);
         
         IntPoint newPos = location.add(d.direction());
+        assert (location.distance(newPos).size() == 1):"Player can only move one tile away";
 
         // Don't move if the new position is out of bounds
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
@@ -118,6 +119,7 @@ public class Player implements Entity {
         m.animator().Animate(this, playerAnimations.get(direction), newPos, 20, () -> {
             if (!(t instanceof WallTile)) t.playerMovedTo(m); // Items get picked up after the player has finished moving 
             location = newPos;
+            assert (m.tiles().getTile(location) instanceof FreeTile):"Player can't stand on a tile that doesn't extend free tile";
             locked = false;
             playerMoveSound.pause();
         });

@@ -75,6 +75,14 @@ public class Tiles {
         return height;
     }
     
+    /**
+     * Performs a given action on each of the tiles within a specified area.
+     * 
+     * @param center The center of the specified area.
+     * @param wRad Essentially the horizontal radius of the area.
+     * @param hRad Essentially the vertical radius of the area.
+     * @param command Action to be performed.
+     */
     public void forEach(IntPoint center, int wRad, int hRad, Consumer<Tile> command) {
 		IntStream.range(center.x()-wRad, center.x()+wRad)
 				 .filter(x -> x >= 0 && x < tiles.size())

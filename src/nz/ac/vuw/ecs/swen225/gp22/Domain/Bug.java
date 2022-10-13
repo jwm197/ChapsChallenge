@@ -80,12 +80,13 @@ public class Bug implements Entity {
     @Override
     public void move(Direction d, Model m) {
         if (locked) return; // Don't move if the bug is not allowed to move
-        if (d == Direction.NONE) return; // Don't move if a NONE direction is given
+        if (d == Direction.NONE) throw new IllegalArgumentException("Bug has to attempt to move from its current position");
 
         direction = d;
         texture = bugTextures.get(direction);
 
         IntPoint newPos = location.add(direction.direction());
+        assert (location.distance(newPos).size() == 1):"Bug can only move one tile away";
 
         // Don't move if the new position is out of bounds
         if (newPos.x()<0 || newPos.x()>=m.tiles().width()
@@ -113,6 +114,7 @@ public class Bug implements Entity {
             }
         });
         location = newPos;
+        assert (m.tiles().getTile(location) instanceof FreeTile):"Bug can't stand on a tile that doesn't extend free tile";
     }
 
     @Override
