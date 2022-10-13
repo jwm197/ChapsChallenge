@@ -25,7 +25,7 @@ public class ThreadedClip implements Playable {
 	//inner audio clip
 	private Clip inner;
 	private boolean looping;
-	
+	private boolean paused = true;
 	//runnable for closure
 	private Runnable onClose = () -> {};
 	
@@ -55,6 +55,7 @@ public class ThreadedClip implements Playable {
 
 	@Override
 	public Playable play() {
+		paused = false;
 		inner.loop(looping ? -1 : 0);
 		inner.start();
 		return this;
@@ -62,6 +63,7 @@ public class ThreadedClip implements Playable {
 
 	@Override
 	public Playable pause() {
+		paused = true;
 		inner.stop();
 		return this;
 	}
@@ -82,12 +84,14 @@ public class ThreadedClip implements Playable {
 	public Playable setLooping(boolean looping) {
 		this.looping = looping;
 		inner.loop(looping ? -1 : 0);
+		if (paused) pause();
 		return this;
 	}
 	
 	@Override
 	public Playable setLoopCount(int loopCount) {
 		inner.loop(loopCount);
+		if (paused) pause();
 		return this;
 	}
 
