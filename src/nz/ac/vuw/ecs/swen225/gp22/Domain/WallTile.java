@@ -34,7 +34,7 @@ public class WallTile implements Tile {
 
     @Override
     public void playerMovedTo(Model m) {
-        return;
+        throw new IllegalStateException("Player can't move to a wall tile");
     }
 
     @Override
