@@ -231,7 +231,7 @@
             <x>7</x>
             <y>5</y>
         </location>
-        <helptext>Lorem ipsum dolor blah blah blah</helptext>
+        <helptext>Collect all of the treasure to unlock the exit. Use keys to open doors</helptext>
     </info>
 
     <exit>
