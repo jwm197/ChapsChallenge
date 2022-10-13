@@ -1,0 +1,725 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Animation {
+  ~ Animation(AnimationProperties): 
+  ~ position(): DoublePoint
+  ~ percentage(): double
+  ~ draw(Graphics, Renderer): void
+  ~ completed(): boolean
+  ~ tick(): void
+}
+class AnimationHandler {
+  ~ AnimationHandler(): 
+  ~ Animate(Entity, TextureSequence, IntPoint, IntPoint, int, int, boolean, Runnable): void
+  ~ tick(): void
+  ~ draw(Graphics, Renderer): void
+  ~ animating(Entity): boolean
+  ~ clear(): void
+  ~ get(Entity): Animation
+}
+entity AnimationProperties << record >> {
+  ~ AnimationProperties(TextureSequence, DoublePoint, DoublePoint, int, int, boolean, Runnable): 
+  ~ frameDuration(): int
+  ~ frames(): TextureSequence
+  ~ endPos(): DoublePoint
+  ~ isLooping(): boolean
+  ~ duration(): int
+  ~ startPos(): DoublePoint
+  ~ onCompletion(): Runnable
+}
+enum Animations << enumeration >> {
+  + Animations(LayeredTexture[]): 
+  + values(): Animations[]
+  + valueOf(String): Animations
+  + frames(): List<LayeredTexture>
+}
+interface Animator << interface >> {
+  + Animate(Entity, TextureSequence, IntPoint, IntPoint, int, int, boolean, Runnable): void
+  + Animate(Entity, TextureSequence, IntPoint, int, Runnable): void
+  + Animate(Entity, TextureSequence, IntPoint, int, int, boolean, Runnable): void
+}
+class AudioMixer {
+  + AudioMixer(): 
+  + pauseAll(): void
+  + closeAll(): void
+  + add(Playable): void
+  + add(Playable, boolean): void
+  + playAll(): void
+}
+class BetterTimer {
+  ~ BetterTimer(int, Runnable): 
+  ~ start(): void
+  ~ stop(): void
+  ~ isRunning(): boolean
+}
+class Bug {
+  + Bug(IntPoint): 
+  + location(): IntPoint
+  + texture(): LayeredTexture
+  + calculateDirection(): Direction
+  + move(Direction, Model): void
+  + tick(Model): void
+  + direction(): Direction
+}
+class BugsMove {
+  + BugsMove(float, Map<Integer, MoveDirection>): 
+  + getTime(): float
+  + getMoves(): Map<Integer, MoveDirection>
+}
+class ChapsChallenge {
+  + ChapsChallenge(): 
+  + pauseTheSounds(): void
+  + gameScreen(String): void
+  + gameEnd(boolean): void
+  + tilesArray(): List<List<Pair<Integer, Integer>>>
+  + stepMove(): void
+  + stepMoveListener(): void
+  + viewControls(): void
+  + treasureLeft(): int
+  + resumeTheSounds(): void
+  + recordedGame(String): void
+  + retry(): void
+  + performAction(String): void
+  + autoReplayListener(JButton): void
+  + getExit(): Pair<Integer, Integer>
+  + closeTheSounds(): void
+  + saveAndExit(): void
+  + getBugPositions(): List<Pair<Integer, Integer>>
+  + loadRecordedGame(): void
+  + newGame(String): boolean
+  + menuScreen(): void
+  + gameHelp(): void
+  + levelNameFormat(): String
+  + prepareMusic(): void
+  + setCurrentMove(MoveDirection): void
+  + newRecordedGame(String): boolean
+  + rightTextFormat(): String
+  + bindFuzzer(Fuzzer): void
+  + leftTextFormat(): String
+  + getItems(): List<Pair<Integer, Integer>>
+  + getPlayerKeys(): List<Integer>
+  + canMoveTo(Pair<Integer, Integer>): boolean
+  + moveBugs(Map<Integer, MoveDirection>): void
+  + getPlayerPosition(): Pair<Integer, Integer>
+  + getCurrentMove(): MoveDirection
+  + replayRecording(): void
+  + saveRecording(): void
+  + loadGame(): void
+  + animating(): boolean
+}
+class Controller {
+  + Controller(ChapsChallenge): 
+}
+enum Direction << enumeration >> {
+  + Direction(): 
+  + valueOf(String): Direction
+  + probUp(): double
+  + probDown(): double
+  + probLeft(): double
+  + direction(): IntPoint
+  + probRight(): double
+  + values(): Direction[]
+}
+class DomainTests {
+  + DomainTests(): 
+  + failedLevelCreation2(): void
+  + checkTextures1(): void
+  + checkTextures7(): void
+  + validPlayerMovement4(): void
+  + checkTextures9(): void
+  + checkTextures5(): void
+  + validPlayerMovement6(): void
+  + checkTextures2(): void
+  + checkTextures8(): void
+  + checkTextures4(): void
+  + invalidPlayerMovement5(): void
+  + validPlayerMovement7(): void
+  + validPlayerMovement2(): void
+  + bugNoDirection1(): void
+  + validBugMovement1(): void
+  + invalidBugMovement3(): void
+  + bugOutOfBounds3(): void
+  + validPlayerMovement3(): void
+  + invalidPlayerMovement2(): void
+  + invalidPlayerMovement4(): void
+  + validPlayerMovement1(): void
+  + invalidBugMovement1(): void
+  + makeTestLevel1(Color): Level
+  + successfulLevelCreation1(): void
+  + invalidPlayerMovement1(): void
+  + playerOutOfBounds1(): void
+  + playerOutOfBounds3(): void
+  + randomBugMovements(): void
+  + checkTextures3(): void
+  + validPlayerMovement5(): void
+  + bugOutOfBounds1(): void
+  + validBugMovement2(): void
+  + invalidPlayerMovement6(): void
+  + checkTextures6(): void
+  + bugOutOfBounds2(): void
+  + playerOutOfBounds2(): void
+  + makeTestLevel2(): Level
+  + playerNoDirection1(): void
+  + invalidBugMovement2(): void
+  + invalidPlayerMovement3(): void
+  + failedLevelCreation1(): void
+}
+entity DoublePoint << record >> {
+  + DoublePoint(double, double): 
+  + times(double): DoublePoint
+  + add(DoublePoint): DoublePoint
+  + y(): double
+  + tween(DoublePoint, DoublePoint, double): DoublePoint
+  + toIntPoint(): IntPoint
+  + x(): double
+  + distance(DoublePoint): DoublePoint
+  + size(): double
+  + add(double, double): DoublePoint
+  + times(double, double): DoublePoint
+  + equals(Object): boolean
+}
+interface Drawable << interface >> {
+  ~ draw(Graphics, Renderer): void
+}
+interface Entity << interface >> {
+  + texture(): LayeredTexture
+  + tick(Model): void
+  + move(Direction, Model): void
+  + location(): IntPoint
+}
+class Exit {
+  + Exit(IntPoint): 
+  + playerMovedTo(Model): void
+  + texture(): LayeredTexture
+}
+class ExitLock {
+  + ExitLock(IntPoint): 
+  + playerMovedTo(Model): void
+  + texture(): LayeredTexture
+  + canPlayerMoveTo(Model): Boolean
+}
+class FreeTile {
+  + FreeTile(IntPoint, Item): 
+  + location(): IntPoint
+  + texture(): LayeredTexture
+  + canPlayerMoveTo(Model): Boolean
+  + item(): Item
+  + playerMovedTo(Model): void
+}
+class FuzzTest {
+  + FuzzTest(): 
+  + performMovementTest(String, boolean): void
+  + test2(): void
+  + testMoves(Iterator<Move>, ChapsChallenge): void
+  + test1(): void
+}
+interface Fuzzer << interface >> {
+  + nextMove(): void
+  + end(): void
+}
+class GameEndScreen {
+  + GameEndScreen(ChapsChallenge, boolean, float): 
+  + make(): JPanel
+}
+class GameHelpScreen {
+  + GameHelpScreen(ChapsChallenge): 
+  + make(): JPanel
+}
+class InfoField {
+  + InfoField(IntPoint, String): 
+  + texture(): LayeredTexture
+  + info(): String
+}
+entity IntPoint << record >> {
+  + IntPoint(int, int): 
+  + y(): int
+  + add(int, int): IntPoint
+  + size(): double
+  + times(int): IntPoint
+  + x(): int
+  + toDoublePoint(): DoublePoint
+  + times(int, int): IntPoint
+  + add(IntPoint): IntPoint
+  + distance(IntPoint): IntPoint
+  + equals(Object): boolean
+}
+interface Item << interface >> {
+  + texture(): LayeredTexture
+  + pickUp(Model): void
+}
+interface JHelper << interface >> {
+  + addComponents(JPanel, Component[]): void
+  + make(): JPanel
+  + createButton(String, int, int, int, int, Font, ActionListener): JButton
+  + createLabel(String, int, Font, int, int, int, int): JLabel
+}
+class JarTool {
+  + JarTool(): 
+  + openJar(String): JarOutputStream
+  + addFile(JarOutputStream, String, String): void
+  + startManifest(): void
+}
+class Key {
+  + Key(Color): 
+  + pickUp(Model): void
+  + color(): Color
+  + texture(): LayeredTexture
+}
+class Keys {
+  ~ Keys(): 
+  ~ keyTyped(KeyEvent): void
+  ~ keyPressed(KeyEvent): void
+  ~ setAction(int, Runnable, Runnable, boolean): void
+  ~ keyReleased(KeyEvent): void
+}
+interface LayeredTexture << interface >> {
+  + layerCount(): int
+  + bottom(): Texture
+  + frames(): List<LayeredTexture>
+  + first(): LayeredTexture
+  + last(): LayeredTexture
+  + stack(LayeredTexture): LayeredTexture
+  + frameCount(): int
+  + layers(): List<Texture>
+  + tint(LayeredTexture, Color, BiFunction<List<Texture>, Color, List<Texture>>): LayeredTexture
+  + top(): Texture
+  + iterator(): Iterator<Texture>
+  + tint(Color): LayeredTexture
+  + tint(Color, BiFunction<List<Texture>, Color, List<Texture>>): LayeredTexture
+}
+enum LayeredTextures << enumeration >> {
+  + LayeredTextures(Texture[]): 
+  + LayeredTextures(int, Texture[]): 
+  + tintLayer(List<Texture>, Color, int): List<Texture>
+  + values(): LayeredTextures[]
+  + layers(): List<Texture>
+  + tint(Color): LayeredTexture
+  + valueOf(String): LayeredTextures
+}
+entity Level << record >> {
+  + Level(Model): 
+  + makeLevel(Player, Map<Integer, Entity>, List<Key>, List<Treasure>, Tiles, Runnable, Runnable): Level
+  + model(): Model
+}
+entity Location << record >> {
+  ~ Location(int, int): 
+  ~ x(): int
+  ~ toString(): String
+  ~ y(): int
+}
+class LockedDoor {
+  + LockedDoor(IntPoint, Color): 
+  + texture(): LayeredTexture
+  + playerMovedTo(Model): void
+  + color(): Color
+  + canPlayerMoveTo(Model): Boolean
+}
+class Main {
+  + Main(): 
+  + main(String[]): void
+}
+class MenuScreen {
+  + MenuScreen(ChapsChallenge): 
+  + make(): JPanel
+}
+interface Model << interface >> {
+  + treasure(): List<Treasure>
+  + animator(): Animator
+  + entities(): Map<Integer, Entity>
+  + time(): float
+  + onGameOver(): void
+  + tick(): void
+  + bindMixer(AudioMixer): void
+  + setTime(float): void
+  + tiles(): Tiles
+  + onNextLevel(): void
+  + player(): Player
+  + keys(): List<Key>
+  + mixer(): AudioMixer
+  + bindAnimator(Animator): void
+}
+enum Move << enumeration >> {
+  ~ Move(): 
+  ~ values(): Move[]
+  ~ valueOf(String): Move
+}
+enum MoveDirection << enumeration >> {
+  + MoveDirection(): 
+  + values(): MoveDirection[]
+  + valueOf(String): MoveDirection
+}
+class NavTile {
+  ~ NavTile(Pair<Integer, Integer>): 
+  ~ inner(): Pair<Integer, Integer>
+  ~ visit(): void
+  ~ isVisited(): boolean
+  ~ resetVisited(): void
+}
+class ObjectBuilder {
+  + ObjectBuilder(): 
+  + name(String): ObjectBuilder
+  + numChips(int): ObjectBuilder
+  + location(List<Location>): ObjectBuilder
+  + items(List<String>): ObjectBuilder
+  + text(String): ObjectBuilder
+  + colour(List<String>): ObjectBuilder
+  + getObj(): ObjectBuilder
+  + paths(List<Path>): ObjectBuilder
+  + toString(): String
+}
+entity Pair<T, U> << record >> {
+  + Pair(T, U): 
+  + first(): T
+  + second(): U
+}
+entity ParseRecordedGame << record >> {
+  + ParseRecordedGame(): 
+  + parseBugsMoves(List<Node>): ArrayDeque<BugsMove>
+  + parseMove(Node): RecordedMove
+  + parseLevel(Document): RecordedLevel
+  + loadXML(String, String): RecordedLevel
+  + parseBugsMove(Node): BugsMove
+  + parseMoves(List<Node>): ArrayDeque<RecordedMove>
+}
+class ParseXML {
+  + ParseXML(): 
+  + checkKeysandDoors(List<Node>, Node, List<Node>): void
+  + parseDoors(List<Node>, List<List<Tile>>): void
+  + parseChips(List<Node>, List<List<Tile>>): List<Treasure>
+  + parseExit(Node, List<List<Tile>>): void
+  + parseBugs(List<Node>): Map<Integer, Entity>
+  + getCoords(Node): IntPoint
+  + getLevelInfo(Node): void
+  + parseWalls(List<Node>, List<List<Tile>>): void
+  + writeJAR(): void
+  + parse(Document, ChapsChallenge): Level
+  + parseLock(Node, List<List<Tile>>): void
+  + parseKeys(List<Node>, List<List<Tile>>): List<Key>
+  + parseInventory(Node): List<Key>
+  + getColour(String): Color
+  + parsePlayer(Node): Player
+  + parseInfo(Node, List<List<Tile>>): void
+}
+class ParserException {
+  + ParserException(String): 
+}
+entity Path << record >> {
+  ~ Path(int, int, int, int): 
+  ~ toString(): String
+  ~ x1(): int
+  ~ y1(): int
+  ~ x(): int
+  ~ y(): int
+}
+entity Persistency << record >> {
+  + Persistency(): 
+  + loadXML(String, String, ChapsChallenge): Level
+  + saveXML(String, String, Document): void
+  + createDoc(String, String): Document
+  + saveLevel(String, String, String, String, Level): void
+}
+entity PersistencyTests << record >> {
+  ~ PersistencyTests(): 
+  ~ TestReadWriteXML2(): void
+  ~ TestLoadXML1(): void
+  ~ TestInvalidLoadXML2(): void
+  ~ TestLoadXML2(): void
+  ~ checkTile(List<List<Tile>>, Color): int
+  ~ TestReadWriteXML1(): void
+  ~ TestInvalidLoadXML4(): void
+  ~ TestReadWriteXML3(): void
+  ~ TestInvalidLoadXML3(): void
+  ~ tick(RenderPanel): void
+  ~ TestInvalidLoadXML1(): void
+}
+interface Playable << interface >> {
+  + setLoopCount(int): Playable
+  + play(): Playable
+  + setLooping(boolean): Playable
+  + bindOnClose(Runnable): void
+  + close(): void
+  + setVolume(float): Playable
+  + pause(): Playable
+  + normalizeVolume(float): float
+}
+class Player {
+  + Player(IntPoint): 
+  + setIsDead(Boolean): void
+  + move(Direction, Model): void
+  + location(): IntPoint
+  + keys(): List<Key>
+  + locked(): Boolean
+  + isDead(): Boolean
+  + setLocked(Boolean): void
+  + texture(): LayeredTexture
+  + tick(Model): void
+}
+class RandomMover {
+  + RandomMover(int): 
+  + next(): Move
+  + hasNext(): boolean
+}
+entity RecordedLevel << record >> {
+  ~ RecordedLevel(String, ArrayDeque<RecordedMove>, ArrayDeque<BugsMove>): 
+  ~ playerMoves(): ArrayDeque<RecordedMove>
+  ~ bugsMoves(): ArrayDeque<BugsMove>
+  ~ levelName(): String
+}
+entity RecordedMove << record >> {
+  + RecordedMove(MoveDirection, float): 
+  + direction(): MoveDirection
+  + time(): float
+}
+class Recorder {
+  + Recorder(String): 
+  + stepMoveBugs(ChapsChallenge): void
+  + saveRecording(String, String): void
+  + getTickSpeed(): float
+  + peekNextBugMove(): BugsMove
+  + setTickSpeed(float): void
+  + loadRecording(String, String): void
+  + stepMovePlayer(ChapsChallenge): void
+  + getNextPlayerMove(): RecordedMove
+  + setPreviousBugMove(BugsMove): void
+  + peekNextPlayerMove(): RecordedMove
+  + setPreviousPlayerMove(RecordedMove): void
+  + getRecordingLevelName(): String
+  + getNextBugMove(): BugsMove
+}
+class RenderPanel {
+  + RenderPanel(): 
+  + paintComponent(Graphics): void
+  + bind(Model): void
+  + tick(): void
+  + drawTexture(Graphics, LayeredTexture, DoublePoint): void
+}
+interface Renderer << interface >> {
+  ~ drawTexture(Graphics, LayeredTexture, DoublePoint): void
+}
+entity SaveRecordedGame << record >> {
+  + SaveRecordedGame(RecordedLevel): 
+  + saveLevel(): Document
+  + saveMove(Element, RecordedMove): void
+  + saveBugsMoves(Element): void
+  + saveBugsMove(Element, BugsMove): void
+  + saveMoves(Element): void
+  + level(): RecordedLevel
+}
+enum SoundClips << enumeration >> {
+  + SoundClips(): 
+  + values(): SoundClips[]
+  + generate(): Playable
+  + valueOf(String): SoundClips
+}
+enum SoundLines << enumeration >> {
+  + SoundLines(): 
+  + values(): SoundLines[]
+  + generate(): Playable
+  + valueOf(String): SoundLines
+}
+class StrategicMover {
+  + StrategicMover(ChapsChallenge): 
+  + next(): Move
+  + hasNext(): boolean
+  + bfs(Pair<Integer, Integer>, Predicate<NavTile>): Deque<Move>
+}
+interface Texture << interface >> {
+  + getTexture(): BufferedImage
+  + bottom(): Texture
+  + top(): Texture
+  + layerCount(): int
+  + tint(Color): Texture
+  + layers(): List<Texture>
+}
+interface TextureSequence << interface >> {
+  + first(): LayeredTexture
+  + frameCount(): int
+  + get(int): LayeredTexture
+  + frames(): List<LayeredTexture>
+  + last(): LayeredTexture
+}
+enum Textures << enumeration >> {
+  + Textures(): 
+  + getTexture(): BufferedImage
+  + values(): Textures[]
+  + valueOf(String): Textures
+}
+class ThreadedClip {
+  + ThreadedClip(InputStream): 
+  + play(): Playable
+  + bindOnClose(Runnable): void
+  + setLoopCount(int): Playable
+  + setVolume(float): Playable
+  + pause(): Playable
+  + close(): void
+  + setLooping(boolean): Playable
+}
+class ThreadedLine {
+  + ThreadedLine(File): 
+  + setVolume(float): Playable
+  + play(): Playable
+  + setLoopCount(int): Playable
+  + constructStream(File): void
+  + pause(): Playable
+  + close(): void
+  + writeBuffer(): void
+  + bindOnClose(Runnable): void
+  + setLooping(boolean): Playable
+  + isActive(): boolean
+}
+interface Tile << interface >> {
+  + canPlayerMoveTo(Model): Boolean
+  + location(): IntPoint
+  + texture(): LayeredTexture
+  + playerMovedTo(Model): void
+}
+class Tiles {
+  + Tiles(List<List<Tile>>, int, int): 
+  + getTile(IntPoint): Tile
+  + setTile(IntPoint, Tile): void
+  + forEach(IntPoint, int, int, Consumer<Tile>): void
+  + tiles(): List<List<Tile>>
+  + height(): int
+  + width(): int
+}
+interface Tintable<R> << interface >> {
+  ~ tintBufferedImage(BufferedImage, Color): BufferedImage
+  ~ tint(Color): R
+}
+class Treasure {
+  + Treasure(): 
+  + texture(): LayeredTexture
+  + pickUp(Model): void
+}
+class ViewControlsScreen {
+  + ViewControlsScreen(ChapsChallenge): 
+  + make(): JPanel
+}
+class WallTile {
+  + WallTile(IntPoint): 
+  + canPlayerMoveTo(Model): Boolean
+  + location(): IntPoint
+  + playerMovedTo(Model): void
+  + texture(): LayeredTexture
+}
+class WriteXML {
+  + WriteXML(): 
+  + parseDoors(Element, List<LockedDoor>): void
+  + checkCoords(IntPoint): void
+  + parseChips(Element, List<IntPoint>): void
+  + getColour(Color): String
+  + parsePlayer(Element, Player): void
+  + parseInventory(Element, List<Key>): void
+  + parseKeys(Element, Map<Key, IntPoint>): void
+  + write(Document, Level): Document
+  + checkKeysandDoors(Model, List<LockedDoor>): void
+}
+
+Animation            -[#008200,dashed]-^  Drawable            
+AnimationHandler     -[#595959,dashed]->  Animation           : "«create»"
+AnimationHandler     -[#595959,dashed]->  AnimationProperties : "«create»"
+AnimationHandler     -[#008200,dashed]-^  Animator            
+AnimationHandler     -[#008200,dashed]-^  Drawable            
+Animations           -[#008200,dashed]-^  TextureSequence     
+Bug                  -[#008200,dashed]-^  Entity              
+ChapsChallenge       -[#595959,dashed]->  AudioMixer          : "«create»"
+ChapsChallenge       -[#595959,dashed]->  BetterTimer         : "«create»"
+ChapsChallenge       -[#595959,dashed]->  BugsMove            : "«create»"
+ChapsChallenge       -[#595959,dashed]->  Controller          : "«create»"
+ChapsChallenge       -[#595959,dashed]->  GameEndScreen       : "«create»"
+ChapsChallenge       -[#595959,dashed]->  GameHelpScreen      : "«create»"
+ChapsChallenge       -[#595959,dashed]->  IntPoint            : "«create»"
+ChapsChallenge       -[#595959,dashed]->  MenuScreen          : "«create»"
+ChapsChallenge       -[#595959,dashed]->  Pair                : "«create»"
+ChapsChallenge       -[#595959,dashed]->  Persistency         : "«create»"
+ChapsChallenge       -[#595959,dashed]->  RecordedMove        : "«create»"
+ChapsChallenge       -[#595959,dashed]->  Recorder            : "«create»"
+ChapsChallenge       -[#595959,dashed]->  RenderPanel         : "«create»"
+ChapsChallenge       -[#595959,dashed]->  ViewControlsScreen  : "«create»"
+Controller           -[#000082,plain]-^  Keys                
+Direction            -[#595959,dashed]->  IntPoint            : "«create»"
+DomainTests          -[#595959,dashed]->  AudioMixer          : "«create»"
+DomainTests          -[#595959,dashed]->  Bug                 : "«create»"
+DomainTests          -[#595959,dashed]->  Exit                : "«create»"
+DomainTests          -[#595959,dashed]->  ExitLock            : "«create»"
+DomainTests          -[#595959,dashed]->  FreeTile            : "«create»"
+DomainTests          -[#595959,dashed]->  InfoField           : "«create»"
+DomainTests          -[#595959,dashed]->  IntPoint            : "«create»"
+DomainTests          -[#595959,dashed]->  Key                 : "«create»"
+DomainTests          -[#595959,dashed]->  LockedDoor          : "«create»"
+DomainTests          -[#595959,dashed]->  Player              : "«create»"
+DomainTests          -[#595959,dashed]->  Tiles               : "«create»"
+DomainTests          -[#595959,dashed]->  Treasure            : "«create»"
+DomainTests          -[#595959,dashed]->  WallTile            : "«create»"
+DoublePoint          -[#595959,dashed]->  DoublePoint         : "«create»"
+DoublePoint          -[#595959,dashed]->  IntPoint            : "«create»"
+Exit                 -[#000082,plain]-^  FreeTile            
+ExitLock             -[#595959,dashed]->  FreeTile            : "«create»"
+ExitLock             -[#000082,plain]-^  WallTile            
+FreeTile             -[#008200,dashed]-^  Tile                
+FuzzTest             -[#595959,dashed]->  ChapsChallenge      : "«create»"
+FuzzTest             -[#595959,dashed]->  RandomMover         : "«create»"
+FuzzTest             -[#595959,dashed]->  StrategicMover      : "«create»"
+GameEndScreen        -[#008200,dashed]-^  JHelper             
+GameHelpScreen       -[#008200,dashed]-^  JHelper             
+InfoField            -[#000082,plain]-^  FreeTile            
+IntPoint             -[#595959,dashed]->  DoublePoint         : "«create»"
+IntPoint             -[#595959,dashed]->  IntPoint            : "«create»"
+Key                  -[#008200,dashed]-^  Item                
+LayeredTexture       -[#008200,plain]-^  TextureSequence     
+LayeredTexture       -[#008200,plain]-^  Tintable            
+LayeredTextures      -[#008200,dashed]-^  LayeredTexture      
+Level                -[#595959,dashed]->  Level               : "«create»"
+LockedDoor           -[#595959,dashed]->  FreeTile            : "«create»"
+LockedDoor           -[#000082,plain]-^  WallTile            
+MenuScreen           -[#008200,dashed]-^  JHelper             
+ParseRecordedGame    -[#595959,dashed]->  BugsMove            : "«create»"
+ParseRecordedGame    -[#595959,dashed]->  ParserException     : "«create»"
+ParseRecordedGame    -[#595959,dashed]->  Persistency         : "«create»"
+ParseRecordedGame    -[#595959,dashed]->  RecordedLevel       : "«create»"
+ParseRecordedGame    -[#595959,dashed]->  RecordedMove        : "«create»"
+ParseXML             -[#595959,dashed]->  Exit                : "«create»"
+ParseXML             -[#595959,dashed]->  ExitLock            : "«create»"
+ParseXML             -[#595959,dashed]->  FreeTile            : "«create»"
+ParseXML             -[#595959,dashed]->  InfoField           : "«create»"
+ParseXML             -[#595959,dashed]->  IntPoint            : "«create»"
+ParseXML             -[#595959,dashed]->  JarTool             : "«create»"
+ParseXML             -[#595959,dashed]->  Key                 : "«create»"
+ParseXML             -[#595959,dashed]->  LockedDoor          : "«create»"
+ParseXML             -[#595959,dashed]->  ParserException     : "«create»"
+ParseXML             -[#595959,dashed]->  Player              : "«create»"
+ParseXML             -[#595959,dashed]->  Tiles               : "«create»"
+ParseXML             -[#595959,dashed]->  Treasure            : "«create»"
+ParseXML             -[#595959,dashed]->  WallTile            : "«create»"
+Persistency          -[#595959,dashed]->  ParseXML            : "«create»"
+Persistency          -[#595959,dashed]->  ParserException     : "«create»"
+Persistency          -[#595959,dashed]->  WriteXML            : "«create»"
+PersistencyTests     -[#595959,dashed]->  AudioMixer          : "«create»"
+PersistencyTests     -[#595959,dashed]->  ChapsChallenge      : "«create»"
+PersistencyTests     -[#595959,dashed]->  IntPoint            : "«create»"
+PersistencyTests     -[#595959,dashed]->  Persistency         : "«create»"
+PersistencyTests     -[#595959,dashed]->  RenderPanel         : "«create»"
+Player               -[#008200,dashed]-^  Entity              
+Recorder             -[#595959,dashed]->  Persistency         : "«create»"
+Recorder             -[#595959,dashed]->  RecordedLevel       : "«create»"
+Recorder             -[#595959,dashed]->  SaveRecordedGame    : "«create»"
+RenderPanel          -[#595959,dashed]->  AnimationHandler    : "«create»"
+RenderPanel          -[#595959,dashed]->  DoublePoint         : "«create»"
+RenderPanel          -[#008200,dashed]-^  Renderer            
+SoundClips           -[#595959,dashed]->  ThreadedClip        : "«create»"
+SoundLines           -[#595959,dashed]->  ThreadedLine        : "«create»"
+StrategicMover       -[#595959,dashed]->  NavTile             : "«create»"
+StrategicMover       -[#595959,dashed]->  Pair                : "«create»"
+Texture              -[#008200,plain]-^  LayeredTexture      
+Textures             -[#008200,dashed]-^  Texture             
+ThreadedClip         -[#008200,dashed]-^  Playable            
+ThreadedLine         -[#008200,dashed]-^  Playable            
+Treasure             -[#008200,dashed]-^  Item                
+ViewControlsScreen   -[#008200,dashed]-^  JHelper             
+WallTile             -[#008200,dashed]-^  Tile                
+WriteXML             -[#595959,dashed]->  ParserException     : "«create»"
+@enduml
