@@ -2,6 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Persistency;
 
 import nz.ac.vuw.ecs.swen225.gp22.App.ChapsChallenge;
 import nz.ac.vuw.ecs.swen225.gp22.Domain.*;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
 import nz.ac.vuw.ecs.swen225.gp22.Renderer.RenderPanel;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,7 @@ record PersistencyTests() {
             assert l.model().time() == 60;
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
+            l.model().bindMixer(new AudioMixer());
             l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
             l.model().player().move(Direction.LEFT, l.model());
@@ -112,6 +114,7 @@ record PersistencyTests() {
             assert l.model().time() == 60;
             RenderPanel rp = new RenderPanel();
             rp.bind(l.model());
+            l.model().bindMixer(new AudioMixer());
             l.model().player().move(Direction.LEFT, l.model());
             tick(rp);
             l.model().player().move(Direction.LEFT, l.model());
