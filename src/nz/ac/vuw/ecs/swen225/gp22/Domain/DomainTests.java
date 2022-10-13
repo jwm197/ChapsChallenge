@@ -403,7 +403,7 @@ public class DomainTests {
         // Have to do another move since there's no animation time, 
         // meaning the runnable gets executed before the position gets updated
         bug.move(Direction.UP,model);
-        assertEquals(bug.location(), new IntPoint(0,2));
+        assertEquals(bug.location(), new IntPoint(0,1));
         assert test;
     }
 
