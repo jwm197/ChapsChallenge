@@ -8,13 +8,10 @@ import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -22,16 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -134,6 +126,8 @@ public class ChapsChallenge extends JFrame{
 		var leftText = JHelper.createLabel(leftTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, -HEIGHT*13/40, WIDTH, HEIGHT);
 		// Right text
 		var rightText = JHelper.createLabel(rightTextFormat(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
+		// Bottom text
+		var bottomText = JHelper.createLabel("", SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Controller for keys
 		panel.addKeyListener(new Controller(this));
 		
@@ -170,6 +164,10 @@ public class ChapsChallenge extends JFrame{
 			levelText.setText(levelNameFormat());
 			leftText.setText(leftTextFormat());
 			rightText.setText(rightTextFormat());
+			bottomText.setText("");
+			if (domainLevel.model().tiles().getTile(domainLevel.model().player().location()) instanceof InfoField i) {
+				bottomText.setText(i.info());
+			}
 			
 			// repaints gui and renderpanel
 			repaint();
@@ -193,6 +191,7 @@ public class ChapsChallenge extends JFrame{
 		panel.add(leftPanel, BorderLayout.WEST);
 		rightPanel.add(rightText);
 		panel.add(rightPanel, BorderLayout.EAST);
+		bottomPanel.add(bottomText);
 		panel.add(bottomPanel, BorderLayout.SOUTH);
 		add(panel);
 		setPreferredSize(getSize());
