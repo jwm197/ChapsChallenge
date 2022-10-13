@@ -8,12 +8,7 @@ import org.junit.Test;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
 
 /**
  * Fuzz module
@@ -28,7 +23,7 @@ import java.util.function.Function;
  */
 public class FuzzTest {
 	/**
-	 * DESCRIPTIOM
+	 * Plays level and way of
 	 *
 	 * @param level level name to be loaded
 	 */
@@ -41,16 +36,29 @@ public class FuzzTest {
 			testMoves(new RandomMover(1000), c);
 		}
 	}
+
+	/**
+	 * Plays level 1.
+	 */
 	@Test
 	public void test1() {
 		performMovementTest("level1.xml", true);
 	}
 
+	/**
+	 * Plays level 2
+	 */
 	@Test
 	public void test2() {
 		performMovementTest("level2.xml", true);
 	}
 
+	/**
+	 * Test the moves
+	 *
+	 * @param mover iterator containing moves to make
+	 * @param c chapschallenge object
+	 */
 	public static void testMoves(Iterator<Move> mover, ChapsChallenge c){
 		boolean running[] = {true};
 		Fuzzer fuzzer = new Fuzzer() {
@@ -88,12 +96,13 @@ public class FuzzTest {
 			}
 		}
 	}
-
-	public static void attemptLevel(ChapsChallenge c) {
-
-	}
-
 }
+
+/**
+ *
+ * Possible moves for player
+ *
+ */
 
 enum Move{
 	UP,DOWN,LEFT,RIGHT,STILL;
