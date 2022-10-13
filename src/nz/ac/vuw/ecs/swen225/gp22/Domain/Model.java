@@ -8,7 +8,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
 /**
  * An empty interface capturing the main aspects of a model.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public interface Model {

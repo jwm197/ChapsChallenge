@@ -14,11 +14,13 @@ import java.util.Map;
 import org.junit.Test;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTextures;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 /**
  * Tests for the domain package.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class DomainTests {
@@ -137,24 +139,6 @@ public class DomainTests {
      * Valid level.
      */
     public void successfulLevelCreation1() {
-        /**Player player = new Player(new IntPoint(0,0));
-        Map<Integer, Entity> entities = new HashMap<>();
-        entities.put(0,player);
-        List<Key> keys = new ArrayList<>();
-        List<Treasure> treasure = new ArrayList<>();
-        Tile tile = new FreeTile(new IntPoint(0,0),null);
-        List<Tile> col = new ArrayList<>();
-        col.add(tile);
-        List<List<Tile>> rows = new ArrayList<>();
-        rows.add(col);
-        Tiles tiles = new Tiles(rows,1,1);
-        Runnable next = ()->{};
-        Runnable gameOver = ()->{};
-        try {
-            Level level = Level.makeLevel(player,entities,keys,treasure,tiles,next,gameOver);
-        } catch (Exception e) {
-            fail("Level creation failed");
-        }*/
         try {
             makeTestLevel1(Color.BLUE);
         } catch (Exception e) {
@@ -416,8 +400,11 @@ public class DomainTests {
         bug.move(Direction.DOWN,model);
         bug.move(Direction.DOWN,model);
         bug.move(Direction.LEFT,model);
-        assert test;
+        // Have to do another move since there's no animation time, 
+        // meaning the runnable gets executed before the position gets updated
+        bug.move(Direction.LEFT,model);
         assertEquals(bug.location(), new IntPoint(0,2));
+        assert test;
     }
 
     @Test
@@ -429,7 +416,7 @@ public class DomainTests {
         Model model = level.model();
         Bug bug = (Bug) model.entities().get(1);
         bug.move(Direction.UP,model);
-        assertEquals(bug.location(), new IntPoint(2,1));
+        assertEquals(bug.location(), new IntPoint(2,0));
     }
 
     @Test
@@ -472,5 +459,199 @@ public class DomainTests {
                 fail("Random bug movements failed");
             }
         }
+    }
+
+    @Test
+    /**
+     * Check player texture.
+     */
+    public void checkTextures1() {
+        Player player = new Player(new IntPoint(0,0));
+        assertEquals(player.texture(), Textures.PlayerFaceDown);
+    }
+
+    @Test
+    /**
+     * Check bug texture.
+     */
+    public void checkTextures2() {
+        Bug bug = new Bug(new IntPoint(0,0));
+        assertEquals(bug.texture(), Textures.BugFaceDown);
+    }
+
+    @Test
+    /**
+     * Check free tile texture with no item.
+     */
+    public void checkTextures3() {
+        FreeTile freeTile = new FreeTile(new IntPoint(0,0), null);
+        assertEquals(freeTile.texture(), Textures.Floor);
+    }
+
+    @Test
+    /**
+     * Check free tile texture with item.
+     */
+    public void checkTextures4() {
+        FreeTile freeTile = new FreeTile(new IntPoint(0,0), new Treasure());
+        assertEquals(freeTile.texture().layers().get(0), Textures.Floor);
+        assertEquals(freeTile.texture().layers().get(1), Textures.Treasure);
+    }
+
+    @Test
+    /**
+     * Check info tile texture.
+     */
+    public void checkTextures5() {
+        InfoField infoTile = new InfoField(new IntPoint(0,0), null);
+        assertEquals(infoTile.texture().layers().get(0), Textures.Floor);
+        assertEquals(infoTile.texture().layers().get(1), Textures.Note);
+    }
+
+    @Test
+    /**
+     * Check exit tile texture.
+     */
+    public void checkTextures6() {
+        Exit exitTile = new Exit(new IntPoint(0,0));
+        assertEquals(exitTile.texture(), LayeredTextures.Exit);
+    }
+
+    @Test
+    /**
+     * Check wall tile texture.
+     */
+    public void checkTextures7() {
+        WallTile wallTile = new WallTile(new IntPoint(0,0));
+        assertEquals(wallTile.texture(), Textures.Wall);
+    }
+
+    @Test
+    /**
+     * Check exit lock tile texture.
+     */
+    public void checkTextures8() {
+        ExitLock exitLockTile = new ExitLock(new IntPoint(0,0));
+        assertEquals(exitLockTile.texture(), LayeredTextures.TreasureLock);
+    }
+
+    @Test
+    /**
+     * Check treasure texture.
+     */
+    public void checkTextures9() {
+        Treasure treasure = new Treasure();
+        assertEquals(treasure.texture(), Textures.Treasure);
+    }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (left this time).
+     */
+    public void bugOutOfBounds1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.LEFT,model);
+        bug.move(Direction.LEFT,model);
+        bug.move(Direction.LEFT,model);
+        assertEquals(bug.location(), new IntPoint(0,1));
+    }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (right this time).
+     */
+    public void bugOutOfBounds2() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.RIGHT,model);
+        bug.move(Direction.RIGHT,model);
+        assertEquals(bug.location(), new IntPoint(3,1));
+    }
+
+    @Test
+    /**
+     * Bug can't move out of bounds (down this time).
+     */
+    public void bugOutOfBounds3() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        bug.move(Direction.DOWN,model);
+        assertEquals(bug.location(), new IntPoint(2,3));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (left this time).
+     */
+    public void playerOutOfBounds1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.LEFT,model);
+        assertEquals(player.location(), new IntPoint(0,2));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (up this time).
+     */
+    public void playerOutOfBounds2() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.UP,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.UP,model);
+        player.move(Direction.UP,model);
+        assertEquals(player.location(), new IntPoint(1,0));
+    }
+
+    @Test
+    /**
+     * Player can't move out of bounds (right this time).
+     */
+    public void playerOutOfBounds3() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.UP,model);
+        player.move(Direction.RIGHT,model);
+        player.move(Direction.RIGHT,model);
+        assertEquals(player.location(), new IntPoint(3,1));
+    }
+
+    @Test
+    /**
+     * Bug can move in no direction.
+     */
+    public void bugNoDirection1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Bug bug = (Bug) model.entities().get(1);
+        bug.move(Direction.NONE,model);
+        assertEquals(bug.location(), new IntPoint(2,0));
+    }
+
+    @Test
+    /**
+     * Player can move in no direction.
+     */
+    public void playerNoDirection1() {
+        Level level = makeTestLevel2();
+        Model model = level.model();
+        Player player = model.player();
+        player.move(Direction.NONE,model);
+        assertEquals(player.location(), new IntPoint(0,2));
     }
 }

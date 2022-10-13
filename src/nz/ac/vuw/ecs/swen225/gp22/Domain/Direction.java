@@ -3,7 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp22.Domain;
 /**
  * Represents the direction an entity is facing/is moving in.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public enum Direction {

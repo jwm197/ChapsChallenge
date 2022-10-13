@@ -14,7 +14,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 /**
  * Represents a player entity in the game.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class Player implements Entity {
@@ -39,6 +39,7 @@ public class Player implements Entity {
     private Direction direction = Direction.NONE; // Direction the player is facing
     private List<Key> keys = new ArrayList<>(); // Keys the player is holding
     private Boolean locked = false; // Determines if the player can move or not
+    private Boolean isDead = false; // Determines if the player is dead or not
 
     /**
      * Construct a player entity with a given starting position.
@@ -88,10 +89,28 @@ public class Player implements Entity {
         this.locked = locked;
     }
 
+    /**
+     * Determine if the player is dead or not.
+     * 
+     * @return True if the player is dead and false if he isn't.
+     */
+    public Boolean isDead() {
+        return isDead;
+    }
+
+    /**
+     * Set the player to be dead or not.
+     * 
+     * @param isDead True to have the player be dead and false to not.
+     */
+    public void setIsDead(Boolean isDead) {
+        this.isDead = isDead;
+    }
+
     @Override
     public void move(Direction d, Model m) {
         if (locked) return; // Don't move if the player is not allowed to move
-        if (d == Direction.NONE) throw new IllegalArgumentException("Player has to attempt to move from his current position");
+        if (d == Direction.NONE) return; // Return immediately if no direction is given
 
         direction = d;
         texture = playerTextures.get(direction);
@@ -112,7 +131,6 @@ public class Player implements Entity {
 
         locked = true; // Prevent the player from making a new move whilst it's in the process of moving
         if (t instanceof WallTile) t.playerMovedTo(m); // Unlockable wall tiles get unlocked before the player moves to them
-
         m.mixer().add(playerMoveSound); // Plays the moving player sound and adds it to the model's mixer
 
         // Animate the player movement

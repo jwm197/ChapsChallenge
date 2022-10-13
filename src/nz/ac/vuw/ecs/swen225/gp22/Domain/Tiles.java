@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 /**
  * Represents all of the tiles in a level.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class Tiles {

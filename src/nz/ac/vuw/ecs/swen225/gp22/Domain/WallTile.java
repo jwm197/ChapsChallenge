@@ -6,7 +6,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 /**
  * Represents a wall tile in the game.
  * 
- * @author sidoroyuri
+ * @author Yuri Sidorov (300567814)
  * 
  */
 public class WallTile implements Tile {
@@ -34,7 +34,7 @@ public class WallTile implements Tile {
 
     @Override
     public void playerMovedTo(Model m) {
-        return;
+        throw new IllegalStateException("Player can't move to a wall tile");
     }
 
     @Override
