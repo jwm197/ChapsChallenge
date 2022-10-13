@@ -13,7 +13,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author anfri
  */
 public enum SoundLines {
-	Music;
+	Music,
+	Music2;
 	
 	public static final String LINE_PATH = "assets/audio/";
 	
