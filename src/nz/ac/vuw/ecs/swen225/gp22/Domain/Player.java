@@ -91,7 +91,7 @@ public class Player implements Entity {
     @Override
     public void move(Direction d, Model m) {
         if (locked) return; // Don't move if the player is not allowed to move
-        if (d == Direction.NONE) throw new IllegalArgumentException("Player has to attempt to move from his current position");
+        if (d == Direction.NONE) return; // Return immediately if no direction is given
 
         direction = d;
         texture = playerTextures.get(direction);

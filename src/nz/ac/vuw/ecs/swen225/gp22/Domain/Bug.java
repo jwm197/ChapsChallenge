@@ -61,6 +61,15 @@ public class Bug implements Entity {
     }
 
     /**
+     * Get the direction the bug is facing.
+     * 
+     * @return The direction the bug is facing.
+     */
+    public Direction direction() {
+        return direction;
+    }
+
+    /**
      * Calculate the next direction the bug should move in based on the
      * direction it's currently facing and the random number generator.
      * 
@@ -80,7 +89,7 @@ public class Bug implements Entity {
     @Override
     public void move(Direction d, Model m) {
         if (locked) return; // Don't move if the bug is not allowed to move
-        if (d == Direction.NONE) throw new IllegalArgumentException("Bug has to attempt to move from its current position");
+        if (d == Direction.NONE) return; // Return immediately if no direction is given
 
         direction = d;
         texture = bugTextures.get(direction);
