@@ -28,7 +28,7 @@ public record SaveRecordedGame(RecordedLevel level) {
     private void saveMoves(Element level) {
         level().playerMoves().stream().forEach(m->saveMove(level,m));
     }
-    /**Saves a move to the file
+    /**Saves a move to the document
      *
      * @param move the being saved
      * @param level the level element of the document being saved
@@ -47,16 +47,16 @@ public record SaveRecordedGame(RecordedLevel level) {
 
         level().bugsMoves().stream().forEach(m->saveBugsMove(level,m));
     }
-    /**Saves a move to the file
+    /**Saves a move to the document
      *
      * @param move the being saved
      * @param level the level element of the document being saved
      */
     private void saveBugsMove(Element level, BugsMove move) {
         Element moveNode= level.addElement("bugmove");
-        moveNode.addAttribute("time",move.time()+"");
+        moveNode.addAttribute("time",move.getTime()+"");
 
-        for (Map.Entry<Integer,MoveDirection> bugMove:move.moves().entrySet()){
+        for (Map.Entry<Integer,MoveDirection> bugMove:move.getMoves().entrySet()){
             Node bugNode=moveNode.addElement("bug");
             ((Element) bugNode).addAttribute("id",bugMove.getKey().toString());
             bugNode.setText(bugMove.getValue()+"");
