@@ -143,16 +143,16 @@ public class ChapsChallenge extends JFrame{
 				}
 			}
 			
+			HashMap<Integer, MoveDirection> moves = new HashMap<>();
 			for (Map.Entry<Integer, Entity> entry : domainLevel.model().entities().entrySet()) {
-				HashMap<Integer, MoveDirection> moves = new HashMap<>();
-				if (entry.getValue() instanceof Bug) {
-					Bug b = (Bug) entry.getValue();
+				if (entry.getValue() instanceof Bug b) {
 					int id = entry.getKey();
 					moves.put(id, MoveDirection.valueOf(b.direction().toString()));
+					System.out.print(id + b.direction().toString() + ",");
 				}
-			//	System.out.println(moves.values());
-				recorder.setPreviousBugMove(new BugsMove(time, moves));
 			}
+			recorder.setPreviousBugMove(new BugsMove(time, moves));
+			System.out.println("Size" + moves.values().size());
 			
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
@@ -164,6 +164,8 @@ public class ChapsChallenge extends JFrame{
 			levelText.setText(levelNameFormat());
 			leftText.setText(leftTextFormat());
 			rightText.setText(rightTextFormat());
+			
+			// display info field text
 			bottomText.setText("");
 			if (domainLevel.model().tiles().getTile(domainLevel.model().player().location()) instanceof InfoField i) {
 				bottomText.setText(i.info());
@@ -295,15 +297,15 @@ public class ChapsChallenge extends JFrame{
 			for (int i=0; i<recorder.getTickSpeed(); i++) {				
 				renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 				time-=delay;
-			}
-			
-			for (Map.Entry<Integer, Entity> e : domainLevel.model().entities().entrySet()) {
-				if (e.getValue() instanceof Bug b) {
-					if (time<=recorder.peekNextBugMove().time()) {
-						recorder.stepMoveBugs(this);
+				for (Map.Entry<Integer, Entity> e : domainLevel.model().entities().entrySet()) {
+					if (e.getValue() instanceof Bug b) {
+						if (time<=recorder.peekNextBugMove().time()) {
+							recorder.stepMoveBugs(this);
+						}
 					}
 				}
 			}
+			
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
 			levelText.setText(levelNameFormat());
@@ -679,7 +681,6 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void moveBugs(HashMap<Integer, MoveDirection> bugMoves) {
 		for (Map.Entry<Integer, MoveDirection> b : bugMoves.entrySet()) {
-			System.out.println("MOVE BUG");
 			domainLevel.model().entities().get(b.getKey()).move(Direction.valueOf(b.getValue().toString()), domainLevel.model());
 		}
 	}
