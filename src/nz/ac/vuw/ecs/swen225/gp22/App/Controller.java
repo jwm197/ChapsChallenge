@@ -6,7 +6,7 @@ import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
 /**
  * Manages user key input for controls
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  */
 
 public class Controller extends Keys{

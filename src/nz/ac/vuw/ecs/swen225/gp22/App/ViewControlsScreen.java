@@ -7,7 +7,7 @@ import javax.swing.SwingConstants;
 /**
  * JPanel for the view controls screen
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  *
  */
 

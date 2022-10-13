@@ -8,7 +8,7 @@ import javax.swing.SwingConstants;
 /**
  * JPanel for the game end screen
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  *
  */
 

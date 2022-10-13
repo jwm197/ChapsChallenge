@@ -6,7 +6,7 @@ import java.awt.Font;
 /**
  * JPanel for the menu screen
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  *
  */
 

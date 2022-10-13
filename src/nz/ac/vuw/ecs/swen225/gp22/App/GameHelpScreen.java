@@ -6,7 +6,7 @@ import javax.swing.SwingConstants;
 /**
  * JPanel for the game help screen
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  *
  */
 

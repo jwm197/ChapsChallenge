@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 /**
  * Interface for helping to construct the jpanel/screens for game
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  *
  */
 

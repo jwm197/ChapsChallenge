@@ -34,7 +34,7 @@ import org.dom4j.DocumentException;
 /**
  * Manages GUI for the Chaps Challenge game
  * 
- * @author pratapshek
+ * @author pratapshek 300565138
  */
 
 public class ChapsChallenge extends JFrame{
