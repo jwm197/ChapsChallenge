@@ -13,9 +13,9 @@ import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.TextureSequence;
 
 /**
  * Represents a player entity in the game.
- * 
+ *
  * @author Yuri Sidorov (300567814)
- * 
+ *
  */
 public class Player implements Entity {
     // Map of player animations based on direction
@@ -33,7 +33,6 @@ public class Player implements Entity {
         Direction.DOWN, Textures.PlayerFaceDown,
         Direction.LEFT, Textures.PlayerFaceLeft
     );
-    private final Playable playerMoveSound = SoundClips.PlayerMove.generate(); // Sound of the moving player
     private LayeredTexture texture; // Player texture
     private IntPoint location; // Position of the player in the game
     private Direction direction = Direction.NONE; // Direction the player is facing
@@ -43,13 +42,12 @@ public class Player implements Entity {
 
     /**
      * Construct a player entity with a given starting position.
-     * 
+     *
      * @param location The starting position.
      */
     public Player(IntPoint location) {
         this.location = location;
         texture = playerTextures.get(direction);
-        playerMoveSound.setLooping(true);
     }
 
     @Override
@@ -61,10 +59,10 @@ public class Player implements Entity {
     public IntPoint location() {
         return location;
     }
-    
+
     /**
      * Get the player's keys.
-     * 
+     *
      * @return List of the player's keys.
      */
     public List<Key> keys() {
@@ -73,7 +71,7 @@ public class Player implements Entity {
 
     /**
      * Determine if the player can move or not.
-     * 
+     *
      * @return True if the player can't move and false if the player can move.
      */
     public Boolean locked() {
@@ -82,7 +80,7 @@ public class Player implements Entity {
 
     /**
      * Lock or unlock player movement.
-     * 
+     *
      * @param locked True to lock player movement or false to unlock.
      */
     public void setLocked(Boolean locked) {
@@ -91,7 +89,7 @@ public class Player implements Entity {
 
     /**
      * Determine if the player is dead or not.
-     * 
+     *
      * @return True if the player is dead and false if he isn't.
      */
     public Boolean isDead() {
@@ -100,7 +98,7 @@ public class Player implements Entity {
 
     /**
      * Set the player to be dead or not.
-     * 
+     *
      * @param isDead True to have the player be dead and false to not.
      */
     public void setIsDead(Boolean isDead) {
@@ -114,7 +112,7 @@ public class Player implements Entity {
 
         direction = d;
         texture = playerTextures.get(direction);
-        
+
         IntPoint newPos = location.add(d.direction());
         assert (location.distance(newPos).size() == 1):"Player can only move one tile away";
 
@@ -131,15 +129,14 @@ public class Player implements Entity {
 
         locked = true; // Prevent the player from making a new move whilst it's in the process of moving
         if (t instanceof WallTile) t.playerMovedTo(m); // Unlockable wall tiles get unlocked before the player moves to them
-        m.mixer().add(playerMoveSound); // Plays the moving player sound and adds it to the model's mixer
+        m.mixer().add(SoundClips.PlayerMove.generate()); // Plays the moving player sound and adds it to the model's mixer
 
         // Animate the player movement
         m.animator().Animate(this, playerAnimations.get(direction), newPos, 20, () -> {
-            if (!(t instanceof WallTile)) t.playerMovedTo(m); // Items get picked up after the player has finished moving 
+            if (!(t instanceof WallTile)) t.playerMovedTo(m); // Items get picked up after the player has finished moving
             location = newPos;
             assert (m.tiles().getTile(location) instanceof FreeTile):"Player can't stand on a tile that doesn't extend free tile";
             locked = false;
-            playerMoveSound.pause();
         });
     }
 
