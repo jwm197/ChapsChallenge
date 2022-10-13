@@ -10,6 +10,12 @@ import nz.ac.vuw.ecs.swen225.gp22.Recorder.*;
  */
 
 public class Controller extends Keys{
+	/**
+	 * Constructs a controller to set actions for key input
+	 * Parameter c to take in the chaps challenge object to call its methods
+	 * 
+	 * @param c chaps challenge object
+	 */
 	Controller(ChapsChallenge c) { 
 		setAction(KeyEvent.VK_X,()->c.performAction("CTRL-X"),()->{},true);
 		setAction(KeyEvent.VK_S,()->c.performAction("CTRL-S"),()->{},true);

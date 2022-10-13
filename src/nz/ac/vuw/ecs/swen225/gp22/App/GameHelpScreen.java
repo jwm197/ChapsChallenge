@@ -3,17 +3,34 @@ package nz.ac.vuw.ecs.swen225.gp22.App;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * JPanel for the game help screen
+ * 
+ * @author pratapshek
+ *
+ */
+
 public class GameHelpScreen extends JPanel implements JHelper{
+	// Private variables
 	private ChapsChallenge cc;
 	
-	// Private variables
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructs a game help screen
+	 * 
+	 * @param c chaps challenge game
+	 */
 	public GameHelpScreen(ChapsChallenge c){
 		super();
 		cc = c;
 	}
 	
+	/**
+	 * Makes the game screen by adding components to a panel
+	 * 
+	 * @return returns the jpanel
+	 */
 	public JPanel make() {
 		JPanel panel = new JPanel();
 		// JLabel for displaying help title

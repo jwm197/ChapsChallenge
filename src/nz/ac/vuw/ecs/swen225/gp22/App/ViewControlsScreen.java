@@ -4,17 +4,34 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * JPanel for the view controls screen
+ * 
+ * @author pratapshek
+ *
+ */
+
 public class ViewControlsScreen extends JPanel implements JHelper{
+	// Private variables
 	private ChapsChallenge cc;
 	
-	// Private variables
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructs a view controls screen
+	 * 
+	 * @param c chaps challenge game
+	 */
 	public ViewControlsScreen(ChapsChallenge c){
 		super();
 		cc = c;
 	}
 	
+	/**
+	 * Makes the view controls screen by adding components to a panel
+	 * 
+	 * @return returns the jpanel
+	 */
 	public JPanel make() {
 		JPanel panel = new JPanel();
 		// JLabel for displaying controls title

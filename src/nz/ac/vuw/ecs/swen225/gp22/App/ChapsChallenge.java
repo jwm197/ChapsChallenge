@@ -56,17 +56,21 @@ public class ChapsChallenge extends JFrame{
 	private boolean wait;
 	private boolean replay;
 	
-	// DOMAIN/RENDERER/RECORDER/PERSISTENCY
+	// DOMAIN/RENDERER/RECORDER/PERSISTENCY/FUZZ
 	private RenderPanel renderPanel;
 	private Level domainLevel;
 	private Recorder recorder;
 	private MoveDirection currentMove;
 	private Persistency persistency = new Persistency();
-	
+	private Fuzzer fuzzer = Fuzzer.NONE;
+
 	// Sound
 	private final AudioMixer soundMixer = new AudioMixer();
 	private final AudioMixer musicMixer = new AudioMixer();
 	
+	/**
+	 * Constructs a new chaps challenge
+	 */
 	public ChapsChallenge(){
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		try { UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); } 
@@ -132,7 +136,8 @@ public class ChapsChallenge extends JFrame{
 		panel.addKeyListener(new Controller(this));
 		
 		timer = new BetterTimer((int)(delay*1000), ()->{
-			// UPDATES DOMAIN/RENDERER/RECORDER
+			// UPDATES DOMAIN/RENDERER/RECORDER/FUZZ
+			fuzzer.nextMove();
 			// recorder
 			if (currentMove!=MoveDirection.NONE) {
 				performAction(currentMove.toString());
@@ -148,11 +153,9 @@ public class ChapsChallenge extends JFrame{
 				if (entry.getValue() instanceof Bug b) {
 					int id = entry.getKey();
 					moves.put(id, MoveDirection.valueOf(b.direction().toString()));
-					System.out.print(id + b.direction().toString() + ",");
 				}
 			}
 			recorder.setPreviousBugMove(new BugsMove(time, moves));
-			System.out.println("Size" + moves.values().size());
 			
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
@@ -233,7 +236,6 @@ public class ChapsChallenge extends JFrame{
 		}
 	}
 	
-
 	/**
 	 * Replays a recorded game
 	 * 
@@ -316,15 +318,15 @@ public class ChapsChallenge extends JFrame{
 			if (autoReplay) {
 				if (recorder.peekNextPlayerMove()!=null) {
 					if (domainLevel.model().player().isDead()) replayRecording();
-					System.out.println(domainLevel.model().player().isDead());
 					if (time<=recorder.peekNextPlayerMove().time() && !domainLevel.model().player().locked()) {
 						stepMove();
 					}
 				} else if (!domainLevel.model().player().locked()) {
-					timer.stop();
+					replayRecording();
 				}
-			} else if (!domainLevel.model().player().locked()) {
-				timer.stop();
+			} else {		
+				if (!domainLevel.model().player().locked()) { timer.stop(); } 
+				else if (recorder.peekNextPlayerMove() == null) { replayRecording(); }
 			}
 			
 			// repaints gui and renderpanel
@@ -431,6 +433,7 @@ public class ChapsChallenge extends JFrame{
 	 * Screen for when player has completed/failed the level
 	 */
 	public void gameEnd(boolean completed) {
+		fuzzer.end();
 		if (replay) return;
 		closeTheSounds();
 		if (completed) { soundMixer.add(SoundClips.PlayerWin.generate()); } 
@@ -631,11 +634,11 @@ public class ChapsChallenge extends JFrame{
 		}
 		if (recorder.peekNextPlayerMove()==null) {
 			System.out.println("NO MORE MOVES TO STEP");
+			replayRecording();
 			return;
 		}
 		timer.start();
 		time = recorder.peekNextPlayerMove().time();
-		System.out.println(recorder.peekNextPlayerMove().direction());
 		recorder.stepMovePlayer(this);
 	}
 	
@@ -702,199 +705,126 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	// FUZZ TESTING ---------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Returns if the player is moving.
 	 * For fuzz testing.
-	 * 
+	 *
 	 * @return true if player is moving, false otherwise (e.g. if false then next move can be executed)
 	 */
 	public boolean animating() {
 		return domainLevel.model().player().locked();
 	}
-	
+
 	/**
 	 * Gets the keys as a list of colors for fuzz.
 	 * Fuzz cannot access key objects so needs to be colors as rgb ints.
-	 * 
+	 *
 	 * @return the list of keys as colors
 	 */
 	public List<Integer> getPlayerKeys() {
 		return domainLevel.model().player().keys().stream().map(k->k.color().getRGB()).collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * Gets the player position as an int[][] for fuzz.
-	 * 
+	 *
 	 * @return [0][0] is x, [0][1] is y position
 	 */
-	public int[][] getPlayerPosition() {
+	public Pair<Integer, Integer> getPlayerPosition() {
 		IntPoint playerLoc = domainLevel.model().player().location();
-		int[][] pos = new int[1][2];
-		pos[0][0] = playerLoc.x();
-		pos[0][1] = playerLoc.y();
-		return pos;
+		return new Pair<>(playerLoc.x(), playerLoc.y());
 	}
-	
+
 	/**
 	 * Gets position of bugs for fuzz.
-	 * 
+	 *
 	 * @return bug positions, [bugNum][0] is x, [bugNum][1] is y position
 	 */
-	public int[][] getBugPositions() {
+	public List<Pair<Integer, Integer>> getBugPositions() {
 		Collection<Entity> entities = domainLevel.model().entities().values();
-		int[][] locations = new int[entities.size()][2];
-		int count = 0;
-		for (Entity e : entities) {
-			if (e instanceof Bug b) {
-				locations[count][0] = b.location().x();
-				locations[count][1] = b.location().y();
-				count++;
-			}
-		}
-		return locations;
+		return entities.stream()
+					   .filter(e -> e instanceof Bug)
+					   .map(b -> new Pair<>(b.location().x(), b.location().y()))
+					   .toList();
 	}
-	
+
 	/**
 	 * Gets number of treasure left for fuzz.
-	 * 
+	 *
 	 * @return treasure left as int
 	 */
 	public int treasureLeft() {
 		return domainLevel.model().treasure().size();
 	}
-	
+
+	public void bindFuzzer(Fuzzer fuzzer) {
+		this.fuzzer = fuzzer;
+	}
+
 	/**
 	 * Gets keys for fuzz, x position, y position, and color as rgb int.
-	 * 
+	 *
 	 * @return int[][] of keys, [keyNum][0] is x, [keyNum][1] is y, [keyNum][2] is rgb int
 	 */
-	public int[][] getKeys() {
-		// number of keys
-		int count = 0;
-		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
-			count += tiles.stream().filter(t->t instanceof FreeTile f && f.item() instanceof Key).count();
-		}
-		
-		// store information
-		int[][] keys = new int[count][3];
-		count = 0;
-		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
-			for (Tile tile : tilesOfTiles) {
-				if (tile instanceof FreeTile f) {
-					if (f.item() instanceof Key k) {
-						keys[count][0] = f.location().x();
-						keys[count][1] = f.location().y();
-						keys[count][2] = k.color().getRGB();
-						count++;
-					}
-				}
-			}
-		}
-		return keys;
+	public List<Pair<Integer, Integer>> getItems() {
+		return domainLevel.model()
+				          .tiles()
+				          .tiles()
+						  .stream()
+						  .flatMap(ts -> ts.stream())
+						  .filter(t -> t instanceof FreeTile f && f.item() != null)
+						  .map(t -> new Pair<>(t.location().x(), t.location().y()))
+						  .toList();
 	}
-	
-	/**
-	 * Gets treasure for fuzz, x position, y position.
-	 * 
-	 * @return int[][] of treasure, [treasureNum][0] is x, [treasureNum][1] is y
-	 */
-	public int[][] getTreasure() {
-		// number of treasure
-		int count = 0;
-		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
-			count += tiles.stream().filter(t->t instanceof FreeTile f && f.item() instanceof Treasure).count();
-		}
-		
-		// store information
-		int[][] treasure = new int[count][3];
-		count = 0;
-		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
-			for (Tile tile : tilesOfTiles) {
-				if (tile instanceof FreeTile f) {
-					if (f.item() instanceof Treasure t) {
-						treasure[count][0] = f.location().x();
-						treasure[count][1] = f.location().y();
-						count++;
-					}
-				}
-			}
-		}
-		return treasure;
-	}
-	
-	/**
-	 * Gets lockedDoors for fuzz, x position, y position, and color as rgb int.
-	 * 
-	 * @return int[][] of lockedDoors, [doorNum][0] is x, [doorNum][1] is y, [doorNum][2] is rgb int
-	 */
-	public int[][] getLockedDoors() {
-		// number of locked doors
-		int count = 0;
-		for (List<Tile> tiles : domainLevel.model().tiles().tiles()) {
-			count += tiles.stream().filter(t->t instanceof LockedDoor).count();
-		}
-		
-		// store information
-		int[][] lockedDoors = new int[count][3];
-		count = 0;
-		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
-			for (Tile tile : tilesOfTiles) {
-				if (tile instanceof LockedDoor l) {
-					lockedDoors[count][0] = l.location().x();
-					lockedDoors[count][1] = l.location().y();
-					lockedDoors[count][2] = l.color().getRGB();
-					count++;
-				}
-			}
-		}
-		return lockedDoors;
-	}
-	
+
 	/**
 	 * Returns exit lock position as an int[][] for fuzz.
-	 * 
+	 *
 	 * @return [0][0] is x, [0][1] is y position
 	 */
-	public int[][] getExitLockPosition(){
-		for (List<Tile> tilesOfTiles : domainLevel.model().tiles().tiles()) {
-			for (Tile tile : tilesOfTiles) {
-				if (tile instanceof ExitLock l) {
-					int[][] pos = new int[1][2];
-					pos[0][0] = l.location().x();
-					pos[0][1] = l.location().y();
-					return pos;
-				}
-			}
-		}
-		return null;
+	public Pair<Integer, Integer> getExit() {
+		return domainLevel.model()
+						  .tiles()
+						  .tiles()
+						  .stream()
+						  .flatMap(ts -> ts.stream())
+						  .filter(t -> t instanceof Exit)
+						  .map(t -> new Pair<>(t.location().x(), t.location().y()))
+						  .findAny()
+						  .get();
 	}
-	
+
 	/**
 	 * Checks if player can move to tile position for fuzz.
-	 * 
+	 *
 	 * @param x x coordinate to move to
 	 * @param y y coordinate to move to
 	 * @return if player can move to that tile
 	 */
-	public boolean canMoveTo(int x, int y) {
-		return domainLevel.model().tiles().getTile(new IntPoint(x, y)).canPlayerMoveTo(domainLevel.model());
+	public boolean canMoveTo(Pair<Integer, Integer> loc) {
+		return domainLevel.model()
+						  .tiles()
+						  .getTile(new IntPoint(loc.first(), loc.second()))
+						  .canPlayerMoveTo(domainLevel.model());
 	}
-	
+
 	/**
 	 * Returns tiles as a boolean array
-	 * 
+	 *
 	 * @param level level to return tiles array
 	 * @return boolean array
 	 */
-	public boolean[][] tilesArray(int level){
-		Level l = null;
-		try { l = persistency.loadXML("levels/", "level" + level + ".xml", this); }
-		catch (ParserException e) {e.printStackTrace(); }
-		catch (IOException e) {e.printStackTrace(); }
-		catch (DocumentException e) {e.printStackTrace();}
-		if (l == null) return new boolean[0][0];
-		Tiles t = l.model().tiles();
-		return new boolean[t.height()][t.width()];
+	public List<List<Pair<Integer, Integer>>> tilesArray(){
+		return domainLevel.model()
+				          .tiles()
+				          .tiles()
+				          .stream()
+				          .map(ts ->
+				              ts.stream()
+				                 .map(t -> new Pair<>(t.location().x(), t.location().y()))
+				                 .toList()
+				              )
+				          .toList();
 	}
 }
