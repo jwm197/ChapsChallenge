@@ -39,6 +39,7 @@ public class Player implements Entity {
     private Direction direction = Direction.NONE; // Direction the player is facing
     private List<Key> keys = new ArrayList<>(); // Keys the player is holding
     private Boolean locked = false; // Determines if the player can move or not
+    private Boolean isDead = false; // Determines if the player is dead or not
 
     /**
      * Construct a player entity with a given starting position.
@@ -86,6 +87,24 @@ public class Player implements Entity {
      */
     public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    /**
+     * Determine if the player is dead or not.
+     * 
+     * @return True if the player is dead and false if he isn't.
+     */
+    public Boolean isDead() {
+        return isDead;
+    }
+
+    /**
+     * Set the player to be dead or not.
+     * 
+     * @param isDead True to have the player be dead and false to not.
+     */
+    public void setIsDead(Boolean isDead) {
+        this.isDead = isDead;
     }
 
     @Override

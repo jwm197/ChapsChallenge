@@ -119,7 +119,10 @@ public class Bug implements Entity {
             if (location.equals(m.player().location())) {
                 Playable bugBiteSound = SoundClips.BugBite.generate(); // Sound of the bug eating the player
                 bugBiteSound.play();
-                m.onGameOver(); // Kill the player if the bug moves to the player's position
+
+                // Kill the player if the bug moves to the player's position
+                m.player().setIsDead(true);
+                m.onGameOver();
             }
         });
         location = newPos;
