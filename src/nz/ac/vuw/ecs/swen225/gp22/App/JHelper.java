@@ -8,7 +8,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Interface for helping to construct the jpanel/screens for game
+ * 
+ * @author pratapshek 300565138
+ *
+ */
+
 public interface JHelper {
+	// Static variables
 	public static final int WIDTH = 1080;
 	public static final int HEIGHT = 720;
 	public static final Font LARGE_FONT = new Font("Trebuchet MS", Font.BOLD, 54);
@@ -64,5 +72,10 @@ public interface JHelper {
 		for (Component c :cs) { p.add(c); }
 	}
 	
+	/**
+	 * Makes jpanel for screen
+	 * 
+	 * @return jpanel with added components
+	 */
 	public JPanel make();
 }

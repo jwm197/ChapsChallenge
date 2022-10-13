@@ -5,14 +5,28 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * JPanel for the game end screen
+ * 
+ * @author pratapshek 300565138
+ *
+ */
+
 public class GameEndScreen extends JPanel implements JHelper{
+	// Private variables
 	private ChapsChallenge cc;
 	private boolean completed;
 	private float time;
 	
-	// Private variables
 	private static final long serialVersionUID = 1L;
-
+	
+	/**
+	 * Constructs a game end screen
+	 * 
+	 * @param c chaps challenge game
+	 * @param b whether level was completed
+	 * @param t time left in game
+	 */
 	public GameEndScreen(ChapsChallenge c, boolean b, float t){
 		super();
 		cc = c;
@@ -20,6 +34,11 @@ public class GameEndScreen extends JPanel implements JHelper{
 		time = t;
 	}
 	
+	/**
+	 * Makes the game screen by adding components to a panel
+	 * 
+	 * @return returns the jpanel
+	 */
 	public JPanel make() {
 		JPanel panel = new JPanel();
 		JPanel bottomPanel = new JPanel();

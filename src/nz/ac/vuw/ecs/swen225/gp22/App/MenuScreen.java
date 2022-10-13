@@ -3,17 +3,34 @@ package nz.ac.vuw.ecs.swen225.gp22.App;
 import javax.swing.*;
 import java.awt.Font;
 
+/**
+ * JPanel for the menu screen
+ * 
+ * @author pratapshek 300565138
+ *
+ */
+
 public class MenuScreen extends JPanel implements JHelper{
+	// Private variables
 	private ChapsChallenge cc;
 	
-	// Private variables
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructs a menu screen
+	 * 
+	 * @param c chaps challenge game
+	 */
 	public MenuScreen(ChapsChallenge c){
 		super();
 		cc = c;
 	}
 	
+	/**
+	 * Makes the menu screen by adding components to a panel
+	 * 
+	 * @return returns the jpanel
+	 */
 	public JPanel make() {
 		JPanel panel = new JPanel();
 		// JLabel for displaying game title
