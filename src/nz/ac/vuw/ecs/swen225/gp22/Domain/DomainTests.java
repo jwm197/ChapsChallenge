@@ -14,6 +14,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import nz.ac.vuw.ecs.swen225.gp22.Domain.Audio.AudioMixer;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.LayeredTextures;
+import nz.ac.vuw.ecs.swen225.gp22.Domain.Textures.Textures;
 
 /**
  * Tests for the domain package.
@@ -416,8 +418,8 @@ public class DomainTests {
         bug.move(Direction.DOWN,model);
         bug.move(Direction.DOWN,model);
         bug.move(Direction.LEFT,model);
-        assert test;
         assertEquals(bug.location(), new IntPoint(0,2));
+        assert test;
     }
 
     @Test
@@ -429,7 +431,7 @@ public class DomainTests {
         Model model = level.model();
         Bug bug = (Bug) model.entities().get(1);
         bug.move(Direction.UP,model);
-        assertEquals(bug.location(), new IntPoint(2,1));
+        assertEquals(bug.location(), new IntPoint(2,0));
     }
 
     @Test
@@ -472,5 +474,106 @@ public class DomainTests {
                 fail("Random bug movements failed");
             }
         }
+    }
+
+    @Test
+    /**
+     * Check player texture.
+     */
+    public void checkTextures1() {
+        Player player = new Player(new IntPoint(0,0));
+        assertEquals(player.texture(), Textures.PlayerFaceDown);
+    }
+
+    @Test
+    /**
+     * Check bug texture.
+     */
+    public void checkTextures2() {
+        Bug bug = new Bug(new IntPoint(0,0));
+        assertEquals(bug.texture(), Textures.BugFaceDown);
+    }
+
+    @Test
+    /**
+     * Check free tile texture with no item.
+     */
+    public void checkTextures3() {
+        FreeTile freeTile = new FreeTile(new IntPoint(0,0), null);
+        assertEquals(freeTile.texture(), Textures.Floor);
+    }
+
+    @Test
+    /**
+     * Check free tile texture with item.
+     */
+    public void checkTextures4() {
+        FreeTile freeTile = new FreeTile(new IntPoint(0,0), new Treasure());
+        assertEquals(freeTile.texture().layers().get(0), Textures.Floor);
+        assertEquals(freeTile.texture().layers().get(1), Textures.Treasure);
+    }
+
+    @Test
+    /**
+     * Check info tile texture.
+     */
+    public void checkTextures5() {
+        InfoField infoTile = new InfoField(new IntPoint(0,0), null);
+        assertEquals(infoTile.texture().layers().get(0), Textures.Floor);
+        assertEquals(infoTile.texture().layers().get(1), Textures.Note);
+    }
+
+    @Test
+    /**
+     * Check exit tile texture.
+     */
+    public void checkTextures6() {
+        Exit exitTile = new Exit(new IntPoint(0,0));
+        assertEquals(exitTile.texture(), LayeredTextures.Exit);
+    }
+
+    @Test
+    /**
+     * Check wall tile texture.
+     */
+    public void checkTextures7() {
+        WallTile wallTile = new WallTile(new IntPoint(0,0));
+        assertEquals(wallTile.texture(), Textures.Wall);
+    }
+
+    @Test
+    /**
+     * Check locked door tile texture.
+     */
+    public void checkTextures8() {
+        LockedDoor lockedDoorTile = new LockedDoor(new IntPoint(0,0), Color.BLUE);
+        assertEquals(lockedDoorTile.texture(), LayeredTextures.Lock);
+    }
+
+    @Test
+    /**
+     * Check exit lock tile texture.
+     */
+    public void checkTextures9() {
+        ExitLock exitLockTile = new ExitLock(new IntPoint(0,0));
+        assertEquals(exitLockTile.texture(), LayeredTextures.TreasureLock);
+    }
+
+    @Test
+    /**
+     * Check key texture.
+     */
+    public void checkTextures10() {
+        Key key = new Key(Color.BLUE);
+        assertEquals(key.texture(), Textures.Key);
+    }
+
+    @Test
+    /**
+     * Check treasure texture.
+     */
+    public void checkTextures11() {
+        Treasure treasure = new Treasure();
+        assertEquals(treasure.texture(), Textures.Treasure);
     }
 }
