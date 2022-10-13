@@ -283,7 +283,7 @@ public class ChapsChallenge extends JFrame{
 			}
 			autoReplayToggle.setText("Auto Replay: " + (autoReplay?"ON":"OFF")); repaint();});
 		// Set speed
-		var setSpeed = new JSlider(1, 10, 1);
+		var setSpeed = new JSlider(1, 5, 1);
 		// Speed label
 		var speedText = JHelper.createLabel("Speed x" + recorder.getTickSpeed(), SwingConstants.CENTER, SMALL_FONT, 0, 0, WIDTH, HEIGHT);
 		// Step move
