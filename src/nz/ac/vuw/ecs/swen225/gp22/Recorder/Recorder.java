@@ -85,7 +85,7 @@ public class Recorder{
     /**Advance the recorded game 1 for the player move*/
     public void stepMovePlayer(){
         if(peekNextPlayerMove()!=null){
-            game.performAction(getNextPlayerMove().toString());
+            game.performAction(getNextPlayerMove().direction().toString());
         }
 
     }
