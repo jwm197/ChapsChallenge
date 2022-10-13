@@ -126,11 +126,61 @@ public class ChapsChallenge extends JFrame{
 		// adds components to panel
 		panel.setLayout(null);
 		addComponents(panel, title, startButton, load, loadRecorder, help, controls, quit);
+		//JPanel menu = new MenuScreen(this);
 		closePhase.run();
 		closePhase = ()->{remove(panel);};
 		add(panel);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		pack();
+	}
+	
+	/**
+	 * Creates a JButton and sets its parameters.
+	 * 
+	 * @param name text
+	 * @param x x pos
+	 * @param y y pos
+	 * @param w width
+	 * @param h height
+	 * @param f font
+	 * @param l action on press
+	 * @return the new JButton
+	 */
+	public JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
+		JButton b = new JButton(name);
+		b.setBounds(x, y, w, h);
+		b.setFont(f);
+		b.addActionListener(l);
+		return b;
+	}
+	
+	/**
+	 * Creates a JLabel and sets its parameters.
+	 * 
+	 * @param name text
+	 * @param i alignment
+	 * @param f font
+	 * @param x x pos
+	 * @param y y pos
+	 * @param w width
+	 * @param h height
+	 * @return the new JLabel
+	 */
+	public JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
+		JLabel l = new JLabel(name, i);
+		l.setBounds(x, y, w, h);
+		l.setFont(f);
+		return l;
+	}
+	
+	/**
+	 * Adds a list of components to a JPanel.
+	 * 
+	 * @param p panel to have components added
+	 * @param cs components to be added
+	 */
+	public void addComponents(JPanel p, Component...cs) {
+		for (Component c :cs) { p.add(c); }
 	}
 	
 	/**
@@ -174,6 +224,18 @@ public class ChapsChallenge extends JFrame{
 					System.out.println("<move time=\"" + time + "\">" + currentMove + "</move>");
 				}
 			}
+			
+			for (Map.Entry<Integer, Entity> entry : domainLevel.model().entities().entrySet()) {
+				HashMap<Integer, MoveDirection> moves = new HashMap<>();
+				if (entry.getValue() instanceof Bug) {
+					Bug b = (Bug) entry.getValue();
+					int id = entry.getKey();
+					moves.put(id, MoveDirection.valueOf(b.direction().toString()));
+				}
+				System.out.println(moves.values());
+				recorder.setPreviousBugMove(new BugsMove(time, moves));
+			}
+			
 			renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 			if (wait && !animating()) wait = false;
 			domainLevel.model().tick(); 
@@ -306,9 +368,17 @@ public class ChapsChallenge extends JFrame{
 		
 		timer = new BetterTimer((int)(delay*1000), ()->{
 			// UPDATES DOMAIN/RENDERER/RECORDER
-			for (int i=0; i<recorder.getTickSpeed(); i++) {
+			for (int i=0; i<recorder.getTickSpeed(); i++) {				
 				renderPanel.tick(); // RenderPanel must be ticked first to ensure animations that are finishing can be requeued by domain if desired
 				time-=delay;
+			}
+			
+			for (Map.Entry<Integer, Entity> e : domainLevel.model().entities().entrySet()) {
+				if (e.getValue() instanceof Bug b) {
+					if (time<=recorder.peekNextBugMove().time()) {
+						recorder.stepMoveBugs(this);
+					}
+				}
 			}
 			// updating timer
 			recorder.setTickSpeed(setSpeed.getValue());
@@ -522,55 +592,6 @@ public class ChapsChallenge extends JFrame{
 	}
 	
 	/**
-	 * Creates a JButton and sets its parameters.
-	 * 
-	 * @param name text
-	 * @param x x pos
-	 * @param y y pos
-	 * @param w width
-	 * @param h height
-	 * @param f font
-	 * @param l action on press
-	 * @return the new JButton
-	 */
-	private JButton createButton(String name, int x, int y, int w, int h, Font f, ActionListener l) {
-		JButton b = new JButton(name);
-		b.setBounds(x, y, w, h);
-		b.setFont(f);
-		b.addActionListener(l);
-		return b;
-	}
-	
-	/**
-	 * Creates a JLabel and sets its parameters.
-	 * 
-	 * @param name text
-	 * @param i alignment
-	 * @param f font
-	 * @param x x pos
-	 * @param y y pos
-	 * @param w width
-	 * @param h height
-	 * @return the new JLabel
-	 */
-	private JLabel createLabel(String name, int i, Font f, int x, int y, int w, int h) {
-		JLabel l = new JLabel(name, i);
-		l.setBounds(x, y, w, h);
-		l.setFont(f);
-		return l;
-	}
-	
-	/**
-	 * Adds a list of components to a JPanel.
-	 * 
-	 * @param p panel to have components added
-	 * @param cs components to be added
-	 */
-	private void addComponents(JPanel p, Component...cs) {
-		for (Component c :cs) { p.add(c); }
-	}
-	
-	/**
 	 * Creates a new game.
 	 * 
 	 * @param name level name
@@ -578,7 +599,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public boolean newGame(String name) {
 		// resets timer
-		recorder = new Recorder(this, name);
+		recorder = new Recorder(name);
 		currentMove = MoveDirection.NONE;
 		wait = false;
 		
@@ -602,7 +623,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public boolean newRecordedGame(String name) {
 		// resets timer and recorder
-		recorder = new Recorder(this, name);
+		recorder = new Recorder(name);
 		recorder.setTickSpeed(1);
 		autoReplay = false;
 		
@@ -715,7 +736,7 @@ public class ChapsChallenge extends JFrame{
 		if (!autoReplay && recorder.peekNextPlayerMove()!=null) {
 			while (recorder.peekNextPlayerMove().direction()==MoveDirection.NONE) {
 				System.out.println("SKIPPED NONE");
-				recorder.stepMovePlayer();
+				recorder.stepMovePlayer(this);
 			}
 		}
 		if (recorder.peekNextPlayerMove()==null) {
@@ -725,7 +746,7 @@ public class ChapsChallenge extends JFrame{
 		timer.start();
 		time = recorder.peekNextPlayerMove().time();
 		System.out.println(recorder.peekNextPlayerMove().direction());
-		recorder.stepMovePlayer();
+		recorder.stepMovePlayer(this);
 	}
 	
 	/**
@@ -786,6 +807,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void moveBugs(HashMap<Integer, MoveDirection> bugMoves) {
 		for (Map.Entry<Integer, MoveDirection> b : bugMoves.entrySet()) {
+			System.out.println("MOVE BUG");
 			domainLevel.model().entities().get(b.getKey()).move(Direction.valueOf(b.getValue().toString()), domainLevel.model());
 		}
 	}
