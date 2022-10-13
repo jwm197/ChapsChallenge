@@ -11,11 +11,10 @@ record RecordedLevel(String levelName, ArrayDeque<RecordedMove>playerMoves,Array
 
 }
 public class Recorder{
-    private final ChapsChallenge game;
     private float tickSpeed=1;
     private RecordedLevel recording;
-    public Recorder(ChapsChallenge game,String levelName){
-        this.game=game;
+    public Recorder(String levelName){
+
         recording=new RecordedLevel(levelName,new ArrayDeque<>(),new ArrayDeque<>());
     }
     /**Getter which level the recording is of*/
@@ -82,15 +81,17 @@ public class Recorder{
     }
 
 
-    /**Advance the recorded game 1 for the player move*/
-    public void stepMovePlayer(){
+    /**Advance the recorded game 1 for the player move
+     * @param game the chaps challenge game the recording is being played on*/
+    public void stepMovePlayer(ChapsChallenge game){
         if(peekNextPlayerMove()!=null){
             game.performAction(getNextPlayerMove().direction().toString());
         }
 
     }
-    /**Advance the recorded game 1 for the bugs*/
-    public void stepMoveBugs(){
+    /**Advance the recorded game 1 for the bugs
+     * @param game the chaps challenge game the recording is being played on*/
+    public void stepMoveBugs(ChapsChallenge game){
         if(peekNextBugMove()!=null){
             game.moveBugs(getNextBugMove().moves());
         }
