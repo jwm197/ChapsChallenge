@@ -4,8 +4,6 @@ import nz.ac.vuw.ecs.swen225.gp22.App.*;
 
 import org.junit.Test;
 
-//import static org.junit.jupiter.api.Assertions.fail;
-
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Iterator;
@@ -41,7 +39,7 @@ public class FuzzTest {
 	 * Plays level 1 strategically
 	 */
 	@Test
-	public void test1() {
+	public void test1s() {
 		performMovementTest("level1.xml", true);
 	}
 
@@ -49,7 +47,7 @@ public class FuzzTest {
 	 * Plays level 2 strategically
 	 */
 	@Test
-	public void test2() {
+	public void test2s() {
 		performMovementTest("level2.xml", true);
 	}
 
@@ -57,7 +55,7 @@ public class FuzzTest {
 	 * Plays level 1 randomly
 	 */
 	@Test
-	public void test1() {
+	public void test1r() {
 		performMovementTest("level1.xml", false);
 	}
 
@@ -65,7 +63,7 @@ public class FuzzTest {
 	 * Plays level 2 randomly
 	 */
 	@Test
-	public void test2() {
+	public void test2r() {
 		performMovementTest("level2.xml", false);
 	}
 
