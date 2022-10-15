@@ -434,6 +434,7 @@ public class ChapsChallenge extends JFrame{
 	 */
 	public void gameEnd(boolean completed) {
 		fuzzer.end();
+		if (fuzzer!=Fuzzer.NONE) return;
 		if (replay) return;
 		closeTheSounds();
 		if (completed) { soundMixer.add(SoundClips.PlayerWin.generate()); } 
