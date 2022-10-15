@@ -38,7 +38,7 @@ public class FuzzTest {
 	}
 
 	/**
-	 * Plays level 1.
+	 * Plays level 1 strategically
 	 */
 	@Test
 	public void test1() {
@@ -46,11 +46,27 @@ public class FuzzTest {
 	}
 
 	/**
-	 * Plays level 2
+	 * Plays level 2 strategically
 	 */
 	@Test
 	public void test2() {
 		performMovementTest("level2.xml", true);
+	}
+
+		/**
+	 * Plays level 1 randomly
+	 */
+	@Test
+	public void test1() {
+		performMovementTest("level1.xml", false);
+	}
+
+	/**
+	 * Plays level 2 randomly
+	 */
+	@Test
+	public void test2() {
+		performMovementTest("level2.xml", false);
 	}
 
 	/**
