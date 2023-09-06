@@ -2,7 +2,9 @@
 
 
 ## Module
-I worked on the Recorder module. Other modules were worked on by other people as seen in the team.md file
+I worked on the Recorder module only. 
+https://github.com/jwm197/ChapsChallenge/tree/main/src/nz/ac/vuw/ecs/swen225/gp22/Recorder
+Other modules were worked on by other people as seen in the team.md file
 
 ## Instructions
 To play this game, run the Main method by executing nz.ac.vuw.ecs.swen225.gp22.App.Main from Eclipse or IntelliJ. Alternatively, you can right click the project, click Run and select the Main class to excute the game.
